@@ -1,32 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Profile Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seller Profile</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background-color: #f8f9fa; /* Light gray background color */
+        color: #28a745; /* Green text color */
+        padding: 20px;
+      }
+
+      h1 {
+        color: #28a745; /* Green heading color */
+      }
+
+      .profile-info {
+        margin-bottom: 20px;
+      }
+
+      .action-buttons {
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Profile</h1>
-    <table>
-      <tr>
-        <th>ID:</th>
-        <td th:text="${id}">ID Placeholder</td>
-      </tr>
-      <tr>
-        <th>Name:</th>
-        <td th:text="${name}">Name Placeholder</td>
-      </tr>
-      <tr>
-        <th>Username:</th>
-        <td th:text="${username}">Username Placeholder</td>
-      </tr>
-      <tr>
-        <th>Email:</th>
-        <td th:text="${email}">Email Placeholder</td>
-      </tr>
-      <tr>
-        <th>Address:</th>
-        <td th:text="${address}">Address Placeholder</td>
-      </tr>
-    </table>
+    <div class="container">
+      <h1 class="mt-4">Seller Profile</h1>
+
+      <div class="profile-info">
+        <p th:text="'ID: ' + ${id}" class="lead"></p>
+        <p th:text="'Name: ' + ${name}" class="lead"></p>
+        <p th:text="'Username: ' + ${username}" class="lead"></p>
+        <p th:text="'Email: ' + ${email}" class="lead"></p>
+        <p th:text="'Address: ' + ${address}" class="lead"></p>
+        <p th:text="'Saldo: $' + ${saldo}" class="lead"></p>
+      </div>
+
+      <div class="action-buttons">
+        <a href="/withdraw" class="btn btn-success mr-2">Withdraw</a>
+        <a href="/edit-profile" class="btn btn-success mr-2">Edit Profile</a>
+        <a href="/sign-out" class="btn btn-danger">Sign Out</a>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (you may need to include them based on your project structure) -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
   </body>
 </html>
