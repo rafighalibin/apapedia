@@ -14,6 +14,6 @@ import jakarta.transaction.Transactional;
 @Repository
 @Transactional
 public interface CatalogueDb extends JpaRepository<Catalogue, UUID> {
-    List<Catalogue> findAllByOrderByProductNameAsc();
+    List<Catalogue> findAllByOrderByProductNameLowerAsc();
     List<Catalogue> findAllByIdSeller(UUID sellerId);
 }

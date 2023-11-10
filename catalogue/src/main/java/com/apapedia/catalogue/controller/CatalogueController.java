@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.xml.catalog.Catalog;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-public class CatalogController {
+public class CatalogueController {
     @Autowired
     CatalogueService catalogueService;
 
@@ -33,7 +36,10 @@ public class CatalogController {
         return catalog;
     }
 
-    
+    @GetMapping(value = "/catalogue")
+    public List<Catalogue> getAllCatalogSortedByName() {
+        return catalogueService.getAllCatalogueByNameAsc();
+    }
 
 
     }
