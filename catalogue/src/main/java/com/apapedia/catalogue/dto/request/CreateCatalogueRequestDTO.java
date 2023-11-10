@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CreateCatalogRequestDTO {
+public class CreateCatalogueRequestDTO {
     private String productName;
     @PositiveOrZero
     private int price;

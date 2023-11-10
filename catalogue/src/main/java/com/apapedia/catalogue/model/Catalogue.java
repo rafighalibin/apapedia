@@ -15,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "catalog")
-public class Catalog {
+@Table(name = "catalogue")
+public class Catalogue {
     @Id
     private UUID id = UUID.randomUUID();
 
