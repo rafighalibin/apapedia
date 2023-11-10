@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Profile Page</title>
+  </head>
+  <body>
+    <h1>Profile</h1>
+    <table>
+      <tr>
+        <th>ID:</th>
+        <td th:text="${id}">ID Placeholder</td>
+      </tr>
+      <tr>
+        <th>Name:</th>
+        <td th:text="${name}">Name Placeholder</td>
+      </tr>
+      <tr>
+        <th>Username:</th>
+        <td th:text="${username}">Username Placeholder</td>
+      </tr>
+      <tr>
+        <th>Email:</th>
+        <td th:text="${email}">Email Placeholder</td>
+      </tr>
+      <tr>
+        <th>Address:</th>
+        <td th:text="${address}">Address Placeholder</td>
+      </tr>
+    </table>
+  </body>
+</html>
