@@ -27,4 +27,8 @@ public class CatalogueService {
         return catalogueDb.findAllByIdSeller(sellerId);
     }
 
+    public Catalogue getCatalogueById(UUID catalogId){
+        return catalogueDb.findById(catalogId).orElse(null);
+    }
+
 }
