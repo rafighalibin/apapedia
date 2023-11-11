@@ -18,6 +18,7 @@ public class ProfileController {
         model.addAttribute("address", "Jl. Jalan No. 1");
         model.addAttribute("saldo", 231231);
         model.addAttribute("category", "official store");
+        model.addAttribute("navbarActive", "Profile");
 
         return "profile-view";
     }

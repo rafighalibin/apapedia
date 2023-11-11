@@ -25,7 +25,7 @@
       crossorigin="anonymous"
     />
     <object th:insert="~{fragments/fragment::css}" th:remove="tag"></object>
-    <object th:insert="~{fragments/fragment::js}" th:remove="tag"></object></head>
+    <object th:insert="~{fragments/fragment::js}" th:remove="tag"></object>
     <link
       th:href="@{/css/font-awesome.min.css}"
       rel="stylesheet"
@@ -52,30 +52,84 @@
   </head>
 
   <body>
-    <header th:replace="~{fragments/navbar :: navbar(active='1')}"></header>
+    <header th:replace="~{fragments/navbar}"></header>
 
     <!-- Seller Profile Section Begin -->
-    <section class="seller-profile spad">
+    <section class="checkout spad">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12">
-            <h2>Profile Page</h2>
-            <!-- Display Seller details -->
-            <div>
-              <p>User ID: <span th:text="${id}">Seller ID</span></p>
-              <p>Name: <span th:text="${name}">Seller Name</span></p>
-              <p>Username: <span th:text="${username}">Username</span></p>
-              <p>Email: <span th:text="${email}">Email</span></p>
-              <p>Address: <span th:text="${address}">Address</span></p>
-              <p>Category: <span th:text="${category}">Category</span></p>
-
-              <!-- Add other details as needed -->
+          <div class="col-lg-12 text-center">
+            <div class="section-title h2">
+              <h2>
+                Profile Seller
+                <span th:if="${category == 'official store'}">
+                  <img th:src="@{/img/logo-cart-official.ico}" class="mb-2" />
+                </span>
+              </h2>
             </div>
-            <!-- Buttons for Withdraw, Edit Profile, and Sign Out -->
-            <div>
-              <a th:href="@{'/withdraw'}"><button>Withdraw</button></a>
-              <a th:href="@{'/edit-profile'}"><button>Edit Profile</button></a>
-              <a th:href="@{'/sign-out'}"><button>Sign Out</button></a>
+          </div>
+        </div>
+        <div class="row px-sm-1 text-center mb-5">
+          <!-- Placeholder Profile Picture -->
+          <div
+            class="col-lg-3 col-md-6 ml-5"
+            style="border: 1px solid #ced4da"
+          ></div>
+          <div class="col-lg-6 col-md-6">
+            <table class="invisible-table">
+              <tr>
+                <td>User ID:</td>
+                <td>
+                  <span class="text-bold" th:text="${id}">Seller ID</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Name:</td>
+                <td>
+                  <span class="text-bold" th:text="${name}">Seller Name</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Username:</td>
+                <td>
+                  <span class="text-bold" th:text="${username}">Username</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Email:</td>
+                <td><span class="text-bold" th:text="${email}">Email</span></td>
+              </tr>
+              <tr>
+                <td>Address:</td>
+                <td>
+                  <span class="text-bold" th:text="${address}">Address</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Category:</td>
+                <td>
+                  <span class="text-bold" th:text="${category}">Category</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Saldo:</td>
+                <td>
+                  <span class="text-bold" th:text="${saldo}">Category</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Buttons for Withdraw, Edit Profile, and Sign Out -->
+        <div class="row mt-3">
+          <div class="col-lg-12 text-center">
+            <div class="seller-buttons">
+              <a class="primary-btn" th:href="@{'/withdraw'}">Withdraw</a>
+              <a class="secondary-btn" th:href="@{'/edit-profile'}"
+                >Edit Profile</a
+              >
+              <a class="warning-btn" th:href="@{'/sign-out'}">Sign Out</a>
             </div>
           </div>
         </div>

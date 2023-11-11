@@ -182,6 +182,27 @@ ol {
 	border: none;
 }
 
+.warning-btn {
+	display: inline-block;
+	font-size: 14px;
+	padding: 10px 28px 10px;
+	color: #ffffff;
+	text-transform: uppercase;
+	font-weight: 700;
+	background: #ad3939;
+	letter-spacing: 2px;
+}
+
+.secondary-btn {
+	display: inline-block;
+	font-size: 14px;
+	padding: 10px 28px 10px;
+	color: #ffffff;
+	text-transform: uppercase;
+	font-weight: 700;
+	background: #3973ad;
+	letter-spacing: 2px;
+}
 /* Preloder */
 
 #preloder {
@@ -639,7 +660,7 @@ ol {
 }
 
 .hero__search__form {
-	width: 610px;
+	width: 510px;
 	height: 50px;
 	border: 1px solid #ebebeb;
 	position: relative;
@@ -3466,3 +3487,30 @@ ol {
 		font-size: 24px;
 	}
 }
+
+
+.invisible-table {
+    border-collapse: collapse;
+    width: 30%;
+	margin: auto;
+}
+
+.invisible-table td, .invisible-table th {
+    border: none;
+    text-align: left;
+    padding: 10px;
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
+.seller-buttons {
+    text-align: center;
+}
+
+.seller-buttons a {
+    margin: 0 10px; 
+}
+
+
