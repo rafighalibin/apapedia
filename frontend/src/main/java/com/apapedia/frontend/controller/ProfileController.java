@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 @Controller
 public class ProfileController {
 
-    @GetMapping("/profile/")
+    @GetMapping("/profile")
     public String profilePage(Model model) {
 
         model.addAttribute("id", "1234567890");
@@ -17,6 +17,7 @@ public class ProfileController {
         model.addAttribute("email", "john@mail");
         model.addAttribute("address", "Jl. Jalan No. 1");
         model.addAttribute("saldo", 231231);
+        model.addAttribute("category", "official store");
 
         return "profile-view";
     }

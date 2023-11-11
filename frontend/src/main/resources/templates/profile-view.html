@@ -1,59 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
   <head>
     <meta charset="UTF-8" />
+    <meta name="description" content="Ogani Template" />
+    <meta name="keywords" content="Ogani, unica, creative, html" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Seller Profile</title>
-
-    <!-- Bootstrap CSS -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Profile</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <!-- Google Font -->
     <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
       rel="stylesheet"
     />
-
-    <style>
-      body {
-        background-color: #f8f9fa; /* Light gray background color */
-        color: #28a745; /* Green text color */
-        padding: 20px;
-      }
-
-      h1 {
-        color: #28a745; /* Green heading color */
-      }
-
-      .profile-info {
-        margin-bottom: 20px;
-      }
-
-      .action-buttons {
-        margin-top: 20px;
-      }
-    </style>
+    <!-- Css Styles -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <object th:insert="~{fragments/fragment::css}" th:remove="tag"></object>
+    <object th:insert="~{fragments/fragment::js}" th:remove="tag"></object></head>
+    <link
+      th:href="@{/css/font-awesome.min.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      th:href="@{/css/elegant-icons.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link th:href="@{/css/nice-select.css}" rel="stylesheet" type="text/css" />
+    <link
+      th:href="@{/css/jquery-ui.min.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      th:href="@{/css/owl.carousel.min.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link th:href="@{/css/slicknav.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" />
   </head>
+
   <body>
-    <div class="container">
-      <h1 class="mt-4">Seller Profile</h1>
+    <header th:replace="~{fragments/navbar :: navbar(active='1')}"></header>
 
-      <div class="profile-info">
-        <p th:text="'ID: ' + ${id}" class="lead"></p>
-        <p th:text="'Name: ' + ${name}" class="lead"></p>
-        <p th:text="'Username: ' + ${username}" class="lead"></p>
-        <p th:text="'Email: ' + ${email}" class="lead"></p>
-        <p th:text="'Address: ' + ${address}" class="lead"></p>
-        <p th:text="'Saldo: $' + ${saldo}" class="lead"></p>
+    <!-- Seller Profile Section Begin -->
+    <section class="seller-profile spad">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2>Profile Page</h2>
+            <!-- Display Seller details -->
+            <div>
+              <p>User ID: <span th:text="${id}">Seller ID</span></p>
+              <p>Name: <span th:text="${name}">Seller Name</span></p>
+              <p>Username: <span th:text="${username}">Username</span></p>
+              <p>Email: <span th:text="${email}">Email</span></p>
+              <p>Address: <span th:text="${address}">Address</span></p>
+              <p>Category: <span th:text="${category}">Category</span></p>
+
+              <!-- Add other details as needed -->
+            </div>
+            <!-- Buttons for Withdraw, Edit Profile, and Sign Out -->
+            <div>
+              <a th:href="@{'/withdraw'}"><button>Withdraw</button></a>
+              <a th:href="@{'/edit-profile'}"><button>Edit Profile</button></a>
+              <a th:href="@{'/sign-out'}"><button>Sign Out</button></a>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
+    <!-- Seller Profile Section End -->
 
-      <div class="action-buttons">
-        <a href="/withdraw" class="btn btn-success mr-2">Withdraw</a>
-        <a href="/edit-profile" class="btn btn-success mr-2">Edit Profile</a>
-        <a href="/sign-out" class="btn btn-danger">Sign Out</a>
-      </div>
-    </div>
+    <footer th:replace="~{fragments/footer}"></footer>
 
-    <!-- Bootstrap JS and dependencies (you may need to include them based on your project structure) -->
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <!-- Js Plugins -->
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/jquery.nice-select.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+    <script th:src="@{/js/jquery.slicknav.js}"></script>
+    <script th:src="@{/js/mixitup.min.js}"></script>
+    <script th:src="@{/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
   </body>
 </html>
