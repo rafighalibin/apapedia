@@ -17,10 +17,10 @@ public class ProfileController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/profile/{id}")
-    public String profilePage(@PathVariable("id") UUID id, Model model) throws IOException, InterruptedException {
+    @GetMapping("/profile")
+    public String profilePage(Model model) throws IOException, InterruptedException {
         // TODO: get user logged user id
-        ReadUserResponseDTO user = userService.getUserById(id);
+        ReadUserResponseDTO user = userService.getUser();
 
         model.addAttribute("user", user);
         model.addAttribute("navbarActive", "Profile");

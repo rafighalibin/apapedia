@@ -19,10 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UserServiceImpl implements UserService {
 
     @Override
-    public ReadUserResponseDTO getUserById(UUID id) throws IOException, InterruptedException {
+    public ReadUserResponseDTO getUser() throws IOException, InterruptedException {
 
-        JsonNode rootNode = getRequest("https://ee523c5e-d3ce-4d13-9592-6db0ab0b6fcf.mock.pstmn.io/user/"
-                + id.toString());
+        JsonNode rootNode = getRequest("http://localhost:8081/api/user/");
 
         ReadUserResponseDTO user = new ReadUserResponseDTO();
 
@@ -33,17 +32,7 @@ public class UserServiceImpl implements UserService {
         user.setBalance(rootNode.get("balance").decimalValue());
         user.setAddress(rootNode.get("address").asText());
 
-        // TODO: might need to change this to correct format
-        OffsetDateTime created_at = OffsetDateTime.parse(rootNode.get("created_at").asText());
-        OffsetDateTime updated_at = OffsetDateTime.parse(rootNode.get("updated_at").asText());
-
-        LocalDateTime localCreated_at = created_at.toLocalDateTime();
-        LocalDateTime localUpdated_at = updated_at.toLocalDateTime();
-
-        user.setCreated_at(localCreated_at);
-        user.setUpdated_at(localUpdated_at);
-
-        user.setCategory(rootNode.get("category").asText());
+        user.setCategory("Official Store");
 
         return user;
     }

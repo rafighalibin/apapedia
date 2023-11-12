@@ -9,5 +9,5 @@ import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
 
 @Service
 public interface UserService {
-    ReadUserResponseDTO getUserById(UUID id) throws IOException, InterruptedException;
+    ReadUserResponseDTO getUser() throws IOException, InterruptedException;
 }
