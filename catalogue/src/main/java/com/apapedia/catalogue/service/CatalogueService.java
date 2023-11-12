@@ -3,6 +3,7 @@ package com.apapedia.catalogue.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.xml.catalog.Catalog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class CatalogueService {
     public List<Catalogue> getAllCatalogueByNameAsc(){
         return catalogueDb.findAllByOrderByProductNameLowerAsc();
     }
-
+    
     public List<Catalogue> getAllCatalogueBySellerId(UUID sellerId) {
         return catalogueDb.findAllByIdSeller(sellerId);
     }

@@ -2,16 +2,17 @@ package com.apapedia.catalogue.controller;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.stream.Collectors;
-
-import javax.xml.catalog.Catalog;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-public class CatalogueController {
+public class CatalogController {
     @Autowired
     CatalogueService catalogueService;
 
@@ -41,19 +42,7 @@ public class CatalogueController {
         return catalog;
     }
 
-    @GetMapping(value = "/catalogue")
-    public List<Catalogue> getAllCatalogSortedByName() {
-        return catalogueService.getAllCatalogueByNameAsc();
+    
+
+
     }
-
-    @GetMapping(value = "/catalogue/by-seller/{sellerId}")
-    public ResponseEntity<List<Catalogue>> getAllCatalogueBySellerId(@PathVariable("sellerId") UUID sellerId) {
-        List<Catalogue> catalogues = catalogueService.getAllCatalogueBySellerId(sellerId);
-        if (catalogues.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(catalogues);
-    }
-
-
-}
