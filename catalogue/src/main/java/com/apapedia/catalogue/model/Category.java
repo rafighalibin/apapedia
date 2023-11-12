@@ -4,6 +4,11 @@ import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +22,9 @@ import lombok.Setter;
 @Table(name = "category")
 public class Category {
     @Id
-    private UUID id;
-    private String name;
+    public UUID id = UUID.randomUUID();
 
-    // getters and setters
+    @NotNull
+    @Size(max = 240)
+    private String name;
 }
