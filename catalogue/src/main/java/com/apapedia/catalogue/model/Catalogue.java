@@ -45,4 +45,8 @@ public class Catalogue {
 
     @Column(name="image", nullable=false)
     private String image;
+
+    @NotNull
+    @Column(name = "product_name_lower")
+    private String productNameLower;
 }
