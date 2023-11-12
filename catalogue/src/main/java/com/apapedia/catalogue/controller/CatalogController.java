@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apapedia.catalogue.dto.CatalogMapper;
-import com.apapedia.catalogue.dto.request.CreateCatalogRequestDTO;
-import com.apapedia.catalogue.model.Catalog;
-import com.apapedia.catalogue.service.CatalogService;
+import com.apapedia.catalogue.dto.CatalogueMapper;
+import com.apapedia.catalogue.dto.request.CreateCatalogueRequestDTO;
+import com.apapedia.catalogue.model.Catalogue;
+import com.apapedia.catalogue.service.CatalogueService;
 
 import jakarta.validation.Valid;
 
@@ -30,15 +30,15 @@ import jakarta.validation.Valid;
 @RequestMapping("/api")
 public class CatalogController {
     @Autowired
-    CatalogService catalogService;
+    CatalogueService catalogueService;
 
     @Autowired
-    CatalogMapper catalogMapper;
+    CatalogueMapper catalogueMapper;
 
-    @PostMapping(value = "catalog/create")
-    public Catalog tambahCatalog(@Valid @RequestBody CreateCatalogRequestDTO catalogDTO) {
-        var catalog = catalogMapper.createCatalogRequestDTOToCatalog(catalogDTO);
-        catalogService.saveCatalog(catalog);
+    @PostMapping(value = "catalogue/create")
+    public Catalogue tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO) {
+        var catalog = catalogueMapper.createCatalogueRequestDTOToCatalogue(catalogueDTO);
+        catalogueService.saveCatalogue(catalog);
         return catalog;
     }
 
