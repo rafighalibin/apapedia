@@ -1,5 +1,4 @@
 package com.apapedia.catalogue.model;
-
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
