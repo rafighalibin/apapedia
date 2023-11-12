@@ -49,7 +49,9 @@ public class CreateUserRequestDTO {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Transient
+    long balance;
+
+
     private String role;
 
 }

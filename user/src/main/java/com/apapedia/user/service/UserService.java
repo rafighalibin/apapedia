@@ -2,6 +2,7 @@ package com.apapedia.user.service;
 
 
 
+import com.apapedia.user.dto.request.UpdateBalance;
 import com.apapedia.user.dto.request.UpdateUserRequestDTO;
 import com.apapedia.user.model.*;
 
@@ -31,9 +32,12 @@ public interface UserService {
 
     String getUsernameFromJwtCookie(HttpServletRequest request);
 
-    void updateUser(UpdateUserRequestDTO user);
+    void updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser);
 
     boolean isLoggedIn(HttpServletRequest request);
 
+    User updateBalance(HttpServletRequest request, UpdateBalance newBalance);
+
+    String checkUsernameEmailPassword(HttpServletRequest request, UpdateUserRequestDTO newUser);
 
 }

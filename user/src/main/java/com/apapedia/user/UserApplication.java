@@ -26,7 +26,7 @@ public class UserApplication {
 
 			for(int i = 0; i < 10; i++){
 				User user = new User();
-				user.setBalance(faker.number().numberBetween(0, Long.MAX_VALUE));
+				user.setBalance((long)100000);
 				user.setEmail(faker.internet().emailAddress());
 				user.setPassword("ariefthegoat");
 				user.setAddress(faker.address().fullAddress());

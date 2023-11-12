@@ -1,6 +1,9 @@
 package com.apapedia.user.auth;
 
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Date;
 
 import java.util.Map;
@@ -8,6 +11,7 @@ import java.util.HashMap;
 import org.springframework.stereotype.Component;
 
 import com.apapedia.user.model.User;
+import java.util.UUID;
 
 
 @Component
@@ -39,8 +43,33 @@ public class JwtUtil {
 
     // Validate token
     public Boolean validateToken(String token, User user) {
-        final String username = extractUsername(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
+        final String id = extractId(token);
+        return (id.equals(user.getId().toString()) && !isTokenExpired(token));
+    }
+    
+
+    public void invalidateToken(HttpServletResponse response){
+        // Invalidate the JWT cookie
+        Cookie jwtCookie = new Cookie("jwt", null);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(0); // set its age to 0 to expire it immediately
+        response.addCookie(jwtCookie);
+    }
+
+    public void createCookie(User user, HttpServletResponse response){
+        final String jwt = generateToken(user);
+
+        // Set the JWT in a cookie
+        Cookie jwtCookie = new Cookie("jwt", jwt);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/");
+        // Uncomment the line below if you're using HTTPS
+        // jwtCookie.setSecure(true);
+
+        // Add the cookie to the response
+        response.addCookie(jwtCookie);
+
     }
 
     private Boolean isTokenExpired(String token) {
@@ -50,5 +79,13 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+     public String extractId(String token) {
+        return Jwts.parser()
+                   .setSigningKey(secretKey)
+                   .parseClaimsJws(token)
+                   .getBody()
+                   .get("userId", String.class); // Assuming the user ID is stored as a String
     }
 }

@@ -8,12 +8,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import  org.springframework.stereotype.Service;
 
 import com.apapedia.user.auth.JwtUtil;
+import com.apapedia.user.dto.request.UpdateBalance;
 import com.apapedia.user.dto.request.UpdateUserRequestDTO;
 import com.apapedia.user.model.*;
 import com.apapedia.user.repository.*;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.UUID;
 
 
@@ -35,13 +38,56 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UpdateUserRequestDTO newUser){
-        User oldUser = findUserByUsername(newUser.getUsername());
+    public void updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser){
+        String jwt = getJwtFromCookies(request);
+        String username = jwtUtil.extractUsername(jwt);
+
+        User oldUser = findUserByUsername(username);
         newUser.setId(oldUser.getId());
+        newUser.setBalance(oldUser.getBalance());
         newUser.setRole(oldUser.getRole());
         newUser.setCreatedAt(oldUser.getCreatedAt());
         newUser.setUpdatedAt(LocalDateTime.now());
     }
+
+    @Override 
+    public String checkUsernameEmailPassword(HttpServletRequest request, UpdateUserRequestDTO newUser){
+        String jwt = getJwtFromCookies(request);
+        String oldId = jwtUtil.extractId(jwt);
+        User oldUser = findUserById(oldId);
+
+        String oldPassword = encrypt(oldUser.getPassword());
+        String newPassword = encrypt(newUser.getPassword());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        for (User user : userDb.findAll()) {
+            String username = user.getUsername();
+            String email = user.getEmail();
+            String password = encrypt(user.getPassword());
+            if (username.equals(newUser.getUsername()) && !username.equals(oldUser.getUsername())) return "duplicateUsername";
+
+            if (email.equals(newUser.getEmail()) && !email.equals(oldUser.getEmail())) return "duplicateEmail";
+
+            if (passwordEncoder.matches(password, newPassword) && !passwordEncoder.matches(password, oldPassword)) return "duplicatePassword";
+        }
+
+        return "Y";
+
+    }
+
+    @Override
+    public User updateBalance(HttpServletRequest request, UpdateBalance newBalance){
+        String jwt = getJwtFromCookies(request);
+        String username = jwtUtil.extractUsername(jwt);
+        
+        User user = findUserByUsername(username);
+        user.setBalance(user.getBalance() + newBalance.getBalance());
+        user.setUpdatedAt(LocalDateTime.now());
+        saveUser(user);
+
+        return user;
+    }
+
 
     @Override
     public void deleteUser(String idString){
@@ -49,7 +95,6 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(true);
         saveUser(user);
     }
-
 
     @Override
     public User saveUser(User user){
@@ -126,8 +171,8 @@ public class UserServiceImpl implements UserService {
         String jwt = getJwtFromCookies(request);
         if (jwt != null && !jwt.isEmpty()) {
             try {
-                String username = jwtUtil.extractUsername(jwt);
-                User user = findUserByUsername(username);
+                String id = jwtUtil.extractId(jwt);
+                User user = findUserById(id);
                 return jwtUtil.validateToken(jwt, user); // Validates the token
             } catch (Exception e) {
                 return false;
@@ -135,6 +180,8 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+
 
 
     
