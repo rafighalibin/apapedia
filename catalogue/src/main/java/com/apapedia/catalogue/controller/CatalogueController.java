@@ -24,6 +24,8 @@ import com.apapedia.catalogue.model.Catalogue;
 import com.apapedia.catalogue.service.CatalogueService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api")
@@ -55,5 +57,14 @@ public class CatalogueController {
         return ResponseEntity.ok(catalogues);
     }
 
+    @GetMapping(value="/catalogue/{catalogueId}")
+    public ResponseEntity<Catalogue> getCatalogueById(@PathVariable("catalogueId") UUID catalogId) {
+        Catalogue catalogue = catalogueService.getCatalogueById(catalogId);
+        if (catalogue == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(catalogue);
+    }
+    
 
-}
+    }
