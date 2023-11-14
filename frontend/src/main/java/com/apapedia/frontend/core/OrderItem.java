@@ -15,6 +15,7 @@ public class OrderItem {
     private int productPrice;
     
     public OrderItem(UUID productId, UUID orderId, int quantity, String productName, int productPrice) {
+        
         this.productId = productId;
         this.orderId = orderId;
         this.quantity = quantity;
