@@ -6,6 +6,7 @@ import java.net.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
 import com.apapedia.frontend.service.UserService;
@@ -39,6 +40,32 @@ public class UserController {
         model.addAttribute("user", user);
 
         return "topup-view";
+    }
+
+    @PostMapping(value = "/topup", params = { "addBalance" })
+    public String addBalance(Model model, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, InterruptedException {
+        try {
+            int amount = Integer.parseInt(request.getParameter("topupAmount"));
+            userService.addBalance(request, amount);
+        } catch (Exception e) {
+            model.addAttribute("error", "Invalid amount");
+            return "redirect:/topup";
+        }
+        return "redirect:/profile";
+    }
+
+    @PostMapping(value = "/topup", params = { "withdrawBalance" })
+    public String withdrawBalance(Model model, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, InterruptedException {
+        try {
+            int amount = Integer.parseInt(request.getParameter("topupAmount"));
+            userService.withdrawBalance(request, amount);
+        } catch (Exception e) {
+            model.addAttribute("error", "Invalid amount");
+            return "redirect:/topup";
+        }
+        return "redirect:/profile";
     }
 
     // TODO: change this to POST

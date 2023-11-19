@@ -115,4 +115,16 @@ public class UserServiceImpl implements UserService {
         return jsonResponse;
     }
 
+    @Override
+    public void addBalance(HttpServletRequest request, int amount) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addBalance'");
+    }
+
+    @Override
+    public void withdrawBalance(HttpServletRequest request, int amount) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'withdrawBalance'");
+    }
+
 }
