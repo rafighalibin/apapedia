@@ -26,7 +26,6 @@ import com.apapedia.catalogue.service.CatalogueService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping("/api")
 public class CatalogueController {
@@ -57,14 +56,31 @@ public class CatalogueController {
         return ResponseEntity.ok(catalogues);
     }
 
-    @GetMapping(value="/catalogue/{catalogueId}")
+    @GetMapping(value = "/catalogue/{catalogueId}")
     public ResponseEntity<Catalogue> getCatalogueById(@PathVariable("catalogueId") UUID catalogId) {
         Catalogue catalogue = catalogueService.getCatalogueById(catalogId);
-        if (catalogue == null){
+        if (catalogue == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(catalogue);
     }
-    
 
+    @GetMapping(value = "/catalogue", params = { "sortBy", "order" })
+    public ResponseEntity<List<Catalogue>> getCatalogListSorted(
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("order") String order) {
+
+        if (!(sortBy.equals("price") || sortBy.equals("name")) || !(order.equals("asc") || order.equals("desc"))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<Catalogue> catalogues = catalogueService.getCatalogListSorted(sortBy, order);
+
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(catalogues);
     }
+
+}
