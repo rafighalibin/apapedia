@@ -16,20 +16,23 @@ public class CatalogueService {
     @Autowired
     CatalogueDb catalogueDb;
 
-    public void saveCatalogue(Catalogue catalogue){
+    public void saveCatalogue(Catalogue catalogue) {
         catalogueDb.save(catalogue);
     }
 
-    public List<Catalogue> getAllCatalogueByNameAsc(){
+    public List<Catalogue> getAllCatalogueByNameAsc() {
         return catalogueDb.findAllByOrderByProductNameLowerAsc();
     }
-    
+
     public List<Catalogue> getAllCatalogueBySellerId(UUID sellerId) {
         return catalogueDb.findAllByIdSeller(sellerId);
     }
 
-    public Catalogue getCatalogueById(UUID catalogId){
+    public Catalogue getCatalogueById(UUID catalogId) {
         return catalogueDb.findById(catalogId).orElse(null);
     }
 
+    public List<Catalogue> getAllCatalogueByName(String name) {
+        return catalogueDb.findAllByProductNameLowerContaining(name);
+    }
 }
