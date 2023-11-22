@@ -25,7 +25,7 @@ public class Catalogue {
 
     @NotNull
     @Column(name="price", nullable=false)
-    private int price;
+    private Integer price;
 
     @NotNull
     @Column(name="product_name", nullable=false)
@@ -41,7 +41,7 @@ public class Catalogue {
 
     @NotNull
     @Column(name="stock", nullable=false)
-    private int stock;
+    private Integer stock;
 
     @Column(name="image", nullable=false)
     private String image;
