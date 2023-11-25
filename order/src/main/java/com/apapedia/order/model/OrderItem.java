@@ -18,7 +18,7 @@ import lombok.Setter;
 public class OrderItem {
 
     @Id
-    private UUID id = UUID.randomUUID();
+    private UUID orderItemId = UUID.randomUUID();
 
     @Column(name = "id_product", nullable = false)
     private UUID productId;
