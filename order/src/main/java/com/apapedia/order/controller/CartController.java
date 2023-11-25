@@ -11,7 +11,12 @@ import com.apapedia.order.service.CartService;
 
 import jakarta.validation.Valid;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,4 +43,9 @@ public class CartController {
         return cartService.addItem(cartItem);
     }
 
+    @GetMapping("/cart/delete-cart-items/{id}")
+    public ResponseEntity<String> deleteCartItems(@PathVariable("id") UUID id){
+        cartService.deleteCartItems(id);
+        return ResponseEntity.ok("Cart items has been deleted successfully");
+    }
 }

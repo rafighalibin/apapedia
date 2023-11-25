@@ -1,5 +1,7 @@
 package com.apapedia.order.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,11 @@ public class CartServiceImpl implements CartService {
     public CartItem addItem(CartItem cartItem) {
         var cart = cartDb.findById(cartItem.getCartId()).get();
         return cart != null ? cartItemDb.save(cartItem) : null;
+    }
+
+    @Override
+    public void deleteCartItems(UUID id){
+        cartItemDb.deleteById(id);
     }
 
 }
