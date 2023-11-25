@@ -19,6 +19,9 @@ public class Order {
     @Id
     private UUID id = UUID.randomUUID();
 
+    @Column(name = "order_item_id", nullable = false)
+    private UUID orderItemId;
+
     @NotNull
     @Column(name = "createdat", nullable = false)
     private Date createdAt;
