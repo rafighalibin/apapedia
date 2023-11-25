@@ -18,13 +18,13 @@ import lombok.Setter;
 public class CartItem {
 
     @Id
-    private UUID id = UUID.randomUUID();
+    private UUID cartItemId = UUID.randomUUID();
 
     @Column(name = "id_product", nullable = false)
     private UUID productId;
 
-    @Column(name = "id_cart", nullable = false)
-    private UUID cartId;
+    @JoinColumn(name = "id_cart", referencedColumnName = "cartId")
+    private Cart cart;
 
     @NotNull
     @Column(name = "quantity", nullable = false)

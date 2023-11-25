@@ -24,8 +24,16 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItem addItem(CartItem cartItem) {
-        var cart = cartDb.findById(cartItem.getCartId()).get();
+        var cart = cartDb.findById(cartItem.getCart().getCartId()).get();
         return cart != null ? cartItemDb.save(cartItem) : null;
+    }
+
+    @Override 
+    public CartItem updateItem(CartItem cartItem) {
+        var cart = cartDb.findById(cartItem.getCart().getCartId()).get();
+        if (cart != null) {
+            
+        }
     }
 
 }

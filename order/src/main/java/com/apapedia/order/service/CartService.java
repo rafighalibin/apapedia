@@ -10,4 +10,6 @@ public interface CartService {
     Cart createCart(Cart cart);
 
     CartItem addItem(CartItem cartItem);
+
+    CartItem updateItem(CartItem cartItem);
 }
