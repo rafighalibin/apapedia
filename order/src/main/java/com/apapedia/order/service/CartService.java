@@ -1,5 +1,7 @@
 package com.apapedia.order.service;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.apapedia.order.model.Cart;
@@ -12,4 +14,6 @@ public interface CartService {
     CartItem addItem(CartItem cartItem);
 
     CartItem updateItem(CartItem cartItem);
+    
+    void deleteCartItems(UUID id);
 }

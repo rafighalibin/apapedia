@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "OrderApplication",
+            "request": "launch",
+            "mainClass": "com.apapedia.order.OrderApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-CatalogueApplication<catalogue>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
