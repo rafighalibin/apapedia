@@ -2,7 +2,7 @@ version: '3.3'
 services:
   order:
     build:
-      context: .
+      context: ./order
     restart: always
     ports:
       - "10142:8080"
@@ -32,7 +32,7 @@ services:
 
   catalogue:
     build:
-      context: .
+      context: ./catalogue
     restart: always
     ports:
       - "10141:8080"
@@ -62,7 +62,7 @@ services:
 
   user:
     build:
-      context: .
+      context: ./user
     restart: always
     ports:
       - "10140:8080"
@@ -92,7 +92,7 @@ services:
 
   frontend:
     build:
-      context: .
+      context: ./frontend
     restart: always
     ports:
       - "10143:8080"
