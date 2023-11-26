@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
+import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -18,5 +20,8 @@ public interface UserService {
     HttpResponse<String> login(String username, String password)
             throws IOException, InterruptedException;
 
-    void logout( HttpServletRequest request) throws IOException, InterruptedException;
+    void logout(HttpServletRequest request) throws IOException, InterruptedException;
+
+    JsonNode updateUser(UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
+            throws IOException, InterruptedException;
 }
