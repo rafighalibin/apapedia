@@ -11,9 +11,13 @@ import com.apapedia.order.model.CartItem;
 public interface CartService {
     Cart createCart(Cart cart);
 
-    CartItem addItem(CartItem cartItem);
+    CartItem addItem(Cart cart, CartItem cartItem);
 
-    CartItem updateItem(CartItem cartItem);
+    CartItem updateCartItem(Cart cart, CartItem cartItem);
+
+    Cart findCartById(UUID idCart);
+
+    Cart findCartByUserId(UUID idUser);
     
     void deleteCartItems(UUID id);
 }
