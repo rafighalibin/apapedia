@@ -22,9 +22,10 @@ public class OrderItem {
 
     @Column(name = "id_product", nullable = false)
     private UUID productId;
-
-    @Column(name = "id_order", nullable = false)
-    private UUID orderId;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_order", referencedColumnName = "orderId")
+    private Order order;
 
     @NotNull
     @Column(name = "quanitity", nullable = false)
