@@ -59,7 +59,8 @@ public class UserRestController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response, HttpServletRequest request) {
 
-        if (!userService.isLoggedIn(request)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You already logged out");
+        if (!userService.isLoggedIn(request))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You already logged out");
 
         jwtUtil.invalidateToken(response);
 
@@ -97,17 +98,23 @@ public class UserRestController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserRequestDTO userDTO, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserRequestDTO userDTO, HttpServletRequest request,
+            HttpServletResponse response) {
 
         if (!userService.isLoggedIn(request))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a user.");
 
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateUsername")) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate username");
+        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateUsername"))
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate username");
 
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateEmail")) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate email");
+        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateEmail"))
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate email");
 
-        // if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicatePassword")) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate password");
-        
+        // if (userService.checkUsernameEmailPassword(request,
+        // userDTO).equals("duplicatePassword")) return
+        // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate
+        // password");
+
         // Service method to update user details
         userService.updateUser(request, userDTO);
 
@@ -141,6 +148,17 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a balance");
 
         User user = userService.updateBalance(request, updateBalance);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getUser(HttpServletRequest request) {
+
+        if (!userService.isLoggedIn(request))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get user");
+
+        User user = userService.findUserByUsername(jwtUtil.extractUsername(userService.getJwtFromCookies(request)));
 
         return ResponseEntity.ok(user);
     }
