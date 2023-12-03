@@ -16,6 +16,8 @@ import java.util.List;
 
 import java.util.UUID;
 
+import com.apapedia.user.model.Role;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,30 +25,30 @@ public class CreateUserRequestDTO {
     @Id
     private UUID id = UUID.randomUUID();
 
-    @NotNull
+    
     @Size(max = 100)
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
     
-    @NotNull
+    
     @Size(max = 100)
-    @Column(name = "username", nullable = false)
+    @Column(name = "username")
     private String username;
 
-    @NotNull
+    
     @Size(max = 100)
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
-    @NotNull
+    
     @Size(max = 100)
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
 
-    @NotNull
+    
     @Size(max = 100)
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
     long balance;

@@ -4,18 +4,29 @@ import java.util.List;
 
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import com.apapedia.user.dto.request.CreateUserRequestDTO;
 import com.apapedia.user.dto.request.UpdateUserRequestDTO;
+import com.apapedia.user.dto.response.CreateUserResponseDTO;
 import com.apapedia.user.model.*;
 
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User createUserRequestDTOToUser(CreateUserRequestDTO createUserRequestDTO);
 
-    User updateUserRequestDTOToUser(UpdateUserRequestDTO updateUserRequestDTO);
+    @Mapping(target = "role", ignore = true)
+    UserModel updateUserRequestDTOToUser(UpdateUserRequestDTO updateUserRequestDTO);
 
-    UpdateUserRequestDTO userToUpdateUserRequestDTO(User user);
+    @Mapping(target = "role", ignore = true)
+    UpdateUserRequestDTO userToUpdateUserRequestDTO(UserModel user);
+
+    UserModel findByUsername(String username);
+
+    @Mapping(target = "role", ignore = true)
+    UserModel createUserRequestDTOToUserModel(CreateUserRequestDTO createUserRequestDTO); 
+
+    @Mapping(target = "role", ignore = true)
+    CreateUserResponseDTO createUserResponseDTOToUserModel(UserModel userModel);
 }

@@ -19,4 +19,6 @@ public interface UserService {
             throws IOException, InterruptedException;
 
     void logout( HttpServletRequest request) throws IOException, InterruptedException;
+
+    String getToken(String username, String name);
 }
