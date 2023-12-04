@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.apapedia.order.model.Order;
 import com.apapedia.order.repository.OrderDb;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -33,4 +34,15 @@ public class OrderServiceImpl implements OrderService {
     public Order findById(UUID id) {
         return orderDb.findById(id).orElseThrow();
     }
+
+    @Override
+    public List<Order> findBySellerId(UUID sellerId){
+        return orderDb.findBySellerId(sellerId);
+    }
+
+    @Override
+    public List<Order> findAll(){
+        return orderDb.findAll();
+    }
+
 }
