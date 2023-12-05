@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ReadUserResponseDTO getUser(HttpServletRequest request) throws IOException, InterruptedException {
-        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:8080/api/user/get", request));
+        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:8081/api/user/get", request));
 
         ReadUserResponseDTO user = new ReadUserResponseDTO();
 
@@ -91,9 +91,14 @@ public class UserServiceImpl implements UserService {
         postData.put("username", username);
 
         HttpServletRequest request = null;
-        HttpResponse<String> response = postRequest("http://localhost:8080/api/user/authenticate", request, postData);
+        HttpResponse<String> response = postRequest("http://localhost:8081/api/user/authenticate", request, postData);
 
         return response;
+    }
+
+    @Override
+    public void logout(HttpServletRequest request) throws IOException, InterruptedException{
+        postRequest("http://localhost:8081/api/user/logout", request, null);
     }
 
     public String getJwtFromCookies(HttpServletRequest request) {
@@ -113,6 +118,18 @@ public class UserServiceImpl implements UserService {
         JsonNode jsonResponse = objectMapper.readTree(response.body());
 
         return jsonResponse;
+    }
+
+    @Override
+    public void addBalance(HttpServletRequest request, int amount) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addBalance'");
+    }
+
+    @Override
+    public void withdrawBalance(HttpServletRequest request, int amount) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'withdrawBalance'");
     }
 
 }

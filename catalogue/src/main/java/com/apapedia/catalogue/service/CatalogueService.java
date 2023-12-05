@@ -51,4 +51,7 @@ public class CatalogueService {
         return null;
     }
 
+    public List<Catalogue> getAllCatalogueByName(String name) {
+        return catalogueDb.findAllByProductNameLowerContaining(name);
+    }
 }
