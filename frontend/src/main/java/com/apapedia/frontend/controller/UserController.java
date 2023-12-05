@@ -148,20 +148,6 @@ public class UserController {
         return "redirect:/profile";
     }
 
-    // TODO: change this to POST
-    @GetMapping("/login")
-    public String login(HttpServletResponse request) throws IOException, InterruptedException {
 
-        HttpResponse<String> response = userService.login(authenticationRequest.getUsername(),
-                authenticationRequest.getPassword());
-
-        java.net.http.HttpHeaders headers = response.headers();
-
-        Cookie cookie = new Cookie("jwt",
-                headers.map().get("Set-Cookie").get(0).toString().split(";")[0].split("=")[1]);
-        request.addCookie(cookie);
-
-        return "redirect:/home";
-    }
 
 }
