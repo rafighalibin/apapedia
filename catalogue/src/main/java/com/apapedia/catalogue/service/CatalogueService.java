@@ -32,6 +32,25 @@ public class CatalogueService {
         return catalogueDb.findById(catalogId).orElse(null);
     }
 
+    public List<Catalogue> getCatalogListSorted(String sortBy, String order) {
+        if (sortBy.equals("price") && order.equals("asc")) {
+            return catalogueDb.findAllByOrderByPriceAsc();
+        }
+
+        if (sortBy.equals("price") && order.equals("desc")) {
+            return catalogueDb.findAllByOrderByPriceDesc();
+        }
+
+        if (sortBy.equals("name") && order.equals("asc")) {
+            return catalogueDb.findAllByOrderByProductNameLowerAsc();
+        }
+
+        if (sortBy.equals("name") && order.equals("desc")) {
+            return catalogueDb.findAllByOrderByProductNameLowerDesc();
+        }
+        return null;
+    }
+
     public List<Catalogue> getAllCatalogueByName(String name) {
         return catalogueDb.findAllByProductNameLowerContaining(name);
     }

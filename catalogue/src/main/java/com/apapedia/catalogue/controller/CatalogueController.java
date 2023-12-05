@@ -122,4 +122,22 @@ public class CatalogueController {
     }
     
 
+    @GetMapping(value = "/catalogue", params = { "sortBy", "order" })
+    public ResponseEntity<List<Catalogue>> getCatalogListSorted(
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("order") String order) {
+
+        if (!(sortBy.equals("price") || sortBy.equals("name")) || !(order.equals("asc") || order.equals("desc"))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<Catalogue> catalogues = catalogueService.getCatalogListSorted(sortBy, order);
+
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(catalogues);
     }
+
+}
