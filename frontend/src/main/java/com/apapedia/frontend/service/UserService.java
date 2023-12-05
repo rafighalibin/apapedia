@@ -18,5 +18,7 @@ public interface UserService {
     HttpResponse<String> login(String username, String password)
             throws IOException, InterruptedException;
 
-    void logout( HttpServletRequest request) throws IOException, InterruptedException;
+    void addBalance(HttpServletRequest request, int amount);
+
+    void withdrawBalance(HttpServletRequest request, int amount);
 }
