@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 services:
   order:
     build:
@@ -12,15 +12,15 @@ services:
     env_file:
       - order/.env
     depends_on:
-      - order_db
+      - db
     networks:
       - frontend-network
       - backend-network
 
-  order_db:
+  db:
     image: postgres:14-alpine
     ports:
-      - '15142:5432'
+      - '15140:5432'
     restart: 'no'
     environment:
       - POSTGRES_USER=postgres
@@ -29,7 +29,7 @@ services:
       - db:/var/lib/postgresql/data
     networks:
       - backend-network
-
+  
   catalogue:
     build:
       context: ./catalogue
@@ -42,22 +42,9 @@ services:
     env_file:
       - catalogue/.env
     depends_on:
-      - catalogue_db
+      - db
     networks:
       - frontend-network
-      - backend-network
-
-  catalogue_db:
-    image: postgres:14-alpine
-    ports:
-      - '15141:5432'
-    restart: 'no'
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret99
-    volumes:
-      - db:/var/lib/postgresql/data
-    networks:
       - backend-network
 
   user:
@@ -72,24 +59,11 @@ services:
     env_file:
       - user/.env
     depends_on:
-      - user_db
+      - db
     networks:
       - frontend-network
       - backend-network
-
-  user_db:
-    image: postgres:14-alpine
-    ports:
-      - '15140:5432'
-    restart: 'no'
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=secret99
-    volumes:
-      - db:/var/lib/postgresql/data
-    networks:
-      - backend-network
-
+  
   frontend:
     build:
       context: ./frontend
