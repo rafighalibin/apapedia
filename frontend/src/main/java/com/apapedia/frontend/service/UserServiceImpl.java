@@ -16,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
+import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ReadUserResponseDTO getUser(HttpServletRequest request) throws IOException, InterruptedException {
-        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:8081/api/user/get", request));
+        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:10140/api/user/get", request));
 
         ReadUserResponseDTO user = new ReadUserResponseDTO();
 
@@ -83,6 +84,28 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    public HttpResponse<String> putRequest(String url, HttpServletRequest initialRequest,
+            HashMap<String, String> postData)
+            throws IOException, InterruptedException {
+
+        // Method untuk melakukan POST request ke API
+
+        String cookie = initialRequest != null ? getJwtFromCookies(initialRequest) : null;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonBody = objectMapper.writeValueAsString(postData);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .method("PUT", HttpRequest.BodyPublishers.ofString(jsonBody))
+                .header("Content-Type", "application/json")
+                .header("Cookie", "jwt=" + cookie)
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
+    }
+
     @Override
     public HttpResponse<String> login(String username, String password)
             throws IOException, InterruptedException {
@@ -91,14 +114,14 @@ public class UserServiceImpl implements UserService {
         postData.put("username", username);
 
         HttpServletRequest request = null;
-        HttpResponse<String> response = postRequest("http://localhost:8081/api/user/authenticate", request, postData);
+        HttpResponse<String> response = postRequest("http://localhost:10140/api/user/authenticate", request, postData);
 
         return response;
     }
 
     @Override
-    public void logout(HttpServletRequest request) throws IOException, InterruptedException{
-        postRequest("http://localhost:8081/api/user/logout", request, null);
+    public void logout(HttpServletRequest request) throws IOException, InterruptedException {
+        postRequest("http://localhost:10140/api/user/logout", request, null);
     }
 
     public String getJwtFromCookies(HttpServletRequest request) {
@@ -121,6 +144,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public JsonNode updateUser(UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
+            throws IOException, InterruptedException {
+        HashMap<String, String> postData = new HashMap<String, String>();
+        postData.put("name", updateUserResponseDTO.getName());
+        postData.put("username", updateUserResponseDTO.getUsername());
+        postData.put("email", updateUserResponseDTO.getEmail());
+        postData.put("address", updateUserResponseDTO.getAddress());
+
+        // TODO: add password and confirmPassword
+        // postData.put("password", updateUserResponseDTO.getPassword());
+        // postData.put("confirmPassword", updateUserResponseDTO.getConfirmPassword());
+
+        HttpResponse<String> response = putRequest("http://localhost:10140/api/user/update", request, postData);
+        JsonNode jsonResponse = requestToJSON(response);
+        return jsonResponse;
     public void addBalance(HttpServletRequest request, int amount) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addBalance'");
