@@ -6,12 +6,7 @@ import java.net.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.apapedia.frontend.DTO.request.AuthenticationRequest;
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
 import com.apapedia.frontend.service.UserService;
 
@@ -26,23 +21,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
-    @GetMapping("/home")
-    public String homePage(){
-        return "home";
-    }
-
-    @GetMapping("logout")
-    public String logout(HttpServletRequest request) throws IOException, InterruptedException{
-        userService.logout(request);
-        return "redirect:/login-page";
-    }
-
-    @GetMapping("/login-page")
-    public String loginPage(Model model, @ModelAttribute AuthenticationRequest authenticationRequest){
-        model.addAttribute("authenticationRequest", authenticationRequest);
-        return "login";
-    }
 
     @GetMapping("/profile")
     public String profilePage(Model model, HttpServletRequest request) throws IOException, InterruptedException {
@@ -63,10 +41,14 @@ public class UserController {
         return "topup-view";
     }
 
-    @PostMapping("/login")
-    public String login(@ModelAttribute AuthenticationRequest authenticationRequest, HttpServletResponse request) throws IOException, InterruptedException {
+    // TODO: change this to POST
+    @GetMapping("/login")
+    public String login(HttpServletResponse request) throws IOException, InterruptedException {
 
-        HttpResponse<String> response = userService.login(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        String username = "arief0";
+        String password = "ariefthegoat";
+
+        HttpResponse<String> response = userService.login(username, password);
 
         java.net.http.HttpHeaders headers = response.headers();
 
@@ -74,7 +56,8 @@ public class UserController {
                 headers.map().get("Set-Cookie").get(0).toString().split(";")[0].split("=")[1]);
         request.addCookie(cookie);
 
-        return "redirect:/home";
+        // TODO: redirect to desired page
+        return "order-history";
     }
 
 }
