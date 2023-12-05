@@ -24,4 +24,8 @@ public interface UserService {
 
     JsonNode updateUser(UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
             throws IOException, InterruptedException;
+            
+    void addBalance(HttpServletRequest request, int amount);
+
+    void withdrawBalance(HttpServletRequest request, int amount);
 }

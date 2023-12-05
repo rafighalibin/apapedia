@@ -159,6 +159,15 @@ public class UserServiceImpl implements UserService {
         HttpResponse<String> response = putRequest("http://localhost:10140/api/user/update", request, postData);
         JsonNode jsonResponse = requestToJSON(response);
         return jsonResponse;
+    public void addBalance(HttpServletRequest request, int amount) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addBalance'");
+    }
+
+    @Override
+    public void withdrawBalance(HttpServletRequest request, int amount) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'withdrawBalance'");
     }
 
 }

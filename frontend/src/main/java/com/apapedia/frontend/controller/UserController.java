@@ -102,9 +102,35 @@ public class UserController {
         return "topup-view";
     }
 
-    @PostMapping("/login")
-    public String login(@ModelAttribute AuthenticationRequest authenticationRequest, HttpServletResponse request)
+    @PostMapping(value = "/topup", params = { "addBalance" })
+    public String addBalance(Model model, HttpServletRequest request, HttpServletResponse response)
             throws IOException, InterruptedException {
+        try {
+            int amount = Integer.parseInt(request.getParameter("topupAmount"));
+            userService.addBalance(request, amount);
+        } catch (Exception e) {
+            model.addAttribute("error", "Invalid amount");
+            return "redirect:/topup";
+        }
+        return "redirect:/profile";
+    }
+
+    @PostMapping(value = "/topup", params = { "withdrawBalance" })
+    public String withdrawBalance(Model model, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, InterruptedException {
+        try {
+            int amount = Integer.parseInt(request.getParameter("topupAmount"));
+            userService.withdrawBalance(request, amount);
+        } catch (Exception e) {
+            model.addAttribute("error", "Invalid amount");
+            return "redirect:/topup";
+        }
+        return "redirect:/profile";
+    }
+
+    // TODO: change this to POST
+    @GetMapping("/login")
+    public String login(HttpServletResponse request) throws IOException, InterruptedException {
 
         HttpResponse<String> response = userService.login(authenticationRequest.getUsername(),
                 authenticationRequest.getPassword());
