@@ -120,14 +120,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel findUserById(String idString){
-        // UUID id = UUID.fromString(idString);
-        // Optional<User> userOptional = userDb.findById(id);
-        // if (userOptional.isPresent()) {
-        //     User user = userOptional.get();
-        //     return user;
-        // } else {
-        //     // Handle the case where the user wasn't found
-        // }
+        UUID id = UUID.fromString(idString);
+        Optional<UserModel> userOptional = userDb.findById(id);
+        if (userOptional.isPresent()) {
+            UserModel user = userOptional.get();
+            return user;
+        } else {
+            
+        }
         return null;
     }
     
@@ -173,16 +173,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isLoggedIn(HttpServletRequest request) {
-        // String jwt = getJwtFromCookies(request);
-        // if (jwt != null && !jwt.isEmpty()) {
-        //     try {
-        //         String id = jwtUtil.extractId(jwt);
-        //         User user = findUserById(id);
-        //         return jwtUtil.validateToken(jwt, user); // Validates the token
-        //     } catch (Exception e) {
-        //         return false;
-        //     }
-        // }
+        String jwt = getJwtFromCookies(request);
+        if (jwt != null && !jwt.isEmpty()) {
+            try {
+                String id = jwtUtils.getIdFromJwtToken(jwt);
+                UserModel user = findUserById(id);
+                return jwtUtils.validateToken(jwt, user);
+            } catch (Exception e) {
+                return false;
+            }
+        }
         return false;
     }
 
@@ -207,13 +207,7 @@ public class UserServiceImpl implements UserService {
         UserModel user = userDb.findByUsername(username);
 
         if (user == null) {
-            user = new UserModel();
-            user.setName(name);
-            user.setPassword("dummy");
-            user.setUsername(username);
-            user.setRole(roleService.getRoleByRoleName("Seller"));
-            user.setEmail(username+"@ui.ac.id");
-            userDb.save(user);
+           return null;
         }
 
         return jwtUtils.generateJwtToken(user);

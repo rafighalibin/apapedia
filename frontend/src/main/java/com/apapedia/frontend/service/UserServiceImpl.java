@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import com.apapedia.frontend.DTO.request.CreateUserRequestDTO;
 import com.apapedia.frontend.DTO.request.LoginRequestDTO;
 import com.apapedia.frontend.DTO.request.TokenDTO;
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
@@ -55,6 +56,24 @@ public class UserServiceImpl implements UserService {
         var token = response.getToken();
 
         return token;
+    }
+    @Override
+    public ReadUserResponseDTO registerUser(CreateUserRequestDTO createUserDTO) throws IOException, InterruptedException {
+        try {
+            var response = this.webClient
+                .post()
+                .uri("/api/user/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(createUserDTO)
+                .retrieve()
+                .bodyToMono(ReadUserResponseDTO.class);
+            var userSubmitted = response.block();
+            return userSubmitted;
+        } catch (Exception e) {
+            ReadUserResponseDTO userResponseDTO = new ReadUserResponseDTO();
+            return userResponseDTO;
+        }
+
     }
 
     @Override

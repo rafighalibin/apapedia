@@ -16,11 +16,12 @@ public class WebSecurityConfig {
 
         http
             .authorizeHttpRequests(requests -> requests
-                    .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/validate-ticket")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/logout-sso")).permitAll()
-                    .anyRequest().authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/validate-ticket")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/logout-sso")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
+                .anyRequest().authenticated()
             )
             .formLogin((form) -> form
                     .loginPage("/login-sso")

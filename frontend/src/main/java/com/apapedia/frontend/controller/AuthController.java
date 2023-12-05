@@ -37,7 +37,7 @@ public class AuthController {
                     .build();
 
     @GetMapping("validate-ticket")
-    public ModelAndView adminLoginSSO(
+    public ModelAndView LoginSSO(
         @RequestParam(value = "ticket", required = false) String ticket,
         HttpServletRequest request, HttpServletResponse response
     ) {

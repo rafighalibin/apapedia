@@ -102,4 +102,17 @@ public class JwtUtils {
         } 
         return false;
     }
+
+       // Validate token
+    public Boolean validateToken(String token, UserModel user) {
+        final String id = getIdFromJwtToken(token);
+        return (id.equals(user.getId().toString()) && !isTokenExpired(token));
+    }
+
+    private Boolean isTokenExpired(String token) {
+        final Date expiration = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getExpiration();
+        return expiration.before(new Date());
+    }
+
+
 }

@@ -52,16 +52,12 @@ public class UserRestController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
-        try {
             UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
             userModel = userService.addUser(userModel, createUserRequestDTO);
 
             CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
             createUserResponseDTO.setRole(userModel.getRole().getRole());
             return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PutMapping("/update")
@@ -120,6 +116,9 @@ public class UserRestController {
 
     @GetMapping("/get")
     public ResponseEntity<?> getUser(HttpServletRequest request) {
+
+        if (!userService.isLoggedIn(request))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
 
         UserModel user = userService.findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromCookies(request)));
 
