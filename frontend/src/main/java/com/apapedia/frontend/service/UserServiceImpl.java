@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ReadUserResponseDTO getUser(HttpServletRequest request) throws IOException, InterruptedException {
-        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:10140/api/user/get", request));
+        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:8080/api/user/get", request));
 
         ReadUserResponseDTO user = new ReadUserResponseDTO();
 
