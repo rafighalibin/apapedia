@@ -20,7 +20,7 @@ import lombok.Setter;
 public class CartItem {
 
     @Id
-    private UUID cartItemId = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "id_product", nullable = false)
     private UUID productId;
