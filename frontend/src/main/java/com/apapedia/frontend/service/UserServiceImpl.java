@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
 
     private final WebClient webClient;
 
-    public UserServiceImpl(WebClient.Builder webClientBuilder){
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080")
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .build();
+    public UserServiceImpl(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("http://localhost:10140")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 
     @Override
@@ -46,28 +46,30 @@ public class UserServiceImpl implements UserService {
         var body = new LoginRequestDTO(username, name);
 
         var response = this.webClient
-            .post()
-            .uri("/api/login/seller")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body)
-            .retrieve()
-            .bodyToMono(TokenDTO.class)
-            .block();
-        
+                .post()
+                .uri("/api/login/seller")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(TokenDTO.class)
+                .block();
+
         var token = response.getToken();
 
         return token;
     }
+
     @Override
-    public ReadUserResponseDTO registerUser(CreateUserRequestDTO createUserDTO) throws IOException, InterruptedException {
+    public ReadUserResponseDTO registerUser(CreateUserRequestDTO createUserDTO)
+            throws IOException, InterruptedException {
         try {
             var response = this.webClient
-                .post()
-                .uri("/api/user/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(createUserDTO)
-                .retrieve()
-                .bodyToMono(ReadUserResponseDTO.class);
+                    .post()
+                    .uri("/api/user/add")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(createUserDTO)
+                    .retrieve()
+                    .bodyToMono(ReadUserResponseDTO.class);
             var userSubmitted = response.block();
             return userSubmitted;
         } catch (Exception e) {
@@ -79,14 +81,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ReadUserResponseDTO getUser(HttpServletRequest request) throws IOException, InterruptedException {
-        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:8080/api/user/get", request));
+        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:10140/api/user/get", request));
 
         ReadUserResponseDTO user = new ReadUserResponseDTO();
 
         user.setId(UUID.fromString(jsonResponse.get("id").asText()));
         user.setName(jsonResponse.get("name").asText());
         user.setUsername(jsonResponse.get("username").asText());
-        user.setEmail(user.getUsername()+"@ui.ac.id");
+        user.setEmail(user.getUsername() + "@ui.ac.id");
         user.setBalance(jsonResponse.get("balance").decimalValue());
         user.setAddress("Permata Puri 1");
 
@@ -212,6 +214,7 @@ public class UserServiceImpl implements UserService {
         return jsonResponse;
 
     }
+
     public void addBalance(HttpServletRequest request, int amount) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addBalance'");
