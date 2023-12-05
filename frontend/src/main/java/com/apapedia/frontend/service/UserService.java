@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.apapedia.frontend.DTO.request.CreateUserRequestDTO;
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
+import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -24,4 +26,11 @@ public interface UserService {
     void logout( HttpServletRequest request) throws IOException, InterruptedException;
 
     String getToken(String username, String name);
+
+    JsonNode updateUser(UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
+            throws IOException, InterruptedException;
+            
+    void addBalance(HttpServletRequest request, int amount);
+
+    void withdrawBalance(HttpServletRequest request, int amount);
 }

@@ -61,7 +61,7 @@
           <div class="col-lg-12 text-center">
             <div class="section-title h2">
               <h2>
-                Profile Seller
+                Edit Profile
                 <span th:if="${user.category == 'Official Store'}">
                   <img th:src="@{/img/logo-cart-official.ico}" class="mb-2" />
                 </span>
@@ -83,75 +83,118 @@
             style="border: 1px solid #ced4da"
           ></div>
           <div class="col-lg-6 col-md-6">
-            <table class="invisible-table">
-              <tr>
-                <td>User ID:</td>
-                <td>
-                  <span class="text-bold" th:text="${user.id}">Seller ID</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Name:</td>
-                <td>
-                  <span class="text-bold" th:text="${user.name}"
-                    >Seller Name</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Username:</td>
-                <td>
-                  <span class="text-bold" th:text="${user.username}"
-                    >Username</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Email:</td>
-                <td>
-                  <span class="text-bold" th:text="${user.email}">Email</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Address:</td>
-                <td>
-                  <span class="text-bold" th:text="${user.address}"
-                    >Address</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Category:</td>
-                <td>
-                  <span class="text-bold" th:text="${user.category}"
-                    >Category</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Saldo:</td>
-                <td>
-                  <span class="text-bold" th:text="${user.balance}"
-                    >Category</span
-                  >
-                </td>
-              </tr>
-            </table>
+            <form method="post" action="/profile/edit" th:object="${user}">
+              <table class="invisible-table">
+                <tr>
+                  <td>User ID:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{id}"
+                      disabled="disabled"
+                      style="width: 200%"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Name:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{name}"
+                      style="width: 200%"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Username:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{username}"
+                      style="width: 200%"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Email:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{email}"
+                      style="width: 200%"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Address:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{address}"
+                      style="width: 200%"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Category:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{category}"
+                      disabled="disabled"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Password:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{password}"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Konfirmasi Password:</td>
+                  <td>
+                    <input
+                      type="text"
+                      class="text-bold"
+                      th:field="*{confirmPassword}"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Saldo:</td>
+                  <td>
+                    <span class="text-bold" th:text="${user.balance}"
+                      >Category</span
+                    >
+                  </td>
+                </tr>
+              </table>
+              <div class="row mt-3">
+                <div class="col-lg-12 text-center">
+                  <div class="seller-buttons">
+                    <button type="submit" class="primary-btn">
+                      Update Profile
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
 
         <!-- Buttons -->
-        <div class="row mt-3">
-          <div class="col-lg-12 text-center">
-            <div class="seller-buttons">
-              <a class="primary-btn" th:href="@{'/topup'}">Withdraw</a>
-              <a class="secondary-btn" th:href="@{'/edit-profile'}"
-                >Edit Profile</a
-              >
-              <a class="warning-btn" th:href="@{'/sign-out'}">Sign Out</a>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
     <!-- Seller Profile Section End -->
