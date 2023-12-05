@@ -10,8 +10,7 @@ import com.apapedia.order.model.Cart;
 import jakarta.transaction.Transactional;
 
 @Repository
+@Transactional
 public interface CartDb extends JpaRepository<Cart, UUID> {
-    Cart findByCartId(UUID id);
 
-    Cart findByUserId(UUID userId);
 }

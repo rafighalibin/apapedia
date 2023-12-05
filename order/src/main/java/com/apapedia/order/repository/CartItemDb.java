@@ -10,7 +10,7 @@ import com.apapedia.order.model.CartItem;
 import jakarta.transaction.Transactional;
 
 @Repository
+@Transactional
 public interface CartItemDb extends JpaRepository<CartItem, UUID> {
-    CartItem findByCartItemId(UUID id);
-    
+
 }

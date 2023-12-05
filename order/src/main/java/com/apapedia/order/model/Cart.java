@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
 
 @Getter
 @Setter
@@ -27,7 +26,4 @@ public class Cart {
     @NotNull
     @Column(name = "total_price", nullable = false)
     private int totalPrice;
-
-    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<CartItem> listCartItem;
 }
