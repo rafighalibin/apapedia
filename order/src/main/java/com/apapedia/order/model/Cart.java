@@ -19,7 +19,7 @@ import java.util.List;
 public class Cart {
 
     @Id
-    private UUID cartId = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "id_user", nullable = false)
     private UUID userId;
