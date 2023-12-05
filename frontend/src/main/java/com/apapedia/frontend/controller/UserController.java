@@ -16,6 +16,7 @@ import com.apapedia.frontend.DTO.request.AuthenticationRequest;
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
 import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
 import com.apapedia.frontend.service.UserService;
+import com.apapedia.frontend.DTO.request.CreateUserRequestDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import jakarta.servlet.http.Cookie;
@@ -24,6 +25,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
 
+
 @Controller
 public class UserController {
 
@@ -31,12 +33,30 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/home")
-    public String homePage() {
+    public String homePage(){
         return "home";
     }
 
+    @GetMapping("/register")
+    public String register(Model model){
+        CreateUserRequestDTO createUserDTO = new CreateUserRequestDTO();
+
+        model.addAttribute("createUserDTO", createUserDTO);
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO)  throws IOException, InterruptedException{
+        createUserDTO.setPassword("ariefthegoat");
+        createUserDTO.setRole("Seller");
+        createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");
+        userService.registerUser(createUserDTO);
+
+        return "redirect:/home";
+    }
+
     @GetMapping("logout")
-    public String logout(HttpServletRequest request) throws IOException, InterruptedException {
+    public String logout(HttpServletRequest request) throws IOException, InterruptedException{
         userService.logout(request);
         return "redirect:/login-page";
     }

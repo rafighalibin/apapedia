@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "UserApplication",
+      "request": "launch",
+      "mainClass": "com.apapedia.user.UserApplication",
+      "projectName": ""
+    },
+    {
+      "type": "java",
       "name": "FrontendApplication",
       "request": "launch",
       "mainClass": "com.apapedia.frontend.FrontendApplication",

@@ -54,12 +54,12 @@
         <div class="row align-items-center">
           <div class="col-lg-3">
             <div class="header__logo">
-              <a href="/"
+              <a href="/home"
                 ><img th:src="@{/img/logo-cart-text-rectangle.png}" width="200"
               /></a>
             </div>
           </div>
-          <div class="col-lg-6">
+          <!-- <div class="col-lg-6">
             <div class="hero__search__form">
               <form action="#">
                 <input
@@ -76,21 +76,21 @@
                 </button>
               </form>
             </div>
-          </div>
+          </div> -->
           <div class="col-lg-3">
             <nav class="header__menu">
               <ul>
+                <li
+                class=""
+                th:classappend="${navbarActive == 'Profile'} ? 'active' : ''"
+              >
+                <a href="/profile">Profile</a>
+              </li>
                 <li
                   class=""
                   th:classappend="${navbarActive == 'orderHistory'} ? 'active' : ''"
                 >
                   <a href="/TODO:orderHistory">Order History</a>
-                </li>
-                <li
-                  class=""
-                  th:classappend="${navbarActive == 'Profile'} ? 'active' : ''"
-                >
-                  <a href="/profile">Profile</a>
                 </li>
               </ul>
             </nav>

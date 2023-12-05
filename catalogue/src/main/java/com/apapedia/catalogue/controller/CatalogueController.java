@@ -79,7 +79,7 @@ public class CatalogueController {
         }
         return ResponseEntity.ok(catalogues);
     }
-}
+
 
     @PutMapping(value="/catalogue/{catalogueId}")
     public ResponseEntity<Catalogue> updateCatalogue(@PathVariable("catalogueId") UUID catalogId, @Valid @RequestBody UpdateCatalogueRequestDTO updateCatalogueRequestDTO) {
