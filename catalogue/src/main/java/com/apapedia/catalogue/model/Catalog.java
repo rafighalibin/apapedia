@@ -15,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "catalogue")
-public class Catalogue {
+@Table(name = "catalog")
+public class Catalog {
     @Id
     private UUID id = UUID.randomUUID();
 
@@ -25,7 +25,7 @@ public class Catalogue {
 
     @NotNull
     @Column(name="price", nullable=false)
-    private Integer price;
+    private int price;
 
     @NotNull
     @Column(name="product_name", nullable=false)
@@ -41,12 +41,8 @@ public class Catalogue {
 
     @NotNull
     @Column(name="stock", nullable=false)
-    private Integer stock;
+    private int stock;
 
     @Column(name="image", nullable=false)
     private String image;
-
-    @NotNull
-    @Column(name = "product_name_lower")
-    private String productNameLower;
 }
