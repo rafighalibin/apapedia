@@ -109,38 +109,14 @@ public class UserServiceImpl implements UserService {
                 .put()
                 .uri("/api/user/update")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request))
                 .header("Cookie", "jwt=" + getJwtFromCookies(request))
                 .bodyValue(updateUserResponseDTO)
-                .retrieve();
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-        return response.toString();
-    }
-
-    public ReadUserResponseDTO addBalance(HttpServletRequest request, Long amount) {
-        ReadUserResponseDTO user = new ReadUserResponseDTO();
-        try {
-            user = getUser(request);
-            Long newBalance = user.getBalance() + amount;
-            user.setBalance(newBalance);
-
-            UpdateBalanceRequestDTO data = new UpdateBalanceRequestDTO();
-            data.setBalance(user.getBalance());
-
-            var response = this.webClient
-                    .put()
-                    .uri("/api/user/update-balance")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("Cookie", "jwt=" + getJwtFromCookies(request))
-                    .bodyValue(data)
-                    .retrieve()
-                    .bodyToMono(UpdateBalanceRequestDTO.class)
-                    .block();
-            // TODO: add error handling
-            return user;
-
-        } catch (Exception e) {
-            return null;
-        }
+        return response;
     }
 
     @Override
@@ -148,7 +124,7 @@ public class UserServiceImpl implements UserService {
         ReadUserResponseDTO user = new ReadUserResponseDTO();
         try {
             user = getUser(request);
-            Long newBalance = user.getBalance() + amount;
+            Long newBalance = user.getBalance() - amount;
             user.setBalance(newBalance);
 
             UpdateBalanceRequestDTO data = new UpdateBalanceRequestDTO();
@@ -158,6 +134,7 @@ public class UserServiceImpl implements UserService {
                     .put()
                     .uri("/api/user/update-balance")
                     .contentType(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request))
                     .header("Cookie", "jwt=" + getJwtFromCookies(request))
                     .bodyValue(data)
                     .retrieve()

@@ -64,18 +64,22 @@ public class UserRestController {
     public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserRequestDTO userDTO, HttpServletRequest request,
             HttpServletResponse response) {
 
+        // TODO: ini kayaknya gabisa kalo statusnya ngga 200
         if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a user.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("You must be logged in to update a user.");
 
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateUsername"))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate username");
+        if (userService.checkUsernameEmailPassword(request,
+                userDTO).equals("duplicateUsername"))
+            return ResponseEntity.ok("duplicate username");
 
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateEmail"))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate email");
+        if (userService.checkUsernameEmailPassword(request,
+                userDTO).equals("duplicateEmail"))
+            return ResponseEntity.ok("duplicate email");
 
         if (userService.checkUsernameEmailPassword(request,
                 userDTO).equals("duplicatePassword"))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate password");
+            return ResponseEntity.ok("duplicate password");
 
         // Service method to update user details
         UserModel updatedUser = userService.updateUser(request, userDTO);
@@ -83,7 +87,7 @@ public class UserRestController {
         jwtUtils.invalidateToken(response);
         jwtUtils.createCookie(updatedUser, response);
 
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok("Success");
     }
 
     @PutMapping("/delete")
@@ -102,7 +106,7 @@ public class UserRestController {
             HttpServletRequest request) {
 
         if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a balance");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must belogged in to update a balance");
 
         UserModel user = userService.updateBalance(request, updateBalance);
 

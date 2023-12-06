@@ -19,7 +19,5 @@ public interface UserService {
         String updateUser(UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
                         throws IOException, InterruptedException;
 
-        ReadUserResponseDTO addBalance(HttpServletRequest request, Long amount);
-
         ReadUserResponseDTO withdrawBalance(HttpServletRequest request, Long amount);
 }
