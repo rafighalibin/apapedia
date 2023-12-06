@@ -33,7 +33,7 @@ public class OrderItem {
 
     @NotNull
     @Column(name = "product_name", nullable = false)
-    private int productName;
+    private String productName;
 
     @NotNull
     @Column(name = "product_price", nullable = false)
