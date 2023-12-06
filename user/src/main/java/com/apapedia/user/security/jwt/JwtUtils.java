@@ -43,9 +43,9 @@ public class JwtUtils {
         return createToken(claims, user.getUsername());
     }
     
-
     
 
+    
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
