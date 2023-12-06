@@ -11,7 +11,11 @@
       src="https://code.jquery.com/jquery-3.7.1.min.js"
       integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
       crossorigin="anonymous"
+      
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+    integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Google Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
@@ -49,51 +53,76 @@
     />
     <link th:href="@{/css/slicknav.min.css}" rel="stylesheet" type="text/css" />
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" />
+    
   </head>
 
   <body>
     <header th:replace="~{fragments/navbar}"></header>
 
-    <!-- Home Page Section Begin -->
+     <!-- Header and other HTML elements -->
+     <div class="container">
+      <div class="text-center pt-5">
+        <h2>Chart Penjualan Produk Bulan Ini</h2>
+        <div class="row justify-content-center m-2">
+          <canvas id="chartSales"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ... other HTML elements ... -->
 
     <script th:inline="javascript">
-      // Pastikan variabel listBuku ini berisi data penjualan per hari
-      var penjualanPerHari = [[${penjualanPerHari}]]; // Contoh: { 'Day 1': 50, 'Day 2': 75, ... }
-  
-      var labels = Object.keys(penjualanPerHari);
-      var chartData = labels.map(function(key) {
-          return penjualanPerHari[key];
-      });
-  
-      // Warna untuk garis dan titik-titik pada grafik
+      var penjualanPerHari = [[${penjualanPerHari}]]; // The server should provide this as a HashMap<Integer, Integer>
+    
+      var labels = [];
+      var chartData = [];
+      for (var day in penjualanPerHari) {
+        if (penjualanPerHari.hasOwnProperty(day)) {
+          labels.push(`Day ${parseInt(day) + 1}`);
+          chartData.push(penjualanPerHari[day]);
+        }
+      }
+    
       var color = 'rgba(54, 162, 235, 0.2)';
       var borderColor = 'rgba(54, 162, 235, 1)';
-  
-      const ctx = document.getElementById('chartBuku');
+    
+      const ctx = document.getElementById('chartSales');
       new Chart(ctx, {
-          type: 'line', // Ubah tipe chart menjadi line
-          data: {
-              labels: labels,
-              datasets: [{
-                  label: 'Jumlah Penjualan Produk', // Ubah label sesuai konteks
-                  data: chartData,
-                  backgroundColor: color,
-                  borderColor: borderColor,
-                  borderWidth: 1,
-                  pointStyle: 'circle', // Opsional, untuk menampilkan titik
-                  pointRadius: 5, // Ukuran titik
-                  fill: false // Tidak mengisi area di bawah garis
-              }]
-          },
-          options: {
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: chartData,
+            backgroundColor: color,
+            borderColor: borderColor,
+            borderWidth: 1,
+            pointStyle: 'circle',
+            pointRadius: 5,
+            fill: false
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Number of Products Sold' //y-axis title
               }
+            }
+          },
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false, // Thide the legend
+            },
+            title: {
+              display: false, //  hide the title at the top
+            }
           }
+        }
       });
-  </script>
+    </script>
 
     <!-- Home Page Section End -->
 

@@ -24,11 +24,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/home")
-    public String homePage() {
-        return "home";
-    }
-
     @GetMapping("/register")
     public String register(Model model) {
         CreateUserRequestDTO createUserDTO = new CreateUserRequestDTO();
