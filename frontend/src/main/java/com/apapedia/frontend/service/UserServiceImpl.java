@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private final WebClient webClient;
 
     public UserServiceImpl(WebClient.Builder webClientBuilder){
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080")
+        this.webClient = webClientBuilder.baseUrl("http://localhost:10140")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
     }
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ReadUserResponseDTO getUser(HttpServletRequest request) throws IOException, InterruptedException {
-        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:8080/api/user/get", request));
+        JsonNode jsonResponse = requestToJSON(getRequest("http://localhost:10140/api/user/get", request));
 
         ReadUserResponseDTO user = new ReadUserResponseDTO();
 
