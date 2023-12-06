@@ -43,8 +43,9 @@ public class Catalogue {
     @Column(name="stock", nullable=false)
     private Integer stock;
 
+    @Lob
     @Column(name="image", nullable=false)
-    private String image;
+    private byte[] image;
 
     @NotNull
     @Column(name = "product_name_lower")
