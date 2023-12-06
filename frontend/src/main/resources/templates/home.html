@@ -54,9 +54,48 @@
   <body>
     <header th:replace="~{fragments/navbar}"></header>
 
-    <!-- Seller Profile Section Begin -->
-    
-    <!-- Seller Profile Section End -->
+    <!-- Home Page Section Begin -->
+
+    <script th:inline="javascript">
+      // Pastikan variabel listBuku ini berisi data penjualan per hari
+      var penjualanPerHari = [[${penjualanPerHari}]]; // Contoh: { 'Day 1': 50, 'Day 2': 75, ... }
+  
+      var labels = Object.keys(penjualanPerHari);
+      var chartData = labels.map(function(key) {
+          return penjualanPerHari[key];
+      });
+  
+      // Warna untuk garis dan titik-titik pada grafik
+      var color = 'rgba(54, 162, 235, 0.2)';
+      var borderColor = 'rgba(54, 162, 235, 1)';
+  
+      const ctx = document.getElementById('chartBuku');
+      new Chart(ctx, {
+          type: 'line', // Ubah tipe chart menjadi line
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: 'Jumlah Penjualan Produk', // Ubah label sesuai konteks
+                  data: chartData,
+                  backgroundColor: color,
+                  borderColor: borderColor,
+                  borderWidth: 1,
+                  pointStyle: 'circle', // Opsional, untuk menampilkan titik
+                  pointRadius: 5, // Ukuran titik
+                  fill: false // Tidak mengisi area di bawah garis
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+
+    <!-- Home Page Section End -->
 
     <footer th:replace="~{fragments/footer}"></footer>
 
