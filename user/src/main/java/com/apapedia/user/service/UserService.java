@@ -1,43 +1,44 @@
 package com.apapedia.user.service;
 
-
-
+import com.apapedia.user.dto.request.AuthenticationRequest;
+import com.apapedia.user.dto.request.CreateUserRequestDTO;
+import com.apapedia.user.dto.request.LoginJwtRequestDTO;
 import com.apapedia.user.dto.request.UpdateBalance;
 import com.apapedia.user.dto.request.UpdateUserRequestDTO;
 import com.apapedia.user.model.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 public interface UserService {
 
-    User findUserById(String idString);
+    String login(AuthenticationRequest authenticationRequest);
 
-    User addUser(User user);
+    String loginSeller(LoginJwtRequestDTO loginJwtRequestDTO);
 
-    User saveUser(User user);
+    UserModel findUserById(String idString);
+
+    UserModel addUser(UserModel user, CreateUserRequestDTO createUserRequestDTO);
+
+    UserModel saveUser(UserModel user);
 
     void deleteUser(String id);
 
     String encrypt(String password);
 
-    User findUserByUsername(String username);
-
-    User authenticate(String username, String password);
+    UserModel findUserByUsername(String username);
 
     String getJwtFromCookies(HttpServletRequest request);
 
     String getUsernameFromJwtCookie(HttpServletRequest request);
 
-    void updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser);
+    UserModel updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser);
 
     boolean isLoggedIn(HttpServletRequest request);
 
-    User updateBalance(HttpServletRequest request, UpdateBalance newBalance);
+    UserModel updateBalance(HttpServletRequest request, UpdateBalance newBalance);
 
     String checkUsernameEmailPassword(HttpServletRequest request, UpdateUserRequestDTO newUser);
+
+    String extractJwtFromRequest(HttpServletRequest request);
 
 }

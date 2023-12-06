@@ -32,7 +32,6 @@ import com.apapedia.catalogue.service.CatalogueService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping("/api")
 public class CatalogueController {
@@ -63,14 +62,24 @@ public class CatalogueController {
         return ResponseEntity.ok(catalogues);
     }
 
-    @GetMapping(value="/catalogue/{catalogueId}")
+    @GetMapping(value = "/catalogue/{catalogueId}")
     public ResponseEntity<Catalogue> getCatalogueById(@PathVariable("catalogueId") UUID catalogId) {
         Catalogue catalogue = catalogueService.getCatalogueById(catalogId);
-        if (catalogue == null){
+        if (catalogue == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(catalogue);
     }
+
+    @GetMapping(value = "/catalogue", params = "name")
+    public ResponseEntity<List<Catalogue>> getAllCatalogueByName(@RequestParam("name") String name) {
+        List<Catalogue> catalogues = catalogueService.getAllCatalogueByName(name.toLowerCase());
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(catalogues);
+    }
+
 
     @PutMapping(value="/catalogue/{catalogueId}")
     public ResponseEntity<Catalogue> updateCatalogue(@PathVariable("catalogueId") UUID catalogId, @Valid @RequestBody UpdateCatalogueRequestDTO updateCatalogueRequestDTO) {
@@ -113,4 +122,22 @@ public class CatalogueController {
     }
     
 
+    @GetMapping(value = "/catalogue", params = { "sortBy", "order" })
+    public ResponseEntity<List<Catalogue>> getCatalogListSorted(
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("order") String order) {
+
+        if (!(sortBy.equals("price") || sortBy.equals("name")) || !(order.equals("asc") || order.equals("desc"))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<Catalogue> catalogues = catalogueService.getCatalogListSorted(sortBy, order);
+
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(catalogues);
     }
+
+}
