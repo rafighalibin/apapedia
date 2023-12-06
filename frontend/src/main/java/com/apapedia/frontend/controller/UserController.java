@@ -1,30 +1,20 @@
 package com.apapedia.frontend.controller;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.apapedia.frontend.DTO.request.AuthenticationRequest;
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
 import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
 import com.apapedia.frontend.service.UserService;
 import com.apapedia.frontend.DTO.request.CreateUserRequestDTO;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
-
 
 @Controller
 public class UserController {
@@ -33,12 +23,12 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/home")
-    public String homePage(){
+    public String homePage() {
         return "home";
     }
 
     @GetMapping("/register")
-    public String register(Model model){
+    public String register(Model model) {
         CreateUserRequestDTO createUserDTO = new CreateUserRequestDTO();
 
         model.addAttribute("createUserDTO", createUserDTO);
@@ -46,25 +36,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO)  throws IOException, InterruptedException{
+    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO)
+            throws IOException, InterruptedException {
         createUserDTO.setPassword("ariefthegoat");
         createUserDTO.setRole("Seller");
         createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");
         userService.registerUser(createUserDTO);
 
         return "redirect:/home";
-    }
-
-    @GetMapping("logout")
-    public String logout(HttpServletRequest request) throws IOException, InterruptedException{
-        userService.logout(request);
-        return "redirect:/login-page";
-    }
-
-    @GetMapping("/login-page")
-    public String loginPage(Model model, @ModelAttribute AuthenticationRequest authenticationRequest) {
-        model.addAttribute("authenticationRequest", authenticationRequest);
-        return "login";
     }
 
     @GetMapping("/profile")
@@ -96,20 +75,25 @@ public class UserController {
     }
 
     @PostMapping("/profile/edit")
-    public String editProfile(@ModelAttribute UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
+    public String editProfile(@ModelAttribute UpdateUserResponseDTO updateUserResponseDTO,
+            HttpServletRequest request, Model model)
             throws IOException, InterruptedException {
 
-        JsonNode res = userService.updateUser(updateUserResponseDTO, request);
+        // TODO: Fix password and confirm password
+        // TODO: Fix Response
+        // if (updateUserResponseDTO.getPassword() !=
+        // updateUserResponseDTO.getConfirmPassword()) {
+        // model.addAttribute("message", "Password dan Confirm Password tidak sama");
+        // return "form-update-profile";
 
-        if (res.get("status").asText().equals("success")) {
+        // }
+        String res = userService.updateUser(updateUserResponseDTO, request);
+
+        System.out.println(res);
+        if (res == "success") {
             return "redirect:/profile";
         }
 
-        if (!res.get("status").asText().equals("success")) {
-            // TODO: add error message
-            return "redirect:/profile";
-
-        }
         return "redirect:/profile";
     }
 
@@ -126,7 +110,7 @@ public class UserController {
     public String addBalance(Model model, HttpServletRequest request, HttpServletResponse response)
             throws IOException, InterruptedException {
         try {
-            int amount = Integer.parseInt(request.getParameter("topupAmount"));
+            long amount = Integer.parseInt(request.getParameter("topupAmount"));
             userService.addBalance(request, amount);
         } catch (Exception e) {
             model.addAttribute("error", "Invalid amount");
@@ -139,7 +123,7 @@ public class UserController {
     public String withdrawBalance(Model model, HttpServletRequest request, HttpServletResponse response)
             throws IOException, InterruptedException {
         try {
-            int amount = Integer.parseInt(request.getParameter("topupAmount"));
+            long amount = Integer.parseInt(request.getParameter("topupAmount"));
             userService.withdrawBalance(request, amount);
         } catch (Exception e) {
             model.addAttribute("error", "Invalid amount");

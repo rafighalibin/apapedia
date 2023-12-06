@@ -23,26 +23,22 @@ import lombok.Setter;
 @Entity
 // @JsonIgnoreProperties(value = { "password","createdAt","updatedAt" })
 @Table(name = "user_model")
-public class UserModel implements Serializable{
+public class UserModel implements Serializable {
     @Id
     private UUID id = UUID.randomUUID();
 
-    
     @Size(max = 100)
     @Column(name = "name")
     private String name;
-    
-    
+
     @Size(max = 100)
     @Column(name = "username")
     private String username;
 
-    
     @Size(max = 100)
     @Column(name = "password")
     private String password;
 
-    
     @Size(max = 100)
     @Column(name = "email")
     private String email;
@@ -50,7 +46,6 @@ public class UserModel implements Serializable{
     @Column(name = "balance")
     private Long balance = (long) 0;
 
-    
     @Size(max = 100)
     @Column(name = "address")
     private String address;

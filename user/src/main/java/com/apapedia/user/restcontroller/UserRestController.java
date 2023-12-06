@@ -52,12 +52,12 @@ public class UserRestController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
-            UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
-            userModel = userService.addUser(userModel, createUserRequestDTO);
+        UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
+        userModel = userService.addUser(userModel, createUserRequestDTO);
 
-            CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
-            createUserResponseDTO.setRole(userModel.getRole().getRole());
-            return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
+        CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
+        createUserResponseDTO.setRole(userModel.getRole().getRole());
+        return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
     }
 
     @PutMapping("/update")
@@ -74,16 +74,11 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate email");
 
         if (userService.checkUsernameEmailPassword(request,
-        userDTO).equals("duplicatePassword")) return
-        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate password");
+                userDTO).equals("duplicatePassword"))
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate password");
 
         // Service method to update user details
-        userService.updateUser(request, userDTO);
-
-        // Convert DTO to User and save
-        UserModel updatedUser = userMapper.updateUserRequestDTOToUser(userDTO);
-
-        userService.saveUser(updatedUser);
+        UserModel updatedUser = userService.updateUser(request, userDTO);
 
         jwtUtils.invalidateToken(response);
         jwtUtils.createCookie(updatedUser, response);
@@ -120,7 +115,8 @@ public class UserRestController {
         if (!userService.isLoggedIn(request))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
 
-        UserModel user = userService.findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromCookies(request)));
+        UserModel user = userService
+                .findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromCookies(request)));
 
         return ResponseEntity.ok(user);
     }

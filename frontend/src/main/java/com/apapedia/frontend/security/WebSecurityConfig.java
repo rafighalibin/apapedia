@@ -15,23 +15,21 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .authorizeHttpRequests(requests -> requests
-                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/validate-ticket")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/logout-sso")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin((form) -> form
-                    .loginPage("/login-sso")
-                    .permitAll()
-                    .defaultSuccessUrl("/")
-            )
-            .logout((logout) -> logout
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login-sso"));
-            return http.build();
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/validate-ticket")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/logout-sso")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
+                        .anyRequest().authenticated())
+                .formLogin((form) -> form
+                        .loginPage("/login-sso")
+                        .permitAll()
+                        .defaultSuccessUrl("/"))
+                .logout((logout) -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessUrl("/login-sso"));
+        return http.build();
     }
-    
+
 }
