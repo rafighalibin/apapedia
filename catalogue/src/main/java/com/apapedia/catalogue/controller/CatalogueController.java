@@ -28,6 +28,7 @@ import com.apapedia.catalogue.dto.request.CreateCatalogueRequestDTO;
 import com.apapedia.catalogue.dto.request.UpdateCatalogueRequestDTO;
 import com.apapedia.catalogue.model.Catalogue;
 import com.apapedia.catalogue.service.CatalogueService;
+import com.apapedia.catalogue.service.CategoryService;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,6 +41,9 @@ public class CatalogueController {
 
     @Autowired
     CatalogueMapper catalogueMapper;
+
+    @Autowired
+    CategoryService categoryService;
 
     @PostMapping(value = "catalogue/create")
     public Catalogue tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO) {
@@ -114,7 +118,7 @@ public class CatalogueController {
     }
 
     if (updateCatalogueRequestDTO.getIdCategory() != null) {
-        catalogue.setIdCategory(updateCatalogueRequestDTO.getIdCategory());
+        catalogue.setCategory(categoryService.getCategoryById(updateCatalogueRequestDTO.getIdCategory()));
     }
         
         catalogueService.saveCatalogue(catalogue);
