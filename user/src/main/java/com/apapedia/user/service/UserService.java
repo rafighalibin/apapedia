@@ -31,7 +31,7 @@ public interface UserService {
 
     String getUsernameFromJwtCookie(HttpServletRequest request);
 
-    void updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser);
+    UserModel updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser);
 
     boolean isLoggedIn(HttpServletRequest request);
 

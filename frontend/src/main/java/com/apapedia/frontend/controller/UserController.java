@@ -1,30 +1,22 @@
 package com.apapedia.frontend.controller;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.apapedia.frontend.DTO.request.AuthenticationRequest;
 import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
 import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
 import com.apapedia.frontend.service.UserService;
 import com.apapedia.frontend.DTO.request.CreateUserRequestDTO;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
-
 
 @Controller
 public class UserController {
@@ -33,12 +25,12 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/home")
-    public String homePage(){
+    public String homePage() {
         return "home";
     }
 
     @GetMapping("/register")
-    public String register(Model model){
+    public String register(Model model) {
         CreateUserRequestDTO createUserDTO = new CreateUserRequestDTO();
 
         model.addAttribute("createUserDTO", createUserDTO);
@@ -46,25 +38,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO)  throws IOException, InterruptedException{
+    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO)
+            throws IOException, InterruptedException {
         createUserDTO.setPassword("ariefthegoat");
         createUserDTO.setRole("Seller");
         createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");
         userService.registerUser(createUserDTO);
 
         return "redirect:/home";
-    }
-
-    @GetMapping("logout")
-    public String logout(HttpServletRequest request) throws IOException, InterruptedException{
-        userService.logout(request);
-        return "redirect:/login-page";
-    }
-
-    @GetMapping("/login-page")
-    public String loginPage(Model model, @ModelAttribute AuthenticationRequest authenticationRequest) {
-        model.addAttribute("authenticationRequest", authenticationRequest);
-        return "login";
     }
 
     @GetMapping("/profile")
@@ -96,55 +77,72 @@ public class UserController {
     }
 
     @PostMapping("/profile/edit")
-    public String editProfile(@ModelAttribute UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
+    public String editProfile(@ModelAttribute UpdateUserResponseDTO updateUserResponseDTO,
+            HttpServletRequest request, Model model, RedirectAttributes redirectAttributes)
             throws IOException, InterruptedException {
 
-        JsonNode res = userService.updateUser(updateUserResponseDTO, request);
+        ReadUserResponseDTO user = userService.getUser(request);
+        UpdateUserResponseDTO oldUser = new UpdateUserResponseDTO();
+        oldUser.setId(user.getId());
+        oldUser.setName(user.getName());
+        oldUser.setUsername(user.getUsername());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setAddress(user.getAddress());
+        oldUser.setBalance(user.getBalance());
+        oldUser.setCategory(user.getCategory());
+        model.addAttribute("user", oldUser);
 
-        if (res.get("status").asText().equals("success")) {
-            return "redirect:/profile";
+        if (updateUserResponseDTO.getPassword() != updateUserResponseDTO.getConfirmPassword()) {
+            model.addAttribute("message", "Password dan Confirm Password tidak sama");
+            return "form-update-profile";
         }
 
-        if (!res.get("status").asText().equals("success")) {
-            // TODO: add error message
-            return "redirect:/profile";
+        String res = userService.updateUser(updateUserResponseDTO, request);
 
+        if (res.equals("duplicate username")) {
+            model.addAttribute("message", "Username sudah digunakan");
+            return "form-update-profile";
         }
+
+        if (res.equals("duplicate email")) {
+            model.addAttribute("message", "Email sudah digunakan");
+            return "form-update-profile";
+        }
+
+        if (res.equals("duplicate password")) {
+            model.addAttribute("message", "Password baru tidak boleh sama dengan sebelumnya");
+            return "form-update-profile";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "Berhasil update profile");
         return "redirect:/profile";
     }
 
-    @GetMapping("/topup")
+    @GetMapping("/withdraw")
     public String topupPage(Model model, HttpServletRequest request) throws IOException, InterruptedException {
         ReadUserResponseDTO user = userService.getUser(request);
 
         model.addAttribute("user", user);
 
-        return "topup-view";
+        return "withdraw-view";
     }
 
-    @PostMapping(value = "/topup", params = { "addBalance" })
-    public String addBalance(Model model, HttpServletRequest request, HttpServletResponse response)
+    @PostMapping(value = "/withdraw", params = { "withdrawBalance" })
+    public String withdrawBalance(Model model, HttpServletRequest request, HttpServletResponse response,
+            RedirectAttributes redirectAttributes)
             throws IOException, InterruptedException {
         try {
-            int amount = Integer.parseInt(request.getParameter("topupAmount"));
-            userService.addBalance(request, amount);
-        } catch (Exception e) {
-            model.addAttribute("error", "Invalid amount");
-            return "redirect:/topup";
-        }
-        return "redirect:/profile";
-    }
-
-    @PostMapping(value = "/topup", params = { "withdrawBalance" })
-    public String withdrawBalance(Model model, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, InterruptedException {
-        try {
-            int amount = Integer.parseInt(request.getParameter("topupAmount"));
+            long amount = Integer.parseInt(request.getParameter("withdrawAmount"));
+            if (amount > userService.getUser(request).getBalance() || amount < 0) {
+                throw new Exception();
+            }
             userService.withdrawBalance(request, amount);
         } catch (Exception e) {
-            model.addAttribute("error", "Invalid amount");
-            return "redirect:/topup";
+            redirectAttributes.addFlashAttribute("message", "Saldo tidak mencukupi");
+            return "redirect:/withdraw";
         }
+        redirectAttributes.addFlashAttribute("message", "Berhasil withdraw saldo");
+
         return "redirect:/profile";
     }
 

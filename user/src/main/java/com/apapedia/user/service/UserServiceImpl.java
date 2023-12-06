@@ -3,9 +3,9 @@ package com.apapedia.user.service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import  org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import  org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service;
 
 import com.apapedia.user.dto.request.AuthenticationRequest;
 import com.apapedia.user.dto.request.CreateUserRequestDTO;
@@ -18,11 +18,8 @@ import com.apapedia.user.security.jwt.JwtUtils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.UUID;
-
-
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,103 +47,114 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser){
-        // String jwt = getJwtFromCookies(request);
-        // String username = jwtUtil.extractUsername(jwt);
+    public UserModel updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser) {
+        String jwt = getJwtFromCookies(request);
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-        // UserModel oldUser = findUserByUsername(username);
-        // newUser.setId(oldUser.getId());
-        // newUser.setBalance(oldUser.getBalance());
-        // newUser.setRole(oldUser.getRole());
-        // newUser.setCreatedAt(oldUser.getCreatedAt());
-        // newUser.setUpdatedAt(LocalDateTime.now());
+        UserModel oldUser = findUserByUsername(username);
+
+        oldUser.setName(newUser.getName());
+        oldUser.setUsername(newUser.getUsername());
+        oldUser.setEmail(newUser.getEmail());
+        oldUser.setAddress(newUser.getAddress());
+        oldUser.setUpdatedAt(LocalDateTime.now());
+        if (!newUser.getPassword().isEmpty()) {
+            oldUser.setPassword(encrypt(newUser.getPassword()));
+        }
+        saveUser(oldUser);
+
+        return oldUser;
     }
 
-    // @Override 
-    // public String checkUsernameEmailPassword(HttpServletRequest request, UpdateUserRequestDTO newUser){
-    //     String jwt = getJwtFromCookies(request);
-    //     String oldId = jwtUtil.extractId(jwt);
-    //     User oldUser = findUserById(oldId);
+    @Override
+    public String checkUsernameEmailPassword(HttpServletRequest request,
+            UpdateUserRequestDTO newUser) {
+        String jwt = getJwtFromCookies(request);
+        String oldId = jwtUtils.getIdFromJwtToken(jwt);
+        UserModel oldUser = findUserById(oldId);
 
-    //     String oldPassword = encrypt(oldUser.getPassword());
-    //     String newPassword = encrypt(newUser.getPassword());
-    //     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String oldPassword = encrypt(oldUser.getPassword());
+        String newPassword = encrypt(newUser.getPassword());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    //     for (User user : userDb.findAll()) {
-    //         String username = user.getUsername();
-    //         String email = user.getEmail();
-    //         String password = encrypt(user.getPassword());
-    //         if (username.equals(newUser.getUsername()) && !username.equals(oldUser.getUsername())) return "duplicateUsername";
+        for (UserModel user : userDb.findAll()) {
+            String username = user.getUsername();
+            String email = user.getEmail();
+            String password = encrypt(user.getPassword());
+            if (username.equals(newUser.getUsername()) &&
+                    !username.equals(oldUser.getUsername()))
+                return "duplicateUsername";
 
-    //         if (email.equals(newUser.getEmail()) && !email.equals(oldUser.getEmail())) return "duplicateEmail";
+            if (email.equals(newUser.getEmail()) && !email.equals(oldUser.getEmail()))
+                return "duplicateEmail";
 
-    //         if (passwordEncoder.matches(password, newPassword) && !passwordEncoder.matches(password, oldPassword)) return "duplicatePassword";
-    //     }
+            if (passwordEncoder.matches(password, newPassword) &&
+                    !passwordEncoder.matches(password, oldPassword))
+                return "duplicatePassword";
+        }
 
-    //     return "Y";
+        return "Y";
 
-    // }
+    }
 
     @Override
-    public UserModel updateBalance(HttpServletRequest request, UpdateBalance newBalance){
-        // String jwt = getJwtFromCookies(request);
-        // String username = jwtUtil.extractUsername(jwt);
-        
-        // User user = findUserByUsername(username);
-        // user.setBalance(user.getBalance() + newBalance.getBalance());
-        // user.setUpdatedAt(LocalDateTime.now());
-        // saveUser(user);
+    public UserModel updateBalance(HttpServletRequest request, UpdateBalance newBalance) {
+        String jwt = getJwtFromCookies(request);
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+
+        UserModel user = findUserByUsername(username);
+        user.setBalance(newBalance.getBalance());
+        user.setUpdatedAt(LocalDateTime.now());
+        saveUser(user);
 
         return null;
     }
 
-
     @Override
-    public void deleteUser(String idString){
+    public void deleteUser(String idString) {
         // UserModel user = findUserById(idString);
         // user.setDeleted(true);
         // saveUser(user);
     }
 
     @Override
-    public UserModel saveUser(UserModel user){
+    public UserModel saveUser(UserModel user) {
         return userDb.save(user);
     }
 
     @Override
-    public UserModel findUserByUsername(String username){
+    public UserModel findUserByUsername(String username) {
         return userDb.findByUsername(username);
     }
 
     @Override
-    public UserModel findUserById(String idString){
+    public UserModel findUserById(String idString) {
         UUID id = UUID.fromString(idString);
         Optional<UserModel> userOptional = userDb.findById(id);
         if (userOptional.isPresent()) {
             UserModel user = userOptional.get();
             return user;
         } else {
-            
+
         }
         return null;
     }
-    
 
     // @Override
     // public User authenticate(String username, String password) {
-    //     // Attempt to retrieve user by username
-    //     User userOptional = userDb.findByUsername(username);
-    //     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    //     if (userOptional != null) {
-    //         User user = userOptional;
-    //         // Check if the provided password matches the stored password
-    //         if (passwordEncoder.matches(password, user.getPassword())) {
-    //             // Return user if passwords match
-    //             return user;
-    //         }
-    //     }
-    //     // Return null if authentication fails
-    //     return null;
+    // // Attempt to retrieve user by username
+    // User userOptional = userDb.findByUsername(username);
+    // BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    // if (userOptional != null) {
+    // User user = userOptional;
+    // // Check if the provided password matches the stored password
+    // if (passwordEncoder.matches(password, user.getPassword())) {
+    // // Return user if passwords match
+    // return user;
+    // }
+    // }
+    // // Return null if authentication fails
+    // return null;
     // }
 
     @Override
@@ -166,7 +174,7 @@ public class UserServiceImpl implements UserService {
     public String getUsernameFromJwtCookie(HttpServletRequest request) {
         // String jwt = getJwtFromCookies(request);
         // if (jwt != null && !jwt.isEmpty()) {
-        //     return jwtUtil.extractUsername(jwt);
+        // return jwtUtil.extractUsername(jwt);
         // }
         return null;
     }
@@ -188,14 +196,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String login(AuthenticationRequest authenticationRequest) {
-        
+
         UserModel user = userDb.findByUsername(authenticationRequest.getUsername());
 
-        if (user == null) return null;
+        if (user == null)
+            return null;
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        
-        if (!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword())) return null;
-        
+
+        if (!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword()))
+            return null;
+
         return jwtUtils.generateJwtToken(user);
     }
 
@@ -207,51 +217,23 @@ public class UserServiceImpl implements UserService {
         UserModel user = userDb.findByUsername(username);
 
         if (user == null) {
-           return null;
+            return null;
         }
 
         return jwtUtils.generateJwtToken(user);
     }
 
-    @Override 
-    public String checkUsernameEmailPassword(HttpServletRequest request, UpdateUserRequestDTO newUser){
-        String jwt = getJwtFromCookies(request);
-        String oldId = jwtUtils.getIdFromJwtToken(jwt);
-        UserModel oldUser = findUserById(oldId);
-
-        String oldPassword = encrypt(oldUser.getPassword());
-        String newPassword = encrypt(newUser.getPassword());
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        for (UserModel user : userDb.findAll()) {
-            String username = user.getUsername();
-            String email = user.getEmail();
-            String password = encrypt(user.getPassword());
-            if (username.equals(newUser.getUsername()) && !username.equals(oldUser.getUsername())) return "duplicateUsername";
-
-            if (email.equals(newUser.getEmail()) && !email.equals(oldUser.getEmail())) return "duplicateEmail";
-
-            if (passwordEncoder.matches(password, newPassword) && !passwordEncoder.matches(password, oldPassword)) return "duplicatePassword";
-        }
-
-        return "Y";
-
-
-    }
     @Override
     public String extractJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        
+
         // Periksa apakah header Authorization ada dan mulai dengan "Bearer "
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             // Ekstrak token JWT tanpa bagian "Bearer "
             return bearerToken.substring(7);
         }
-        
+
         return null;
     }
-    
-
-
 
 }

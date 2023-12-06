@@ -52,43 +52,42 @@ public class UserRestController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
-            UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
-            userModel = userService.addUser(userModel, createUserRequestDTO);
+        UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
+        userModel = userService.addUser(userModel, createUserRequestDTO);
 
-            CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
-            createUserResponseDTO.setRole(userModel.getRole().getRole());
-            return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
+        CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
+        createUserResponseDTO.setRole(userModel.getRole().getRole());
+        return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserRequestDTO userDTO, HttpServletRequest request,
             HttpServletResponse response) {
 
+        // TODO: ini kayaknya gabisa kalo statusnya ngga 200
         if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a user.");
-
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateUsername"))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate username");
-
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateEmail"))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate email");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("You must be logged in to update a user.");
 
         if (userService.checkUsernameEmailPassword(request,
-        userDTO).equals("duplicatePassword")) return
-        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate password");
+                userDTO).equals("duplicateUsername"))
+            return ResponseEntity.ok("duplicate username");
+
+        if (userService.checkUsernameEmailPassword(request,
+                userDTO).equals("duplicateEmail"))
+            return ResponseEntity.ok("duplicate email");
+
+        if (userService.checkUsernameEmailPassword(request,
+                userDTO).equals("duplicatePassword"))
+            return ResponseEntity.ok("duplicate password");
 
         // Service method to update user details
-        userService.updateUser(request, userDTO);
-
-        // Convert DTO to User and save
-        UserModel updatedUser = userMapper.updateUserRequestDTOToUser(userDTO);
-
-        userService.saveUser(updatedUser);
+        UserModel updatedUser = userService.updateUser(request, userDTO);
 
         jwtUtils.invalidateToken(response);
         jwtUtils.createCookie(updatedUser, response);
 
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok("Success");
     }
 
     @PutMapping("/delete")
@@ -107,7 +106,7 @@ public class UserRestController {
             HttpServletRequest request) {
 
         if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a balance");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must belogged in to update a balance");
 
         UserModel user = userService.updateBalance(request, updateBalance);
 
@@ -120,7 +119,8 @@ public class UserRestController {
         if (!userService.isLoggedIn(request))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
 
-        UserModel user = userService.findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromCookies(request)));
+        UserModel user = userService
+                .findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromCookies(request)));
 
         return ResponseEntity.ok(user);
     }

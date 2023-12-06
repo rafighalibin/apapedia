@@ -5,15 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
+
+import com.apapedia.user.model.Role;
+
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UpdateUserRequestDTO extends CreateUserRequestDTO{
+public class UpdateUserRequestDTO extends CreateUserRequestDTO {
     private UUID id;
 
     LocalDateTime createdAt;
 
     LocalDateTime updatedAt;
+
 }
