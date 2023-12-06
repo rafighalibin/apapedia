@@ -46,8 +46,9 @@ public class CatalogueApplication {
     catalogueDTO.setProductDescription(faker.lorem().sentence());
     catalogueDTO.setStock(faker.number().randomDigitNotZero());
     // String imageUrl = generateRandomImageUrl();
-    catalogueDTO.setImage("vamos");
-    catalogueDTO.setCategory(categoryDTO);
+    // Simulate generating a byte array for an image (replace this with your actual image generation logic)
+    byte[] fakeImageBytes = generateFakeImageBytes();
+    catalogueDTO.setImage(fakeImageBytes);
 
     catalogueDTO.setIdSeller(UUID.randomUUID());
 	catalogueDTO.setProductNameLower(catalogueDTO.getProductName().toLowerCase());
@@ -57,5 +58,10 @@ public class CatalogueApplication {
    }
   };
  }
+ private byte[] generateFakeImageBytes() {
+    // Replace this with your actual image generation logic or use a placeholder image
+    // For example, you can use a library like Apache Commons Imaging to create a simple placeholder image.
+    return new byte[0];
+}
 
 }
