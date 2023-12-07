@@ -48,6 +48,21 @@ public class OrderController {
         return graphDTO;
     }
 
+    @GetMapping("/get/customer/{customerId}")
+    public ResponseEntity<?> getOrderByCustomerId(@PathVariable UUID customerId){
+        var listOrder = orderService.findByCustomerId(customerId);
+        return ResponseEntity.ok(listOrder);
+    }
+
+    
+    @GetMapping("/get/seller/{sellerId}")
+    public ResponseEntity<?> getOrderBySellerId(@PathVariable UUID sellerId){
+        var listOrder = orderService.findBySellerId(sellerId);
+        return ResponseEntity.ok(listOrder);
+    }
+
+
+
     @PutMapping("/{orderId}")
     public ResponseEntity<Order> updateOrderStatus(@PathVariable UUID orderId, @RequestBody Order order) {
         Order existingOrder = orderService.findById(orderId);

@@ -2,6 +2,9 @@ package com.apapedia.order.model;
 
 import java.util.Date;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,6 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties(value = {"order"}, allowSetters = true)
 @Table(name = "order_item")
 public class OrderItem {
 
