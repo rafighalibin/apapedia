@@ -20,6 +20,7 @@ public interface OrderService {
     Order findById(UUID id);
 
     List<Order> findBySellerId(UUID sellerId);
+    List<Order> findByCustomerId(UUID customerId);
     List<Order> findAll();
 
     void saveOrderItem(OrderItem orderItem);
