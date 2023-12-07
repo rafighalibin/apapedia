@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Service
 public interface OrderService {
-    HashMap<Integer, Integer> getGraph();
+    HashMap<Integer, Integer> getGraph(HttpServletRequest request);
 
-    List<Order> findBySellerId(UUID sellerId);
 }
