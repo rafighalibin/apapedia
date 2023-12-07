@@ -12,9 +12,13 @@ import com.apapedia.order.model.Order;
 import com.apapedia.order.model.OrderItem;
 import com.apapedia.order.repository.OrderDb;
 import com.apapedia.order.repository.OrderItemDb;
+import com.apapedia.order.security.jwt.JwtUtils;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.util.StringUtils;
 
 
 @Service
@@ -25,6 +29,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrderItemDb orderItemDb;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
 
     @Override
@@ -67,9 +74,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public HashMap<Integer, Integer> getDailySales() {
-        var listOrder = orderDb.findAll();
+    public HashMap<Integer, Integer> getDailySales(HttpServletRequest request) {
+
+        var token = jwtUtils.parseJwt(request);
+
+        var id = jwtUtils.getIdFromJwtToken(token);
+
+        UUID idSeller = UUID.fromString(id);
+        
+        var listOrder = findBySellerId(idSeller);
+
         HashMap<Integer, Integer> productSold = new HashMap<>();
+        
         LocalDateTime now = LocalDateTime.now();
 
         Calendar calendar = Calendar.getInstance();
@@ -94,5 +110,7 @@ public class OrderServiceImpl implements OrderService {
 
         return productSold;
     }
+
+
 
 }
