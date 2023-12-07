@@ -12,6 +12,9 @@ import com.apapedia.order.model.OrderItem;
 import com.apapedia.order.repository.OrderDb;
 import com.apapedia.order.repository.OrderItemDb;
 
+import java.util.List;
+import java.util.UUID;
+
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -27,6 +30,30 @@ public class OrderServiceImpl implements OrderService {
     public void saveOrder(Order order) {
         orderDb.save(order);
     }
+
+    @Override
+    public Order updateOrderStatus(UUID id, int status) {
+        Order existingOrder = findById(id);
+        existingOrder.setStatus(status);
+        saveOrder(existingOrder);
+        return existingOrder;
+    }
+
+    @Override
+    public Order findById(UUID id) {
+        return orderDb.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<Order> findBySellerId(UUID sellerId){
+        return orderDb.findBySellerId(sellerId);
+    }
+
+    @Override
+    public List<Order> findAll(){
+        return orderDb.findAll();
+    }
+
 
     @Override
     public void saveOrderItem(OrderItem orderItem) {
@@ -61,5 +88,5 @@ public class OrderServiceImpl implements OrderService {
 
         return productSold;
     }
-    
+
 }
