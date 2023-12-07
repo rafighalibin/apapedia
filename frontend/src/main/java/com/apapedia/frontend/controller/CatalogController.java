@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.apapedia.frontend.service.OrderService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+
 @Controller
 public class CatalogController {
 
@@ -14,8 +17,8 @@ public class CatalogController {
     OrderService orderService;
 
     @GetMapping("/home")
-    public String homePage(Model model) {
-        model.addAttribute("penjualanPerHari", orderService.getGraph());
+    public String homePage(Model model, HttpServletRequest request) {
+        model.addAttribute("penjualanPerHari",  orderService.getGraph(request));
         return "home";
     }
     

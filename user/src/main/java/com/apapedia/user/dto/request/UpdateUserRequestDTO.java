@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-import com.apapedia.user.model.Role;
 
 import java.time.LocalDateTime;
 
