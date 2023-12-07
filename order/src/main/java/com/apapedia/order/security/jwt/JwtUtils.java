@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.HashMap;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Component
@@ -63,6 +65,14 @@ public class JwtUtils {
         } 
         return false;
     }
+
+    public String parseJwt(HttpServletRequest request) {
+    String headerAuth = request.getHeader("Authorization");
+    if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")){
+        return headerAuth.substring(7);
+        }
+    return null;
+}
 
 }
 
