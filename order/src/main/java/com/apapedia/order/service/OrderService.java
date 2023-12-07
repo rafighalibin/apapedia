@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.apapedia.order.model.Order;
 import com.apapedia.order.model.OrderItem;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +27,6 @@ public interface OrderService {
 
     void saveOrderItem(OrderItem orderItem);
 
-    HashMap<Integer, Integer> getDailySales();
+    HashMap<Integer, Integer> getDailySales(HttpServletRequest request);
 
 }
