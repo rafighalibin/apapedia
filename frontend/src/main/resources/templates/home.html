@@ -57,7 +57,7 @@
   </head>
 
   <body>
-    <header th:replace="~{fragments/navbar}"></header>
+    <nav th:replace="~{fragments/navbar :: navbar(${activeNavbar})}"></nav>
 
     <div th:if="${penjualanPerHari != null}">
 
