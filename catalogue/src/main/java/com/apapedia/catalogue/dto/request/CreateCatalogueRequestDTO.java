@@ -16,7 +16,7 @@ public class CreateCatalogueRequestDTO {
     private int price;
     private String productDescription;
     private int stock;
-    private String image;
+    private byte[] image;
     private UUID idCategory;
     private UUID idSeller;
 }

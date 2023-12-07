@@ -1,6 +1,10 @@
 package com.apapedia.order.model;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
+
+import org.springframework.cglib.core.Local;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,16 +24,13 @@ public class Order {
     @Id
     private UUID orderId = UUID.randomUUID();
 
-    @Column(name = "order_item_id", nullable = false)
-    private UUID orderItemId;
-
     @NotNull
     @Column(name = "createdat", nullable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @NotNull
     @Column(name = "updatedat", nullable = false)
-    private Date UpdatedAt;
+    private LocalDateTime UpdatedAt;
 
     @NotNull
     @Column(name = "status", nullable = false)

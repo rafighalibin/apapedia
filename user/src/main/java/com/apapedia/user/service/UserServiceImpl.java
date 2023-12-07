@@ -58,8 +58,11 @@ public class UserServiceImpl implements UserService {
         oldUser.setEmail(newUser.getEmail());
         oldUser.setAddress(newUser.getAddress());
         oldUser.setUpdatedAt(LocalDateTime.now());
-        oldUser.setPassword(encrypt(newUser.getPassword()));
+        if (!newUser.getPassword().isEmpty()) {
+            oldUser.setPassword(encrypt(newUser.getPassword()));
+        }
         saveUser(oldUser);
+
         return oldUser;
     }
 
