@@ -59,6 +59,8 @@
   <body>
     <header th:replace="~{fragments/navbar}"></header>
 
+    <div th:if="${penjualanPerHari != null}">
+
      <!-- Header and other HTML elements -->
      <div class="container">
       <div class="text-center pt-5">
@@ -72,13 +74,13 @@
     <!-- ... other HTML elements ... -->
 
     <script th:inline="javascript">
-      var penjualanPerHari = [[${penjualanPerHari}]]; // The server should provide this as a HashMap<Integer, Integer>
+      var penjualanPerHari = [[${penjualanPerHari}]]; 
     
       var labels = [];
       var chartData = [];
       for (var day in penjualanPerHari) {
         if (penjualanPerHari.hasOwnProperty(day)) {
-          labels.push(`Day ${parseInt(day) + 1}`);
+          labels.push(`Day ${parseInt(day)}`);
           chartData.push(penjualanPerHari[day]);
         }
       }
@@ -123,6 +125,8 @@
         }
       });
     </script>
+
+    </div>
 
     <!-- Home Page Section End -->
 

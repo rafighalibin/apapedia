@@ -52,7 +52,6 @@ public class OrderServiceImpl implements OrderService {
             if (now.getMonthValue() == order.getCreatedAt().getMonthValue()) {
                 for (OrderItem orderItem: order.getListOrderItem()) {
                     int day = order.getCreatedAt().getDayOfMonth();
-                    // System.out.println(productSold.get(day));
                     productSold.put(day, productSold.get(day) + orderItem.getQuantity());
 
                 }
