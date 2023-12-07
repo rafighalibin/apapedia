@@ -5,7 +5,7 @@ services:
       context: ./order
     restart: always
     ports:
-      - "10142:8080"
+      - "10141:8080"
     volumes:
       - ./file-storage:/file-storage
       - ./log:/log
@@ -35,7 +35,7 @@ services:
       context: ./catalogue
     restart: always
     ports:
-      - "10141:8080"
+      - "10142:8080"
     volumes:
       - ./file-storage:/file-storage
       - ./log:/log
