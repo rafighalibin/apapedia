@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.HashMap;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,9 @@ import com.apapedia.order.model.Order;
 import com.apapedia.order.model.OrderItem;
 import com.apapedia.order.repository.OrderDb;
 import com.apapedia.order.repository.OrderItemDb;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -27,6 +31,30 @@ public class OrderServiceImpl implements OrderService {
     public void saveOrder(Order order) {
         orderDb.save(order);
     }
+
+    @Override
+    public Order updateOrderStatus(UUID id, int status) {
+        Order existingOrder = findById(id);
+        existingOrder.setStatus(status);
+        saveOrder(existingOrder);
+        return existingOrder;
+    }
+
+    @Override
+    public Order findById(UUID id) {
+        return orderDb.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<Order> findBySellerId(UUID sellerId){
+        return orderDb.findBySellerId(sellerId);
+    }
+
+    @Override
+    public List<Order> findAll(){
+        return orderDb.findAll();
+    }
+
 
     @Override
     public void saveOrderItem(OrderItem orderItem) {
@@ -52,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
             if (now.getMonthValue() == order.getCreatedAt().getMonthValue()) {
                 for (OrderItem orderItem: order.getListOrderItem()) {
                     int day = order.getCreatedAt().getDayOfMonth();
+                    // System.out.println(productSold.get(day));
                     productSold.put(day, productSold.get(day) + orderItem.getQuantity());
 
                 }
@@ -61,4 +90,5 @@ public class OrderServiceImpl implements OrderService {
         return productSold;
     }
     
+
 }
