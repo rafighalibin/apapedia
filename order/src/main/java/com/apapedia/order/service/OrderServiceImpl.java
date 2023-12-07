@@ -46,6 +46,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findByCustomerId(UUID customerId){
+        return orderDb.findByCustomerId(customerId);
+    }
+
+    @Override
     public List<Order> findBySellerId(UUID sellerId){
         return orderDb.findBySellerId(sellerId);
     }
