@@ -18,7 +18,9 @@ public class CatalogController {
 
     @GetMapping("/home")
     public String homePage(Model model, HttpServletRequest request) {
-        model.addAttribute("penjualanPerHari",  orderService.getGraph(request));
+        var graph =  orderService.getGraph(request);
+        if (graph != null) model.addAttribute("activeNavbar", "Home");
+        model.addAttribute("penjualanPerHari",  graph);
         return "home";
     }
     

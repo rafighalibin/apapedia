@@ -18,6 +18,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/fonts/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/sass/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/Source/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/validate-ticket")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/logout-sso")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
