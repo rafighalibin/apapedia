@@ -51,56 +51,44 @@
     <!-- Navbar Begin -->
     <header class="header" th:fragment="navbar(navbarActive)">
       <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-3">
-            <div class="header__logo">
-              <a href="/home"
-                ><img th:src="@{/img/logo-cart-text-rectangle.png}" width="200"
-              /></a>
-            </div>
+          <div class="row align-items-center">
+              <!-- Logo -->
+              <div class="col-lg-3">
+                  <div class="header__logo">
+                      <a href="/home">
+                          <img th:src="@{/img/logo-cart-text-rectangle.png}" width="200"/>
+                      </a>
+                  </div>
+              </div>
+  
+              <!-- Main Navigation (Profile, Order History) -->
+              <div class="col-lg-6">
+                  <nav class="header__menu">
+                      <ul th:if="${navbarActive != null and navbarActive != 'NotLoggedIn'}">
+                          <li th:classappend="${navbarActive == 'Profile'} ? 'active' : ''">
+                              <a href="/profile">Profile</a>
+                          </li>
+                          <li th:classappend="${navbarActive == 'orderHistory'} ? 'active' : ''">
+                              <a href="/TODO:orderHistory">Order History</a>
+                          </li>
+                      </ul>
+                  </nav>
+              </div>
+  
+              <!-- Login Link -->
+              <div class="col-lg-3">
+                  <nav class="header__menu">
+                      <ul th:unless="${navbarActive != null and navbarActive == 'Home'}">
+                          <li class="text-right">
+                              <a href="/login-sso">Login</a>
+                          </li>
+                      </ul>
+                  </nav>
+              </div>
           </div>
-          <!-- <div class="col-lg-6">
-            <div class="hero__search__form">
-              <form action="#">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  style="width: 150px; padding: 8px"
-                />
-                <button
-                  type="submit"
-                  class="site-btn"
-                  style="padding: 8px 12px; margin-left: 10px"
-                >
-                  SEARCH
-                </button>
-              </form>
-            </div>
-          </div> -->
-          <div class="col-lg-3">
-            <nav class="header__menu">
-              <ul th:if="${navbarActive != null}">
-                <li
-                  class=""
-                  th:classappend="${navbarActive == 'Profile'} ? 'active' : ''"
-                >
-                  <a href="/profile">Profile</a>
-                </li>
-                <li
-                  class=""
-                  th:classappend="${navbarActive == 'orderHistory'} ? 'active' : ''"
-                >
-                  <a href="/TODO:orderHistory">Order History</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div class="humberger__open">
-            <i class="fa fa-bars"></i>
-          </div>
-        </div>
       </div>
-    </header>
+  </header>
+  
 
     <!-- Navbar End -->
   </body>
