@@ -1,30 +1,20 @@
 package com.apapedia.user.restcontroller;
 
+import com.apapedia.user.dto.UserMapper;
+import com.apapedia.user.dto.request.*;
+import com.apapedia.user.dto.response.CreateUserResponseDTO;
+import com.apapedia.user.dto.response.UpdateUserBalanceResponse;
+import com.apapedia.user.model.UserModel;
+import com.apapedia.user.security.jwt.JwtUtils;
+import com.apapedia.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.apapedia.user.dto.UserMapper;
-import com.apapedia.user.dto.request.AuthenticationRequest;
-import com.apapedia.user.dto.request.CreateUserRequestDTO;
-import com.apapedia.user.dto.request.DeleteUserRequestDTO;
-import com.apapedia.user.dto.request.UpdateBalance;
-import com.apapedia.user.dto.request.UpdateUserRequestDTO;
-import com.apapedia.user.dto.response.CreateUserResponseDTO;
-import com.apapedia.user.model.UserModel;
-import com.apapedia.user.repository.UserDb;
-import com.apapedia.user.security.jwt.JwtUtils;
-import com.apapedia.user.service.UserService;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/user")
@@ -125,4 +115,12 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/order/done/update-balance")
+    public ResponseEntity<?> updateBalanceAfterTransaction(@Valid @RequestBody UpdateBalanceAfterOrder updateBalance, HttpServletRequest request) {
+        if (!userService.isLoggedIn(request))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
+        UpdateUserBalanceResponse user = userService.updateBalanceAfterTransaction(updateBalance);
+
+        return ResponseEntity.ok(user);
+    }
 }
