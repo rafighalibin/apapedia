@@ -18,7 +18,7 @@ public class OrderServiceImpl implements OrderService{
     private final WebClient webClient;
 
     public OrderServiceImpl(WebClient.Builder webClientBuilder){
-        this.webClient = webClientBuilder.baseUrl("http://localhost:10141")
+        this.webClient = webClientBuilder.baseUrl("https://apap-141.cs.ui.ac.id")
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
     }
