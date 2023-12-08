@@ -1,24 +1,18 @@
 package com.apapedia.user.service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.apapedia.user.dto.request.*;
+import com.apapedia.user.dto.response.UpdateUserBalanceResponse;
+import com.apapedia.user.model.UserModel;
+import com.apapedia.user.repository.UserDb;
+import com.apapedia.user.security.jwt.JwtUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.apapedia.user.dto.request.AuthenticationRequest;
-import com.apapedia.user.dto.request.CreateUserRequestDTO;
-import com.apapedia.user.dto.request.LoginJwtRequestDTO;
-import com.apapedia.user.dto.request.UpdateBalance;
-import com.apapedia.user.dto.request.UpdateUserRequestDTO;
-import com.apapedia.user.model.*;
-import com.apapedia.user.repository.*;
-import com.apapedia.user.security.jwt.JwtUtils;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -111,6 +105,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UpdateUserBalanceResponse updateBalanceAfterTransaction(UpdateBalanceAfterOrder request) {
+        UserModel seller = findUserById(String.valueOf(request.getSellerId()));
+
+        Long sellerCurrentBalance = seller.getBalance();
+        seller.setUpdatedAt(LocalDateTime.now());
+        seller.setBalance(sellerCurrentBalance + request.getTotalPrice());
+
+        saveUser(seller);
+
+        UserModel buyer = findUserById(String.valueOf(request.getCustomerId()));
+
+        Long buyerCurrentBalance = buyer.getBalance();
+        buyer.setUpdatedAt(LocalDateTime.now());
+        buyer.setBalance(buyerCurrentBalance + request.getTotalPrice());
+
+        saveUser(buyer);
+
+        UpdateUserBalanceResponse response = new UpdateUserBalanceResponse();
+        response.setBuyer(buyer);
+        response.setSeller(seller);
+
+        return response;
+    }
+
+    @Override
     public void deleteUser(String idString) {
         // UserModel user = findUserById(idString);
         // user.setDeleted(true);
@@ -131,13 +150,7 @@ public class UserServiceImpl implements UserService {
     public UserModel findUserById(String idString) {
         UUID id = UUID.fromString(idString);
         Optional<UserModel> userOptional = userDb.findById(id);
-        if (userOptional.isPresent()) {
-            UserModel user = userOptional.get();
-            return user;
-        } else {
-
-        }
-        return null;
+        return userOptional.orElse(null);
     }
 
     // @Override
