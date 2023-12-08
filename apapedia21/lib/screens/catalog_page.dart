@@ -24,7 +24,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8080/api/product/view-all'),
+        Uri.parse(''),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
