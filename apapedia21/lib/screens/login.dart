@@ -1,4 +1,5 @@
 import 'package:apapedia21/screens/catalog_page.dart';
+import 'package:apapedia21/screens/register.dart';
 import 'package:apapedia21/utils/color_pallette.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -78,7 +79,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text("Baca Baca",
+                  const Text("APAPEDIA 21",
                       style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w700)),
@@ -189,6 +190,29 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                                       style: TextStyle(
                                           fontSize: 20,
                                         color: Colors.black
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: Size(MediaQuery.of(context).size.width * 0.8, 50),
+                                      primary: Colors.white, // Choose an appropriate color for the register button
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      // Navigate to the Register Screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const RegisterFormScreen()),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Register',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black // Choose an appropriate text color
                                       ),
                                     ),
                                   ),

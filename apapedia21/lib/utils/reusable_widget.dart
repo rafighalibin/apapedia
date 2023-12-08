@@ -1,7 +1,9 @@
 import 'package:apapedia21/utils/color_pallette.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void popUpExit(BuildContext context, String title) async {
+  final storage = FlutterSecureStorage();
   showDialog(
     context: context,
     builder: (context) {
@@ -43,7 +45,8 @@ void popUpExit(BuildContext context, String title) async {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    await storage.delete(key: 'jwt');
                     {
                       Navigator.pushNamed(context, "/");
                     };
