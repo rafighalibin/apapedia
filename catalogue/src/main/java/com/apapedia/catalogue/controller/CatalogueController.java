@@ -46,10 +46,10 @@ public class CatalogueController {
     CategoryService categoryService;
 
     @PostMapping(value = "catalogue/create")
-    public Catalogue tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO) {
+    public ResponseEntity<?> tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO) {
         var catalog = catalogueMapper.createCatalogueRequestDTOToCatalogue(catalogueDTO);
         catalogueService.saveCatalogue(catalog);
-        return catalog;
+        return ResponseEntity.ok(catalog);
     }
 
     @GetMapping(value = "/catalogue")

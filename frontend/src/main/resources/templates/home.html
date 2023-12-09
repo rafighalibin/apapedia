@@ -64,7 +64,7 @@
      <!-- Header and other HTML elements -->
      <div class="container">
       <div class="text-center pt-5">
-        <h2>Chart Penjualan Produk Bulan Ini</h2>
+        <h2>Chart Penjualan Produk</h2>
         <div class="row justify-content-center m-2">
           <canvas id="chartSales"></canvas>
         </div>
@@ -127,6 +127,37 @@
     </script>
 
     </div>
+
+    <div class="container mt-5">
+      <h2 class="mb-4">All Catalogs</h2>
+  
+      <!-- Iterate through the catalogs and display information using Bootstrap cards -->
+      <div class="row">
+          <div th:each="catalog : ${listCatalog}" class="col-md-4 mb-4">
+              <div class="card">
+                  <!-- Image -->
+                  <img th:src="'data:image/jpeg;base64,' + ${catalog.imageBase64}" class="card-img-top" alt="Product Image">
+  
+                  <div class="card-body">
+                      <!-- Product Information -->
+                      <h5 class="card-title" th:text="${catalog.productName}"></h5>
+                      <p class="card-text">
+                          Category: <span th:text="${catalog.category}"></span><br>
+                          Price: <span th:text="${catalog.price}"></span><br>
+                          Description: <span th:text="${catalog.productDescription}"></span><br>
+                          Stock: <span th:text="${catalog.stock}"></span>
+                      </p>
+                  </div>
+  
+                  <!-- Buttons for actions -->
+                  <div class="card-footer">
+                      <a th:href="" class="btn btn-secondary btn-sm">Edit Product</a>
+      
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 
     <!-- Home Page Section End -->
 

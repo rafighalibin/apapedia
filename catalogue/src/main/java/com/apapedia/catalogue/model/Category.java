@@ -21,8 +21,9 @@ import java.util.List;
 @Table(name = "category")
 public class Category {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id_category")
-    public UUID id = UUID.randomUUID();
+    public UUID id;
 
     @NotNull
     @Size(max = 240)
