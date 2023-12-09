@@ -27,7 +27,7 @@ public interface UserService {
 
     UserModel findUserByUsername(String username);
 
-    String getJwtFromCookies(HttpServletRequest request);
+    String getJwtFromHeader(HttpServletRequest request);
 
     String getUsernameFromJwtCookie(HttpServletRequest request);
 
