@@ -52,6 +52,15 @@ public class CatalogueController {
         return ResponseEntity.ok(catalog);
     }
 
+    @GetMapping(value = "/catalogue/viewall")
+    public ResponseEntity<List<Catalogue>> getAllCatalogue() {
+        List<Catalogue> catalogues = catalogueService.findAllCatalogues();
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(catalogues);
+    }
+
     @GetMapping(value = "/catalogue")
     public List<Catalogue> getAllCatalogSortedByName() {
         return catalogueService.getAllCatalogueByNameAsc();

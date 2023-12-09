@@ -30,6 +30,7 @@ public class CatalogController {
         var graph =  orderService.getGraph(request);
         if (graph != null) model.addAttribute("activeNavbar", "Home");
         model.addAttribute("penjualanPerHari",  graph);
+        model.addAttribute("listCatalogue", catalogueService.getAllCatalogue());
         return "home";
     }
     

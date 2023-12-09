@@ -12,4 +12,5 @@ import reactor.core.publisher.Mono;
 public interface CatalogueService {
     ReadCatalogueResponseDTO createCatalogue(CreateCatalogueRequestDTO catalogueDTO);
     List<CategoryResponseDTO> getAllCategory();
+    List<ReadCatalogueResponseDTO> getAllCatalogue();
 }

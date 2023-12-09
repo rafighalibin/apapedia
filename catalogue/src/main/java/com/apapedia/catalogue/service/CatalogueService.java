@@ -24,7 +24,9 @@ public class CatalogueService {
         return catalogueDb.findAllByOrderByProductNameLowerAsc();
     }
 
-    
+    public List<Catalogue> findAllCatalogues() {
+        return catalogueDb.findAll();
+    }
 
     public List<Catalogue> getAllCatalogueBySellerId(UUID sellerId) {
         return catalogueDb.findAllByIdSeller(sellerId);

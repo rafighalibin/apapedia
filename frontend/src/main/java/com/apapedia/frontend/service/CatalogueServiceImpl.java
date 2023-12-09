@@ -33,4 +33,9 @@ public class CatalogueServiceImpl implements CatalogueService {
         String url = "/api/category/all";
         return this.webClient.get().uri(url).retrieve().bodyToFlux(CategoryResponseDTO.class).collectList().block();
     }
+
+    public List<ReadCatalogueResponseDTO> getAllCatalogue() {
+        String url = "/api/catalogue/viewall";
+        return this.webClient.get().uri(url).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+    }
 }
