@@ -57,8 +57,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <h2 class="text-center mb-4">Add Prodcuts</h2>
-                <form th:action="@{/register}" th:object="${catalogueDTO}" method="POST">
+                <h2 class="text-center mb-4">Add Products</h2>
+                <form th:action="@{/catalogue/create}" th:object="${catalogueDTO}" method="POST">
         
                     Product Name: <br>
                     <input class="form-control" type="text" th:field="*{productName}" />
@@ -76,14 +76,17 @@
                     <input class="form-control" type="text" th:field="*{stock}" />
                     <br><br>
 
-                    <!-- Product Image: <br>
+                    Product Image: <br>
                     <input class="form-control" type="file" th:field="*{image}" />
                     <br><br>
 
                     Product Category: <br>
-                    <input class="form-control" type="text" th:field="*{address}" />
-                    <br><br> -->
-
+                    <select class="form-control" name="categoryId.id" id="categoryId" th:field="*{categoryId.id}">
+                      <option th:each="category: ${listCategory}" th:value="${category.id}" th:text="${category.name}"></option>
+                  </select>
+                  
+                  
+                    <br><br>
                     <div class="d-flex justify-content-center">
                         <a href="/" class="btn btn-danger" style="margin-inline-end: 20px;">Batal</a>
                         <button class="btn btn-primary" type="submit">Simpan</button>

@@ -20,6 +20,8 @@ public interface CatalogueDb extends JpaRepository<Catalogue, UUID> {
 
     List<Catalogue> findAllByOrderByPriceAsc();
 
+    List<Catalogue> findAll();
+
     List<Catalogue> findAllByOrderByPriceDesc();
 
     List<Catalogue> findAllByOrderByProductNameLowerDesc();
