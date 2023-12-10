@@ -24,10 +24,10 @@ public class UserServiceImpl implements UserService {
 
     private final WebClient webClient;
 
-    public UserServiceImpl(WebClient.Builder webClientBuilder){
+    public UserServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("https://apap-141.cs.ui.ac.id")
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .build();
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 
     @Override

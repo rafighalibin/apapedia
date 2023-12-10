@@ -19,38 +19,37 @@ import org.springframework.security.config.Customizer;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Autowired
-    JwtTokenFilter jwtTokenFilter;
+        @Autowired
+        JwtTokenFilter jwtTokenFilter;
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
+        @Bean
+        @Order(1)
+        public SecurityFilterChain jwtFilterChain(HttpSecurity http) throws Exception {
 
-        http.securityMatcher("/api/**")
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                .requestMatchers( "/api/order/get/seller/{id}").permitAll()
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        
-        return http.build();
-    }
+                http.securityMatcher("/api/**")
+                                .csrf(AbstractHttpConfigurer::disable)
+                                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                                                .requestMatchers("/api/order/get/seller/{id}").permitAll()
+                                                .requestMatchers("/api/**").permitAll()
+                                                .anyRequest().permitAll())
+                                .sessionManagement(
+                                                sessionManagement -> sessionManagement
+                                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    @Order(2)
-    public SecurityFilterChain webfilterChain(HttpSecurity http) throws Exception{ 
-        http
-            .csrf(Customizer.withDefaults())
-            .authorizeHttpRequests (requests -> requests
-                .requestMatchers (new AntPathRequestMatcher("/css/**")).permitAll() 
-                .requestMatchers (new AntPathRequestMatcher("/js/**")).permitAll()
-                .anyRequest().authenticated()
-            )
-        ;
-        return http.build();
-    }
+                return http.build();
+        }
 
+        @Bean
+        @Order(2)
+        public SecurityFilterChain webfilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(Customizer.withDefaults())
+                                .authorizeHttpRequests(requests -> requests
+                                                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                                                .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                                                .anyRequest().authenticated());
+                return http.build();
+        }
 
 }

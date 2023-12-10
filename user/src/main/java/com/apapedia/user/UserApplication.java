@@ -20,7 +20,7 @@ public class UserApplication {
 
 	@Bean
 	@Transactional
-	CommandLineRunner run(UserService userService, RoleService roleService){
+	CommandLineRunner run(UserService userService, RoleService roleService) {
 		return args -> {
 
 			var faker = new Faker();
@@ -28,21 +28,31 @@ public class UserApplication {
 			roleService.addRole("Seller");
 			roleService.addRole("Customer");
 
-
-			for(int i = 0; i < 2; i++){
+			for (int i = 0; i < 2; i++) {
 				UserModel user = new UserModel();
 				user.setRole(roleService.getRoleByRoleName("Seller"));
-				user.setBalance((long)100000);
+				user.setBalance((long) 100000);
 				user.setEmail(faker.internet().emailAddress());
 				user.setAddress(faker.address().fullAddress());
 				user.setName(faker.name().fullName());
-				user.setUsername("user"+i);
+				user.setUsername("user" + i);
 				String hashedPass = userService.encrypt("arief123");
 				user.setPassword(hashedPass);
 				userService.saveUser(user);
 			}
-			};
 
+			UserModel user = new UserModel();
+			user.setRole(roleService.getRoleByRoleName("Customer"));
+			user.setBalance((long) 100000);
+			user.setAddress(faker.address().fullAddress());
+			user.setName(faker.name().fullName());
+			user.setEmail(faker.internet().emailAddress());
+			user.setUsername("qwe");
+			String hashedPass = userService.encrypt("qwe");
+			user.setPassword(hashedPass);
+			userService.saveUser(user);
 		};
+
+	};
 
 }
