@@ -1,5 +1,6 @@
 package com.apapedia.user.restcontroller;
 
+import org.mapstruct.control.MappingControl.Use;
 import com.apapedia.user.dto.UserMapper;
 import com.apapedia.user.dto.request.*;
 import com.apapedia.user.dto.response.CreateUserResponseDTO;
@@ -59,16 +60,15 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("You must be logged in to update a user.");
 
-        if (userService.checkUsernameEmailPassword(request,
-                userDTO).equals("duplicateUsername"))
+        String checkUsernameEmailPassword = userService.checkUsernameEmailPassword(request,
+                userDTO);
+        if (checkUsernameEmailPassword.equals("duplicateUsername"))
             return ResponseEntity.ok("duplicate username");
 
-        if (userService.checkUsernameEmailPassword(request,
-                userDTO).equals("duplicateEmail"))
+        if (checkUsernameEmailPassword.equals("duplicateEmail"))
             return ResponseEntity.ok("duplicate email");
 
-        if (userService.checkUsernameEmailPassword(request,
-                userDTO).equals("duplicatePassword"))
+        if (checkUsernameEmailPassword.equals("duplicatePassword"))
             return ResponseEntity.ok("duplicate password");
 
         // Service method to update user details
@@ -110,13 +110,14 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
 
         UserModel user = userService
-                .findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromCookies(request)));
+                .findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromHeader(request)));
 
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/order/done/update-balance")
-    public ResponseEntity<?> updateBalanceAfterTransaction(@Valid @RequestBody UpdateBalanceAfterOrder updateBalance, HttpServletRequest request) {
+    public ResponseEntity<?> updateBalanceAfterTransaction(@Valid @RequestBody UpdateBalanceAfterOrder updateBalance,
+            HttpServletRequest request) {
         if (!userService.isLoggedIn(request))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
         UpdateUserBalanceResponse user = userService.updateBalanceAfterTransaction(updateBalance);

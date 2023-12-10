@@ -1,22 +1,5 @@
-version: '3.8'
+version: '3.3'
 services:
-  # order:
-  #   build:
-  #     context: ./order
-  #   restart: always
-  #   ports:
-  #     - "10142:8080"
-  #   volumes:
-  #     - ./file-storage:/file-storage
-  #     - ./log:/log
-  #   env_file:
-  #     - order/.env
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - frontend-network
-  #     - backend-network
-
   db:
     image: postgres:14-alpine
     ports:
@@ -29,13 +12,29 @@ services:
       - db:/var/lib/postgresql/data
     networks:
       - backend-network
-  
+  # order:
+  #   build:
+  #     context: ./order
+  #   restart: always
+  #   ports:
+  #     - "10141:8080"
+  #   volumes:
+  #     - ./file-storage:/file-storage
+  #     - ./log:/log
+  #   env_file:
+  #     - order/.env
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - frontend-network
+  #     - backend-network
+
   # catalogue:
   #   build:
   #     context: ./catalogue
   #   restart: always
   #   ports:
-  #     - "10141:8080"
+  #     - "10142:8080"
   #   volumes:
   #     - ./file-storage:/file-storage
   #     - ./log:/log

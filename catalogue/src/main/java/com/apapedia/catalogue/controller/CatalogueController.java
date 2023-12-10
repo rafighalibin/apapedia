@@ -46,10 +46,19 @@ public class CatalogueController {
     CategoryService categoryService;
 
     @PostMapping(value = "catalogue/create")
-    public Catalogue tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO) {
+    public ResponseEntity<?> tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO) {
         var catalog = catalogueMapper.createCatalogueRequestDTOToCatalogue(catalogueDTO);
         catalogueService.saveCatalogue(catalog);
-        return catalog;
+        return ResponseEntity.ok(catalog);
+    }
+
+    @GetMapping(value = "/catalogue/viewall")
+    public ResponseEntity<List<Catalogue>> getAllCatalogue() {
+        List<Catalogue> catalogues = catalogueService.findAllCatalogues();
+        if (catalogues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(catalogues);
     }
 
     @GetMapping(value = "/catalogue")

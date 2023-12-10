@@ -17,7 +17,7 @@ import com.apapedia.catalogue.model.Catalogue;
 import com.github.javafaker.Faker;
 import com.apapedia.catalogue.service.CatalogueService;
 import com.apapedia.catalogue.service.CategoryService;
-import java.util.UUID;
+import java.util.*;
 
 import jakarta.transaction.Transactional;
 
@@ -33,32 +33,14 @@ public class CatalogueApplication {
  CommandLineRunner run(CatalogueService catalogueService,  CatalogueMapper catalogueMapper, CategoryService categoryService){
   return args -> {
    var faker = new Faker(new Locale("in-ID"));
-   for (int i = 0; i < 10; i++) {
-
-    var categoryDTO = new Category();
-    categoryDTO.setName(faker.food().ingredient());
-
-
-    categoryService.createCategory(categoryDTO);
-
-    var catalogueDTO = new Catalogue();
-
-    catalogueDTO.setPrice(faker.number().randomDigitNotZero());
-    catalogueDTO.setProductName(faker.commerce().productName());
-
-    catalogueDTO.setProductDescription(faker.lorem().sentence());
-    catalogueDTO.setStock(faker.number().randomDigitNotZero());
-    // String imageUrl = generateRandomImageUrl();
-    // Simulate generating a byte array for an image (replace this with your actual image generation logic)
-    byte[] fakeImageBytes = generateFakeImageBytes();
-    catalogueDTO.setImage(fakeImageBytes);
-
-    catalogueDTO.setIdSeller(UUID.randomUUID());
-	catalogueDTO.setProductNameLower(catalogueDTO.getProductName().toLowerCase());
-
-    
-    catalogueService.saveCatalogue(catalogueDTO);
-   }
+   var categoryNames = List.of("Aksesoris Fashion", "Buku & Alat Tulis", "Elektronik", "Fashion Bayi & Anak",
+           "Fashion Muslim", "Fotografi", "Hobi & Koleksi", "Jam Tangan", "Perawatan & Kecantikan",
+           "Makanan & Minuman", "Otomotif", "Perlengkapan Rumah", "Souvenir & Party Supplies");
+    for (int ii = 0; ii < categoryNames.size(); ii++){
+        Category category  = new Category();
+        category.setName(categoryNames.get(ii));
+        categoryService.createCategory(category);
+    }
   };
  }
  private byte[] generateFakeImageBytes() {
