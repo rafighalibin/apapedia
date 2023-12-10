@@ -14,6 +14,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.apapedia.order.security.jwt.JwtTokenFilter;
 import org.springframework.security.config.Customizer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -30,27 +32,26 @@ public class WebSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers( "/api/order/get/seller/{id}").permitAll()
+                .requestMatchers( "/api/order/{id}").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        
+
         return http.build();
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain webfilterChain(HttpSecurity http) throws Exception{ 
+    public SecurityFilterChain webfilterChain(HttpSecurity http) throws Exception{
         http
             .csrf(Customizer.withDefaults())
             .authorizeHttpRequests (requests -> requests
-                .requestMatchers (new AntPathRequestMatcher("/css/**")).permitAll() 
+                .requestMatchers (new AntPathRequestMatcher("/css/**")).permitAll()
                 .requestMatchers (new AntPathRequestMatcher("/js/**")).permitAll()
                 .anyRequest().authenticated()
             )
         ;
         return http.build();
     }
-
-
 }
