@@ -73,7 +73,6 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<Order> getOrderHistory(HttpServletRequest request, UUID userId) {
         try{
-            System.out.println(userId);
             var response = this.webClient
                     .get()
                     .uri("/api/order/get/seller/{userId}", userId)

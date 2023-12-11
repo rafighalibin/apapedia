@@ -48,7 +48,8 @@ public class CatalogController {
     }
 
     @PostMapping("/catalogue/create")
-    public String addProduct(@ModelAttribute CreateCatalogueRequestDTO catalogueDTO, HttpServletRequest request){
+    public String addProduct(@ModelAttribute CreateCatalogueRequestDTO catalogueDTO, HttpServletRequest request) throws Exception{
+        catalogueDTO.setImage(catalogueDTO.getImageFile().getBytes());
         catalogueService.createCatalogue(catalogueDTO,request);
         return "redirect:/home";
     }
@@ -73,33 +74,10 @@ public class CatalogController {
     }
 
     @PostMapping("/catalogue/{id}/update")
-    public String UbahCatalogue(@ModelAttribute UpdateCatalogueResponseDTO updateCatalogueResponseDTO, HttpServletRequest request) {
+    public String UbahCatalogue(@ModelAttribute UpdateCatalogueResponseDTO updateCatalogueResponseDTO, HttpServletRequest request) throws Exception{
+        updateCatalogueResponseDTO.setImage(updateCatalogueResponseDTO.getImageFile().getBytes());
         catalogueService.updateCatalogue(updateCatalogueResponseDTO, request);
         return "redirect:/home";
-    }
-
-    @GetMapping("/catalogue/{id}/update")
-    public String formUbahCatalogue(@PathVariable("id") UUID id, Model model) {
-        //Mengambil catalogue dengan id tersebut
-        ReadCatalogueResponseDTO catalogue = catalogueService.getCatalogueById(id);
-        UpdateCatalogueResponseDTO catalogueDTO = new UpdateCatalogueResponseDTO();
-        catalogueDTO.setId(catalogue.getId());
-        catalogueDTO.setPrice(catalogue.getPrice());
-        catalogueDTO.setProductName(catalogue.getProductName());
-        catalogueDTO.setProductDescription(catalogue.getProductDescription());
-        catalogueDTO.setCategory(catalogue.getCategory());
-        catalogueDTO.setStock(catalogue.getStock());
-        catalogueDTO.setImage(catalogue.getImage());
-
-        model.addAttribute("catalogueDTO", catalogueDTO);
-
-        return "form-edit-product";
-    }
-
-    @PostMapping("/catalgue/{id}/update")
-    public String UbahCatalogue(@ModelAttribute UpdateCatalogueResponseDTO updateCatalogueResponseDTO) {
-        catalogueService.updateCatalogue(updateCatalogueResponseDTO);
-        return "home";
     }
 
 }
