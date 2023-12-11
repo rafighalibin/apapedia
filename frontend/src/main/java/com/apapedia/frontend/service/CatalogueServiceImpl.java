@@ -94,16 +94,17 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     @Override
-    public ReadCatalogueResponseDTO getCatalogueById(UUID id) {
-        String url = "/api/category/"+id;
-        return this.webClient.get().uri(url).retrieve().bodyToMono(ReadCatalogueResponseDTO.class).block();
+    public ReadCatalogueResponseDTO getCatalogueById(UUID id, HttpServletRequest request) {
+        String url = "/api/catalogue/"+id;
+        return this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToMono(ReadCatalogueResponseDTO.class).block();
     }
 
     @Override
-    public ReadCatalogueResponseDTO updateCatalogue(UpdateCatalogueResponseDTO updateCatalogueResponseDTO){
+    public ReadCatalogueResponseDTO updateCatalogue(UpdateCatalogueResponseDTO updateCatalogueResponseDTO, HttpServletRequest request){
             var response = this.webClient
                 .put()
                 .uri("/api/catalogue/update/"+updateCatalogueResponseDTO.getId())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateCatalogueResponseDTO)
                 .retrieve()
