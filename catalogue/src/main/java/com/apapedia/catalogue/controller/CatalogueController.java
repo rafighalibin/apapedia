@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
@@ -27,9 +28,11 @@ import com.apapedia.catalogue.dto.CatalogueMapper;
 import com.apapedia.catalogue.dto.request.CreateCatalogueRequestDTO;
 import com.apapedia.catalogue.dto.request.UpdateCatalogueRequestDTO;
 import com.apapedia.catalogue.model.Catalogue;
+import com.apapedia.catalogue.security.jwt.JwtUtils;
 import com.apapedia.catalogue.service.CatalogueService;
 import com.apapedia.catalogue.service.CategoryService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -45,47 +48,46 @@ public class CatalogueController {
     @Autowired
     CategoryService categoryService;
 
+    @Autowired
+    JwtUtils jwtUtils;
+
     @PostMapping(value = "catalogue/create")
-    public ResponseEntity<?> tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO) {
+    public ResponseEntity<?> tambahCatalog(@Valid @RequestBody CreateCatalogueRequestDTO catalogueDTO, HttpServletRequest request) {
+        var idSeller = jwtUtils.getIdFromJwtToken(jwtUtils.parseJwt(request));
+        var idSellerUUID = UUID.fromString(idSeller);
+        catalogueDTO.setIdSeller(idSellerUUID);
         var catalog = catalogueMapper.createCatalogueRequestDTOToCatalogue(catalogueDTO);
         catalogueService.saveCatalogue(catalog);
+
         return ResponseEntity.ok(catalog);
     }
 
     @GetMapping(value = "/catalogue/viewall")
     public ResponseEntity<List<Catalogue>> getAllCatalogue() {
         List<Catalogue> catalogues = catalogueService.findAllCatalogues();
-        if (catalogues.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return ResponseEntity.ok(catalogues);
     }
 
     @GetMapping(value = "/catalogue")
-    public List<Catalogue> getAllCatalogSortedByName() {
-        return catalogueService.getAllCatalogueByNameAsc();
+    public  ResponseEntity<List<Catalogue>> getAllCatalogSortedByName() {
+       List<Catalogue> catalogues = catalogueService.getAllCatalogueByNameAsc();
+       return ResponseEntity.ok(catalogues);
     }
 
     @GetMapping(value = "/catalogue/by-seller/{sellerId}")
     public ResponseEntity<List<Catalogue>> getAllCatalogueBySellerId(@PathVariable("sellerId") UUID sellerId) {
         List<Catalogue> catalogues = catalogueService.getAllCatalogueBySellerId(sellerId);
-        if (catalogues.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return ResponseEntity.ok(catalogues);
     }
 
     @GetMapping(value = "/catalogue/{catalogueId}")
     public ResponseEntity<Catalogue> getCatalogueById(@PathVariable("catalogueId") UUID catalogId) {
         Catalogue catalogue = catalogueService.getCatalogueById(catalogId);
-        if (catalogue == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return ResponseEntity.ok(catalogue);
     }
 
-    @GetMapping(value = "/catalogue", params = "name")
-    public ResponseEntity<List<Catalogue>> getAllCatalogueByName(@RequestParam("name") String name) {
+    @GetMapping(value = "/catalogue/search")
+    public ResponseEntity<List<Catalogue>> getAllCatalogueByName(@RequestParam(value="query") String name) {
         List<Catalogue> catalogues = catalogueService.getAllCatalogueByName(name.toLowerCase());
         if (catalogues.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -94,8 +96,8 @@ public class CatalogueController {
     }
 
 
-    @PutMapping(value="/catalogue/{catalogueId}")
-    public ResponseEntity<Catalogue> updateCatalogue(@PathVariable("catalogueId") UUID catalogId, @Valid @RequestBody UpdateCatalogueRequestDTO updateCatalogueRequestDTO) {
+    @PutMapping(value="/catalogue/update/{catalogueId}")
+    public ResponseEntity<Catalogue> updateCatalogue(@PathVariable("catalogueId") UUID catalogId, @Valid @RequestBody UpdateCatalogueRequestDTO updateCatalogueRequestDTO, HttpServletRequest request) {
         // Retrieve the existing catalog from the database
         Catalogue catalogue = catalogueService.getCatalogueById(catalogId);
         if (catalogue == null) {
@@ -126,8 +128,8 @@ public class CatalogueController {
         catalogue.setImage(updateCatalogueRequestDTO.getImage());
     }
 
-    if (updateCatalogueRequestDTO.getIdCategory() != null) {
-        catalogue.setCategory(categoryService.getCategoryById(updateCatalogueRequestDTO.getIdCategory()));
+    if (updateCatalogueRequestDTO.getCategory() != null) {
+        catalogue.setCategory(updateCatalogueRequestDTO.getCategory());
     }
         
         catalogueService.saveCatalogue(catalogue);

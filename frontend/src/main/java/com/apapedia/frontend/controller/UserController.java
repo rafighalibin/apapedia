@@ -33,8 +33,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO)
+    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO, Model model)
             throws IOException, InterruptedException {
+        model.addAttribute("navbarActive", "Register");
         createUserDTO.setPassword("ariefthegoat");
         createUserDTO.setRole("Seller");
         createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");

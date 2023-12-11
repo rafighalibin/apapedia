@@ -129,6 +129,14 @@
     </div>
     <div class="container mt-5">
       <h2 class="mb-4">All Catalogue</h2>
+       <!-- Add Product Button (visible only if logged in) -->
+       <div th:if="${isLoggedIn}">
+        <a th:href="@{/catalogue/create}" class="btn btn-success">Add Product</a>
+    </div>
+    <form th:action="@{/catalogue/search}" method="GET">
+      <input type="text" name="query" placeholder="Search Product Name Here..." th:value="${query}" />
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
       <div class="row">
         <!-- Iterate through the list of catalogs -->
         <div th:each="catalogue : ${listCatalogue}" class="col-md-4 mb-4">
@@ -137,17 +145,21 @@
               <!-- Product Information -->
               <h5 class="card-title" th:text="${catalogue.productName}"></h5>
               <p class="card-text">
+                <img alt="" th:src="@{'data:image/jpeg;base64,'+ ${catalogue.imageString}}" style="width: 200px;height: 200px;"><br>
                 Category: <span th:text="${catalogue.category.name}"></span><br>
                 Price: <span th:text="${catalogue.price}"></span><br>
                 Description: <span th:text="${catalogue.productDescription}"></span><br>
                 Stock: <span th:text="${catalogue.stock}"></span>
               </p>
+               <!-- Edit Button (visible only if logged in) -->
+            <div th:if="${isLoggedIn}">
+              <a type="button" class="btn btn-primary" th:href="@{/catalogue/{id}/update(id=${catalogue.id})}">Edit</a>
+          </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
 
     <!-- Home Page Section End -->
 

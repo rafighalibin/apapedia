@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'APAPEDIA 21',
       routes: {
-        '/': (context) => const LoginFormScreen(),
+        '/': (context) => LoginFormScreen(),
         '/catalog-page': (context) => const CatalogScreen(),
         '/topup-page': (context) => TopUpScreen(),
         '/cart-page': (context) => const CartScreen(),

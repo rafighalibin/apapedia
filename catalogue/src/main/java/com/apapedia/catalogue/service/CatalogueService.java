@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.apapedia.catalogue.model.Catalogue;
 import com.apapedia.catalogue.repository.CatalogueDb;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class CatalogueService {
     @Autowired
@@ -25,11 +27,11 @@ public class CatalogueService {
     }
 
     public List<Catalogue> findAllCatalogues() {
-        return catalogueDb.findAll();
+        return catalogueDb.findAllByOrderByProductNameLowerAsc();
     }
 
     public List<Catalogue> getAllCatalogueBySellerId(UUID sellerId) {
-        return catalogueDb.findAllByIdSeller(sellerId);
+        return catalogueDb.findAllByIdSellerOrderByProductNameLowerAsc(sellerId);
     }
 
     public Catalogue getCatalogueById(UUID catalogId) {
