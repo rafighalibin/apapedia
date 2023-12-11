@@ -2,115 +2,117 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="description" content="Ogani Template"/>
+    <meta name="keywords" content="Ogani, unica, creative, html"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="https://cdn.usebootstrap.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap");
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Profile</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"
+    ></script>
+    <!-- Google Font -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
+            rel="stylesheet"
+    />
+    <!-- Css Styles -->
+    <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+    />
 
-        body {
-            font-family: "Open Sans", sans-serif;
-        }
-
-        .search {
-            top: 6px;
-            left: 10px;
-        }
-
-        .form-control {
-            border: none;
-            padding-left: 32px;
-        }
-
-        .form-control:focus {
-            border: none;
-            box-shadow: none;
-        }
-
-        .green {
-            color: green;
-        }
-    </style>
-    <script src="/js/bootstrap.min.js"></script>
+    <object th:insert="~{fragments/fragment::css}" th:remove="tag"></object>
+    <object th:insert="~{fragments/fragment::js}" th:remove="tag"></object>
+    <link
+            th:href="@{/css/font-awesome.min.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link
+            th:href="@{/css/elegant-icons.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link th:href="@{/css/nice-select.css}" rel="stylesheet" type="text/css"/>
+    <link
+            th:href="@{/css/jquery-ui.min.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link
+            th:href="@{/css/owl.carousel.min.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link th:href="@{/css/slicknav.min.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">APAS</a>
-    <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-    >
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-                <form class="form-inline my-2 my-lg-0">
-                    <input
-                            class="form-control mr-sm-2"
-                            type="search"
-                            placeholder="Search"
-                            aria-label="Search"
-                    />
-                    <button
-                            class="btn btn-outline-success my-2 my-sm-0"
-                            type="submit"
-                    >
-                        Search
-                    </button>
-                </form>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/order-history/">Order History</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/profile/">Profile</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<nav th:replace="~{fragments/navbar :: navbar('Order History')}"></nav>
 
 <div class="container">
     <h2>Seller Order History</h2>
+    <h5 th:text="${message}" style="color: #ad3939"></h5>
     <table class="table table-borderless mx-auto">
         <thead>
         <tr class="bg-light">
-            <th scope="col" width="5%">#</th>
-            <th scope="col" width="20%">Tanggal</th>
-            <th scope="col" width="10%">Status</th>
-            <th scope="col" width="20%">Customer</th>
-            <th scope="col" width="20%">Nama Barang</th>
-            <th scope="col" class="text-end" width="20%">
+            <th scope="col" class="text-center" width="5%">#</th>
+            <th scope="col" class="text-center" width="20%">Tanggal</th>
+            <th scope="col" class="text-center" width="10%">Status</th>
+            <th scope="col" class="text-center" width="20%">Pelanggan</th>
+            <th scope="col" class="text-center" width="20%">
                 <span>Harga Total</span>
             </th>
+            <th scope="col" class="text-center" width="25%">Ubah Status</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="order : ${orders}">
             <td th:text="${order.orderId}"></td>
-            <td th:text="${order.createdAt}">1 Oct, 21</td>
+            <td th:text="${order.createdAt}"></td>
             <td>
-                <i class="fa fa-check-circle-o green"></i
-                ><span class="ms-1">Paid</span>
+                <span th:if="${order.status eq 1}">
+                    <span class="ms-1 text-center d-inline-block">Dikonfirmasi Penjual</span>
+                </span>
+                <span th:if="${order.status eq 2}">
+                    <span class="ms-1 text-center d-inline-block">Menunggu Kurir</span>
+                </span>
+                <span th:if="${order.status eq 3}">
+                    <span class="ms-1 text-center d-inline-block">Dalam Perjalanan</span>
+                </span>
+                <span th:if="${order.status eq 4}">
+                    <span class="ms-1 text-center d-inline-block">Barang Diterima</span>
+                </span>
+                <span th:if="${order.status eq 5}">
+                    <span class="ms-1 text-center d-inline-block">Selesai</span>
+                </span>
             </td>
             <td>
                 <img src="https://i.imgur.com/VKOeFyS.png" width="25"/>
                 <span th:text="${order.customerId}"></span>
             </td>
-            <td>Wirecard for figma</td>
-            <td class="text-end">
-                <span class="fw-bolder" th:text="${order.totalPrice}">$0.99</span>
-                <i class="fa fa-ellipsis-h ms-2"></i>
+            <td class="text-center">
+                <span class="fw-bolder" th:text="${order.totalPrice}"></span>
+            </td>
+            <td class="text-center">
+                <div th:id="'form-' + ${order.orderId}">
+                    <form th:action="@{'/order/update/status/' + ${order.orderId}}" th:object="${updateStatusForm}"
+                          method="post">
+                        <input type="hidden" id="status" name="status" required th:value="${order.status}"/>
+
+                        <div th:if="${order.status < 5}" class="d-inline-block">
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </div>
+
+                        <div th:if="${order.status == 5}" class="ms-1">
+                            <span class="text-center d-inline-block">Selesai</span>
+                        </div>
+                    </form>
+                </div>
             </td>
         </tr>
         <tr>

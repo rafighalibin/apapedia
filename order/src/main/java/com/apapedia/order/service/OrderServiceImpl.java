@@ -18,7 +18,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.UUID;
-import org.springframework.util.StringUtils;
 
 
 @Service
@@ -49,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(UUID id) {
-        return orderDb.findById(id).orElseThrow();
+        return orderDb.findByOrderId(id);
     }
 
     @Override
@@ -110,7 +109,5 @@ public class OrderServiceImpl implements OrderService {
 
         return productSold;
     }
-
-
 
 }

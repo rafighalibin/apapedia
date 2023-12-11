@@ -30,6 +30,16 @@
       "projectName": "catalogue",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FrontendApplication<frontend>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.apapedia.frontend.FrontendApplication",
+      "projectName": "frontend",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }

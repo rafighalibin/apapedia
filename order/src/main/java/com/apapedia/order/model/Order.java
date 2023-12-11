@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.cglib.core.Local;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +22,7 @@ import java.util.List;
 public class Order {
 
     @Id
+    @Column(name = "order_id")
     private UUID orderId = UUID.randomUUID();
 
     @NotNull
@@ -49,5 +50,6 @@ public class Order {
     private UUID sellerId;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<OrderItem> listOrderItem;
 }
