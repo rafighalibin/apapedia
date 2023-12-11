@@ -15,7 +15,7 @@ public class CatalogueServiceImpl implements CatalogueService {
    private final WebClient webClient;
 
    public CatalogueServiceImpl(WebClient.Builder webClientBuilder) {
-       this.webClient = webClientBuilder.baseUrl("https://apap-141.cs.ui.ac.id").build();
+       this.webClient = webClientBuilder.baseUrl("http://localhost:10142").build();
    }
 
    public ReadCatalogueResponseDTO createCatalogue(CreateCatalogueRequestDTO catalogueDTO) {
