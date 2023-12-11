@@ -9,23 +9,23 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Order {
-    private UUID id;
+    private UUID orderId;
     private Date createdAt;
     private Date updatedAt;
     private int status;
     private int totalPrice;
-    private UUID customer;
-    private UUID seller;
+    private UUID customerId;
+    private UUID sellerId;
     private List<OrderItem> orderItem;
 
 
-    public Order(UUID id, Date createdAt, Date updatedAt, int status, int totalPrice, UUID customer, UUID seller) {
-        this.id = id;
+    public Order(UUID orderId, Date createdAt, Date updatedAt, int status, int totalPrice, UUID customerId, UUID sellerId) {
+        this.orderId = orderId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.status = status;
         this.totalPrice = totalPrice;
-        this.customer = customer;
-        this.seller = seller;
+        this.customerId = customerId;
+        this.sellerId = sellerId;
     }
 }
