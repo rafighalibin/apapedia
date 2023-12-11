@@ -52,7 +52,7 @@
       </head>
 <body>
 
-    <header th:replace="~{fragments/navbar}"></header>
+  <nav th:replace="~{fragments/navbar :: navbar('Register')}"></nav>
 
     <div class="container">
         <div class="row justify-content-center">
@@ -72,6 +72,13 @@
                     <input class="form-control" type="text" th:field="*{address}" />
                     <br><br>
 
+                    Category: <br>
+                    <select class="form-control" th:field="*{category}">
+                        <option value="Biasa">Biasa</option>
+                        <option value="Official Store">Official Store</option>
+                    </select>
+                    <br><br>
+                    
                     <div class="d-flex justify-content-center">
                         <a href="/" class="btn btn-danger" style="margin-inline-end: 20px;">Batal</a>
                         <button class="btn btn-primary" type="submit">Simpan</button>

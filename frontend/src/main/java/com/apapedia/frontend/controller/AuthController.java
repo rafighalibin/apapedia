@@ -73,7 +73,7 @@ public class AuthController {
         response.addCookie(jwtCookie);
 
     
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/");
     }
 
     @GetMapping("/login-sso")
@@ -83,7 +83,8 @@ public class AuthController {
 
     @GetMapping("/logout-sso")
     public ModelAndView logoutSSO(Principal principal){
-        return new ModelAndView("redirect" + Setting.SERVER_LOGOUT + Setting.CLIENT_LOGOUT);
+        return new ModelAndView("redirect:" + Setting.SERVER_LOGOUT + Setting.CLIENT_LOGOUT);
     }
+
                     
 }

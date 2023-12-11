@@ -52,6 +52,9 @@ public class UserServiceImpl implements UserService {
     public ReadUserResponseDTO registerUser(CreateUserRequestDTO createUserDTO)
             throws IOException, InterruptedException {
         try {
+            createUserDTO.setPassword("ariefthegoat");
+            createUserDTO.setRole("Seller");
+            createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");
             var response = this.webClient
                     .post()
                     .uri("/api/user/add")
@@ -78,7 +81,6 @@ public class UserServiceImpl implements UserService {
                 .bodyToMono(ReadUserResponseDTO.class);
 
         ReadUserResponseDTO userResponseDTO = user.block();
-        userResponseDTO.setCategory("Official Store");
 
         return userResponseDTO;
     }
