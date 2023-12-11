@@ -27,11 +27,11 @@ public class CatalogueService {
     }
 
     public List<Catalogue> findAllCatalogues() {
-        return catalogueDb.findAll();
+        return catalogueDb.findAllByOrderByProductNameLowerAsc();
     }
 
     public List<Catalogue> getAllCatalogueBySellerId(UUID sellerId) {
-        return catalogueDb.findAllByIdSeller(sellerId);
+        return catalogueDb.findAllByIdSellerOrderByProductNameLowerAsc(sellerId);
     }
 
     public Catalogue getCatalogueById(UUID catalogId) {
