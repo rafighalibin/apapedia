@@ -16,4 +16,5 @@ public class ReadCatalogueResponseDTO {
     private Integer stock;
     private byte[] image;
     private String imageString;
+    private UUID idSeller;
 }
