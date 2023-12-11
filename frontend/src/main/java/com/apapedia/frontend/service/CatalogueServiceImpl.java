@@ -127,7 +127,16 @@ public class CatalogueServiceImpl implements CatalogueService {
     @Override
     public List<ReadCatalogueResponseDTO> listCatalogueFiltered(String productName, HttpServletRequest request){
         String url = "/api/catalogue/search?query="+productName;
-        return this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+        try {
+            var listCatalogue = this.webClient.get().uri(url).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+            for (var catalogue : listCatalogue){
+                catalogue.setImageString(Base64.getEncoder().encodeToString(catalogue.getImage()));
+            } 
+            return listCatalogue;
+        } catch (Exception e){
+            return null;
+        }
+
     }
     
 }

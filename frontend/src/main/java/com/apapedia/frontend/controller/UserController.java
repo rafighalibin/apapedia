@@ -36,12 +36,9 @@ public class UserController {
     public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO, Model model)
             throws IOException, InterruptedException {
         model.addAttribute("navbarActive", "Register");
-        createUserDTO.setPassword("ariefthegoat");
-        createUserDTO.setRole("Seller");
-        createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");
         userService.registerUser(createUserDTO);
 
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     @GetMapping("/profile")
