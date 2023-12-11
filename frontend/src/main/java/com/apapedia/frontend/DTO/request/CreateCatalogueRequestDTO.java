@@ -20,5 +20,5 @@ public class CreateCatalogueRequestDTO {
     private byte[] image;
     @JsonProperty("category")
     private CategoryResponseDTO categoryId;
-    private UUID idSeller = UUID.randomUUID();
+    private UUID idSeller;
 }
