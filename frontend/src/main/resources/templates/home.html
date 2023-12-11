@@ -141,6 +141,7 @@
               <!-- Product Information -->
               <h5 class="card-title" th:text="${catalogue.productName}"></h5>
               <p class="card-text">
+                <img alt="" th:src="@{'data:image/jpeg;base64,'+ ${catalogue.imageString}}" style="width: 200px;height: 200px;"><br>
                 Category: <span th:text="${catalogue.category.name}"></span><br>
                 Price: <span th:text="${catalogue.price}"></span><br>
                 Description: <span th:text="${catalogue.productDescription}"></span><br>

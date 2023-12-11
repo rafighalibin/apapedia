@@ -2,7 +2,10 @@ package com.apapedia.frontend.DTO.request;
 
 import java.util.UUID;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.apapedia.frontend.DTO.response.CategoryResponseDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +21,8 @@ public class CreateCatalogueRequestDTO {
     private String productDescription;
     private int stock;
     private byte[] image;
+    @JsonIgnore
+    private MultipartFile imageFile;
     @JsonProperty("category")
     private CategoryResponseDTO categoryId;
     private UUID idSeller;
