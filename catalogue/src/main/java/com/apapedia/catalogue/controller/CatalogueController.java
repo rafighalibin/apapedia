@@ -96,7 +96,7 @@ public class CatalogueController {
 
 
     @PutMapping(value="/catalogue/update/{catalogueId}")
-    public ResponseEntity<Catalogue> updateCatalogue(@PathVariable("catalogueId") UUID catalogId, @Valid @RequestBody UpdateCatalogueRequestDTO updateCatalogueRequestDTO) {
+    public ResponseEntity<Catalogue> updateCatalogue(@PathVariable("catalogueId") UUID catalogId, @Valid @RequestBody UpdateCatalogueRequestDTO updateCatalogueRequestDTO, HttpServletRequest request) {
         // Retrieve the existing catalog from the database
         Catalogue catalogue = catalogueService.getCatalogueById(catalogId);
         if (catalogue == null) {
