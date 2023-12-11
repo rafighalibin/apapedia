@@ -56,10 +56,20 @@ public class CatalogueServiceImpl implements CatalogueService {
         if (token != null){
             String sellerId = getIdFromJwtToken(token);
             String url = "/api/catalogue/by-seller/"+ sellerId;
-        return this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+            var listCatalogue =  this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+            for (var catalogue : listCatalogue){
+                catalogue.setImageString(Base64.getEncoder().encodeToString(catalogue.getImage()));
+            }
+            return listCatalogue;
+
         } else{
             String url = "/api/catalogue/viewall";
-        return this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+
+            var listCatalogue = this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+            for (var catalogue : listCatalogue){
+                catalogue.setImageString(Base64.getEncoder().encodeToString(catalogue.getImage()));
+            }
+            return listCatalogue;
         }
     }
 

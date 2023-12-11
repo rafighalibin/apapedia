@@ -15,4 +15,5 @@ public class ReadCatalogueResponseDTO {
     private CategoryResponseDTO category;
     private Integer stock;
     private byte[] image;
+    private String imageString;
 }
