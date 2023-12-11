@@ -58,7 +58,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h2 class="text-center mb-4">Update Your Product</h2>
-                <form th:action="@{/catalogue/{catalogueId}/update(catalogueId=$(catalogueDTO.id))}" th:object="${catalogueDTO}" method="POST">
+                <form th:action="@{/catalogue/{id}/update(id=${catalogueDTO.id})}" th:object="${catalogueDTO}" method="POST">
         
                     Product Name: <br>
                     <input class="form-control" type="text" th:field="*{productName}" />
