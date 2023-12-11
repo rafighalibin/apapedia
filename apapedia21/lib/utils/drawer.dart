@@ -1,3 +1,4 @@
+import 'package:apapedia21/screens/cart.dart';
 import 'package:apapedia21/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:apapedia21/screens/catalog_page.dart';
@@ -33,6 +34,13 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const CatalogScreen()));
+            },
+          ),
+          ListTile(
+            title: const Text('Cart'),
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const CartScreen()));
             },
           ),
         ],

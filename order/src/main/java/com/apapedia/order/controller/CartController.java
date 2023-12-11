@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 
 import java.util.UUID;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,30 +42,31 @@ public class CartController {
     }
 
     @PostMapping("/cart/add-item/{idCart}")
-    public ResponseEntity<CartItem> addItem(@Valid @RequestBody CreateCartItemRequestDTO cartItemDTO, @PathVariable("idCart") String idCart) {
+    public ResponseEntity<CartItem> addItem(@Valid @RequestBody CreateCartItemRequestDTO cartItemDTO,
+            @PathVariable("idCart") String idCart) {
         var cart = cartService.findCartById(UUID.fromString(idCart));
         var cartItem = cartMapper.createCartItemRequestDTOToCartItem(cartItemDTO);
         return ResponseEntity.ok(cartService.addItem(cart, cartItem));
     }
 
     @PutMapping("/cart/update-item/{idCart}")
-    public ResponseEntity<CartItem> updateCartItem(@Valid @RequestBody UpdateCartItemRequestDTO cartItemDTO, @PathVariable("idCart") UUID idCart) {
+    public ResponseEntity<CartItem> updateCartItem(@Valid @RequestBody UpdateCartItemRequestDTO cartItemDTO,
+            @PathVariable("idCart") UUID idCart) {
         var cart = cartService.findCartById(idCart);
         var cartItemFromDto = cartMapper.updateCartItemRequestDTOToCartItem(cartItemDTO);
         var updatedCart = cartService.updateCartItem(cart, cartItemFromDto);
         return ResponseEntity.ok(updatedCart);
     }
-    
+
     @GetMapping("/cart/get/{userId}")
-    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable("userId") UUID userId){
+    public ResponseEntity<List<Map<String, Object>>> getCartItems(@PathVariable("userId") UUID userId) {
         var cart = cartService.findCartByUserId(userId);
         List<CartItem> listCartItems = cart.getListCartItem();
-        return ResponseEntity.ok(listCartItems);
+        return ResponseEntity.ok(cartService.convertToJsonObject(listCartItems));
     }
-    
 
     @GetMapping("/cart/delete-cart-items/{id}")
-    public ResponseEntity<String> deleteCartItems(@PathVariable("id") UUID id){
+    public ResponseEntity<String> deleteCartItems(@PathVariable("id") UUID id) {
         cartService.deleteCartItems(id);
         return ResponseEntity.ok("Cart items has been deleted successfully");
     }

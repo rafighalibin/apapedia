@@ -1,6 +1,7 @@
 package com.apapedia.user.service;
 
 import com.apapedia.user.dto.request.*;
+import com.apapedia.user.dto.response.CreateCartResponseDTO;
 import com.apapedia.user.dto.response.UpdateUserBalanceResponse;
 import com.apapedia.user.model.UserModel;
 import com.apapedia.user.repository.UserDb;
@@ -10,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -26,11 +30,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     RoleService roleService;
 
+    private final WebClient webClient;
+
+    public UserServiceImpl(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("http://localhost:10141")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+    }
+
     @Override
     public UserModel addUser(UserModel user, CreateUserRequestDTO createUserRequestDTO) {
         user.setRole(roleService.getRoleByRoleName(createUserRequestDTO.getRole()));
         String hashedPass = encrypt(user.getPassword());
         user.setPassword(hashedPass);
+
         return userDb.save(user);
     }
 
@@ -230,7 +243,23 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword()))
             return null;
 
-        return jwtUtils.generateJwtToken(user);
+        String jwt = jwtUtils.generateJwtToken(user);
+        if (user.getRole().getRole().equals("Customer")) {
+            CreateCartRequestDTO createCartRequestDTO = new CreateCartRequestDTO();
+            createCartRequestDTO.setUserId(user.getId());
+            createCartRequestDTO.setTotalPrice(0);
+            var response = this.webClient
+                    .post()
+                    .uri("/api/cart/create")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
+                    .header("Cookie", "jwt=" + jwt)
+                    .bodyValue(createCartRequestDTO)
+                    .retrieve()
+                    .bodyToMono(CreateCartResponseDTO.class)
+                    .block();
+        }
+        return jwt;
     }
 
     @Override
