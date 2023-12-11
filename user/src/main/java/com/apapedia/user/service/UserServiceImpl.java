@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
         UserModel oldUser = findUserByUsername(username);
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String checkUsernameEmailPassword(HttpServletRequest request,
             UpdateUserRequestDTO newUser) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         String oldId = jwtUtils.getIdFromJwtToken(jwt);
         UserModel oldUser = findUserById(oldId);
 
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel updateBalance(HttpServletRequest request, UpdateBalance newBalance) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
         UserModel user = findUserByUsername(username);
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         saveUser(user);
 
-        return null;
+        return user;
     }
 
     @Override
@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
     // }
 
     @Override
-    public String getJwtFromCookies(HttpServletRequest request) {
+    public String getJwtFromHeader(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -180,12 +180,23 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
+
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            authorizationHeader = authorizationHeader.substring(7); // Remove 'Bearer ' prefix
+        }
+
+        if (authorizationHeader != null && !authorizationHeader.isEmpty()) {
+            return authorizationHeader;
+
+        }
         return null;
     }
 
     @Override
     public String getUsernameFromJwtCookie(HttpServletRequest request) {
-        // String jwt = getJwtFromCookies(request);
+        // String jwt = getJwtFromHeader(request);
         // if (jwt != null && !jwt.isEmpty()) {
         // return jwtUtil.extractUsername(jwt);
         // }
@@ -194,7 +205,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isLoggedIn(HttpServletRequest request) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         if (jwt != null && !jwt.isEmpty()) {
             try {
                 String id = jwtUtils.getIdFromJwtToken(jwt);

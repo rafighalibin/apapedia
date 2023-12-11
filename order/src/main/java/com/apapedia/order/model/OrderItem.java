@@ -28,7 +28,7 @@ public class OrderItem {
     private UUID productId;
     
     @ManyToOne
-    @JoinColumn(name = "id_order", referencedColumnName = "orderId")
+    @JoinColumn(name = "id_order", referencedColumnName = "order_id")
     private Order order;
 
     @NotNull
