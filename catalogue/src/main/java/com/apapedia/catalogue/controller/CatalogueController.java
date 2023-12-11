@@ -69,8 +69,9 @@ public class CatalogueController {
     }
 
     @GetMapping(value = "/catalogue")
-    public List<Catalogue> getAllCatalogSortedByName() {
-        return catalogueService.getAllCatalogueByNameAsc();
+    public  ResponseEntity<List<Catalogue>> getAllCatalogSortedByName() {
+       List<Catalogue> catalogues = catalogueService.getAllCatalogueByNameAsc();
+       return ResponseEntity.ok(catalogues);
     }
 
     @GetMapping(value = "/catalogue/by-seller/{sellerId}")
@@ -85,8 +86,8 @@ public class CatalogueController {
         return ResponseEntity.ok(catalogue);
     }
 
-    @GetMapping(value = "/catalogue", params = "name")
-    public ResponseEntity<List<Catalogue>> getAllCatalogueByName(@RequestParam("name") String name) {
+    @GetMapping(value = "/catalogue/search")
+    public ResponseEntity<List<Catalogue>> getAllCatalogueByName(@RequestParam(value="query") String name) {
         List<Catalogue> catalogues = catalogueService.getAllCatalogueByName(name.toLowerCase());
         if (catalogues.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

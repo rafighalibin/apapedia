@@ -113,5 +113,11 @@ public class CatalogueServiceImpl implements CatalogueService {
 
         return response;
     }
+
+    @Override
+    public List<ReadCatalogueResponseDTO> listCatalogueFiltered(String productName, HttpServletRequest request){
+        String url = "/api/catalogue/search?query="+productName;
+        return this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+    }
     
 }
