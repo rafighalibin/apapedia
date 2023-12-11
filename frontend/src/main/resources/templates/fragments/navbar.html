@@ -55,7 +55,7 @@
               <!-- Logo -->
               <div class="col-lg-3">
                   <div class="header__logo">
-                      <a href="/home">
+                      <a href="/">
                           <img th:src="@{/img/logo-cart-text-rectangle.png}" width="200"/>
                       </a>
                   </div>
@@ -64,7 +64,7 @@
               <!-- Main Navigation (Profile, Order History) -->
               <div class="col-lg-6">
                   <nav class="header__menu">
-                      <ul th:if="${navbarActive != null}">
+                      <ul th:if="${navbarActive != 'NotLoggedIn' and navbarActive != 'Register'}">
                           <li th:classappend="${navbarActive == 'Profile'} ? 'active' : ''">
                               <a href="/profile">Profile</a>
                           </li>
@@ -77,14 +77,23 @@
   
               <!-- Login Link -->
               <div class="col-lg-3">
-                  <nav class="header__menu">
-                    <ul th:if="${navbarActive == null}">
-                          <li class="text-right">
-                              <a href="/login-sso">Login</a>
-                          </li>
-                      </ul>
-                  </nav>
-              </div>
+                <nav class="header__menu">
+                    <ul th:if="${navbarActive == 'NotLoggedIn' or navbarActive == 'Register'}">
+                        <li class="text-right" th:classappend="${navbarActive == 'Login'} ? 'active' : ''">
+                            <a href="/login-sso">Login</a>
+                        </li>
+                        <li class="text-right" th:classappend="${navbarActive == 'Register'} ? 'active' : ''">
+                            <a href="/register">Register</a>
+                        </li>
+                    </ul>
+                    <ul th:if="${navbarActive != 'NotLoggedIn' and navbarActive != 'Register'}">
+                      <li class="text-right" th:classappend="${navbarActive == 'Logout'} ? 'active' : ''">
+                        <a href="/logout-sso">Logout</a>
+                      </li>
+                  </ul>
+                </nav>
+            </div>
+            
           </div>
       </div>
   </header>

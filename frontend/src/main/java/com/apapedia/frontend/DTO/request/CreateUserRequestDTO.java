@@ -19,6 +19,8 @@ public class CreateUserRequestDTO {
 
     private String address;
 
+    private String category;
+
     long balance;
 
     private String role;

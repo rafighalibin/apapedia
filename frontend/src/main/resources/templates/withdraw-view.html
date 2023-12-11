@@ -52,7 +52,8 @@
   </head>
 
   <body>
-    <header th:replace="~{fragments/navbar}"></header>
+    <nav th:replace="~{fragments/navbar :: navbar('Profile')}"></nav>
+
 
     <!-- Balance Management Section -->
     <section class="balance-management spad">
