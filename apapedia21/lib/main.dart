@@ -1,3 +1,4 @@
+import 'package:apapedia21/screens/cart.dart';
 import 'package:apapedia21/screens/catalog_page.dart';
 import 'package:apapedia21/screens/login.dart';
 import 'package:apapedia21/screens/topup.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => LoginFormScreen(),
         '/catalog-page': (context) => const CatalogScreen(),
         '/topup-page': (context) => TopUpScreen(),
+        '/cart-page': (context) => const CartScreen(),
       },
     );
   }
