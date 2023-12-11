@@ -204,11 +204,16 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                                     style: ElevatedButton.styleFrom(
                                       fixedSize: Size(
                                           MediaQuery.of(context).size.width *
+                                              0.8,
+                                          50),
+                                      primary: Colors
+                                          .white, // Choose an appropriate color for the register button
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
                                     onPressed: () {
+                                      // Navigate to the Register Screen
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
