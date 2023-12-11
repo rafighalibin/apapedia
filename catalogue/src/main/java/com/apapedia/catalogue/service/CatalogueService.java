@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.apapedia.catalogue.model.Catalogue;
 import com.apapedia.catalogue.repository.CatalogueDb;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class CatalogueService {
     @Autowired
