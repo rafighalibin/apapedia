@@ -1,10 +1,10 @@
-package com.apapedia.catalogue.dto.request;
+package com.apapedia.frontend.DTO.request;
 
 import java.util.UUID;
 
-import com.apapedia.catalogue.model.Category;
+import com.apapedia.frontend.DTO.response.CategoryResponseDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class CreateCatalogueRequestDTO {
     private String productName;
-    @PositiveOrZero
     private int price;
     private String productDescription;
     private int stock;
     private byte[] image;
-    private Category category;
-    private UUID idSeller;
+    @JsonProperty("category")
+    private CategoryResponseDTO categoryId;
+    private UUID idSeller = UUID.randomUUID();
 }

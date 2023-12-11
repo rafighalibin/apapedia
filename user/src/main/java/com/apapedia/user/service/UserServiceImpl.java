@@ -1,24 +1,18 @@
 package com.apapedia.user.service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.apapedia.user.dto.request.*;
+import com.apapedia.user.dto.response.UpdateUserBalanceResponse;
+import com.apapedia.user.model.UserModel;
+import com.apapedia.user.repository.UserDb;
+import com.apapedia.user.security.jwt.JwtUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.apapedia.user.dto.request.AuthenticationRequest;
-import com.apapedia.user.dto.request.CreateUserRequestDTO;
-import com.apapedia.user.dto.request.LoginJwtRequestDTO;
-import com.apapedia.user.dto.request.UpdateBalance;
-import com.apapedia.user.dto.request.UpdateUserRequestDTO;
-import com.apapedia.user.model.*;
-import com.apapedia.user.repository.*;
-import com.apapedia.user.security.jwt.JwtUtils;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -48,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
         UserModel oldUser = findUserByUsername(username);
@@ -69,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String checkUsernameEmailPassword(HttpServletRequest request,
             UpdateUserRequestDTO newUser) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         String oldId = jwtUtils.getIdFromJwtToken(jwt);
         UserModel oldUser = findUserById(oldId);
 
@@ -99,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel updateBalance(HttpServletRequest request, UpdateBalance newBalance) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
         UserModel user = findUserByUsername(username);
@@ -107,7 +101,32 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         saveUser(user);
 
-        return null;
+        return user;
+    }
+
+    @Override
+    public UpdateUserBalanceResponse updateBalanceAfterTransaction(UpdateBalanceAfterOrder request) {
+        UserModel seller = findUserById(String.valueOf(request.getSellerId()));
+
+        Long sellerCurrentBalance = seller.getBalance();
+        seller.setUpdatedAt(LocalDateTime.now());
+        seller.setBalance(sellerCurrentBalance + request.getTotalPrice());
+
+        saveUser(seller);
+
+        UserModel buyer = findUserById(String.valueOf(request.getCustomerId()));
+
+        Long buyerCurrentBalance = buyer.getBalance();
+        buyer.setUpdatedAt(LocalDateTime.now());
+        buyer.setBalance(buyerCurrentBalance + request.getTotalPrice());
+
+        saveUser(buyer);
+
+        UpdateUserBalanceResponse response = new UpdateUserBalanceResponse();
+        response.setBuyer(buyer);
+        response.setSeller(seller);
+
+        return response;
     }
 
     @Override
@@ -131,13 +150,7 @@ public class UserServiceImpl implements UserService {
     public UserModel findUserById(String idString) {
         UUID id = UUID.fromString(idString);
         Optional<UserModel> userOptional = userDb.findById(id);
-        if (userOptional.isPresent()) {
-            UserModel user = userOptional.get();
-            return user;
-        } else {
-
-        }
-        return null;
+        return userOptional.orElse(null);
     }
 
     // @Override
@@ -158,7 +171,7 @@ public class UserServiceImpl implements UserService {
     // }
 
     @Override
-    public String getJwtFromCookies(HttpServletRequest request) {
+    public String getJwtFromHeader(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -167,12 +180,23 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
+
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            authorizationHeader = authorizationHeader.substring(7); // Remove 'Bearer ' prefix
+        }
+
+        if (authorizationHeader != null && !authorizationHeader.isEmpty()) {
+            return authorizationHeader;
+
+        }
         return null;
     }
 
     @Override
     public String getUsernameFromJwtCookie(HttpServletRequest request) {
-        // String jwt = getJwtFromCookies(request);
+        // String jwt = getJwtFromHeader(request);
         // if (jwt != null && !jwt.isEmpty()) {
         // return jwtUtil.extractUsername(jwt);
         // }
@@ -181,7 +205,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isLoggedIn(HttpServletRequest request) {
-        String jwt = getJwtFromCookies(request);
+        String jwt = getJwtFromHeader(request);
         if (jwt != null && !jwt.isEmpty()) {
             try {
                 String id = jwtUtils.getIdFromJwtToken(jwt);

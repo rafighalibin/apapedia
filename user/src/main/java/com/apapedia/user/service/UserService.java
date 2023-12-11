@@ -1,13 +1,13 @@
 package com.apapedia.user.service;
 
-import com.apapedia.user.dto.request.AuthenticationRequest;
-import com.apapedia.user.dto.request.CreateUserRequestDTO;
-import com.apapedia.user.dto.request.LoginJwtRequestDTO;
-import com.apapedia.user.dto.request.UpdateBalance;
-import com.apapedia.user.dto.request.UpdateUserRequestDTO;
+import com.apapedia.user.dto.request.*;
+import com.apapedia.user.dto.response.UpdateUserBalanceResponse;
 import com.apapedia.user.model.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -27,7 +27,7 @@ public interface UserService {
 
     UserModel findUserByUsername(String username);
 
-    String getJwtFromCookies(HttpServletRequest request);
+    String getJwtFromHeader(HttpServletRequest request);
 
     String getUsernameFromJwtCookie(HttpServletRequest request);
 
@@ -36,6 +36,8 @@ public interface UserService {
     boolean isLoggedIn(HttpServletRequest request);
 
     UserModel updateBalance(HttpServletRequest request, UpdateBalance newBalance);
+
+    UpdateUserBalanceResponse updateBalanceAfterTransaction(UpdateBalanceAfterOrder newBalance);
 
     String checkUsernameEmailPassword(HttpServletRequest request, UpdateUserRequestDTO newUser);
 
