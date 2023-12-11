@@ -1,27 +1,27 @@
 package com.apapedia.order.controller;
 
-import java.util.HashMap;
-
-import org.apache.catalina.connector.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.apapedia.order.dto.OrderMapper;
 import com.apapedia.order.dto.request.CreateOrderRequestDTO;
 import com.apapedia.order.dto.request.GraphRequestDTO;
+import com.apapedia.order.dto.request.UpdateOrderStatusRequestDTO;
 import com.apapedia.order.model.Order;
-import com.apapedia.order.service.CartService;
 import com.apapedia.order.service.OrderService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
+    private final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     OrderService orderService;
@@ -57,14 +57,14 @@ public class OrderController {
         return ResponseEntity.ok(listOrder);
     }
 
-
-
-    @PutMapping("/{orderId}")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable UUID orderId, @RequestBody Order order) {
-        Order existingOrder = orderService.findById(orderId);
-        existingOrder.setStatus(order.getStatus());
-        orderService.saveOrder(existingOrder);
-
-        return ResponseEntity.ok(existingOrder);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable UUID id, @RequestBody UpdateOrderStatusRequestDTO request) {
+        try{
+            Order order = orderService.updateOrderStatus(id, request.getStatus());
+            return ResponseEntity.ok(order);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tidak ada order dengan UUID : " + id);
+        }
     }
 }

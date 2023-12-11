@@ -1,6 +1,6 @@
-
 import 'package:apapedia21/screens/catalog_page.dart';
 import 'package:apapedia21/screens/login.dart';
+import 'package:apapedia21/screens/topup.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginFormScreen(),
         '/catalog-page': (context) => const CatalogScreen(),
+        '/topup-page': (context) => TopUpScreen(),
       },
     );
   }

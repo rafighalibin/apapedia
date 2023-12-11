@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:apapedia21/product/product.dart';
+import 'package:apapedia21/utils/drawer.dart';
 import 'package:apapedia21/utils/reusable_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -100,23 +101,22 @@ class _CatalogScreenState extends State<CatalogScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0XFF5d675b),
-          title: FutureBuilder<String?>(
-            future: getUsernameFromJwt(),
-            builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-               
-                return const Text("Loading...");
-              } else if (snapshot.hasData) {
-                // Display the username if available
-                return Text(snapshot.data ?? 'No Username', 
-                            style: TextStyle(color: Colors.white));
-              } else {
-                // Handle the case where there is no username or an error
-                return const Text('No Username', 
-                                  style: TextStyle(color: Colors.white));
-              }
-            },
-          ),
+        title: FutureBuilder<String?>(
+          future: getUsernameFromJwt(),
+          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text("Loading...");
+            } else if (snapshot.hasData) {
+              // Display the username if available
+              return Text(snapshot.data ?? 'No Username',
+                  style: TextStyle(color: Colors.white));
+            } else {
+              // Handle the case where there is no username or an error
+              return const Text('No Username',
+                  style: TextStyle(color: Colors.white));
+            }
+          },
+        ),
         actions: [
           Padding(
               padding: const EdgeInsets.only(right: 10),
@@ -132,10 +132,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ))
         ],
       ),
+      drawer: MyDrawer(),
       body: FutureBuilder<List<Product>?>(
-        future: getJwtToken().then((token) =>
-            fetchProduct(token)), // a previously-obtained Future<String> or null
-        builder: (BuildContext context, AsyncSnapshot<List<Product>?> snapshot) {
+        future: getJwtToken().then((token) => fetchProduct(
+            token)), // a previously-obtained Future<String> or null
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Product>?> snapshot) {
           if (snapshot.data == null) {
             if (snapshot.connectionState == ConnectionState.done) {
               return const Padding(
@@ -195,7 +197,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             Text(product.photo,
                                 style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
-                            
                             Text('Tahun Terbit: ${product.productName}',
                                 style: const TextStyle(fontSize: 16)),
                             Text('Harga: ${product.price.toString()}',
