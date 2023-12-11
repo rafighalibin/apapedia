@@ -129,6 +129,10 @@
     </div>
     <div class="container mt-5">
       <h2 class="mb-4">All Catalogue</h2>
+       <!-- Add Product Button (visible only if logged in) -->
+       <div th:if="${isLoggedIn}">
+        <a th:href="@{/catalogue/create}" class="btn btn-success">Add Product</a>
+    </div>
       <div class="row">
         <!-- Iterate through the list of catalogs -->
         <div th:each="catalogue : ${listCatalogue}" class="col-md-4 mb-4">
@@ -142,12 +146,15 @@
                 Description: <span th:text="${catalogue.productDescription}"></span><br>
                 Stock: <span th:text="${catalogue.stock}"></span>
               </p>
+               <!-- Edit Button (visible only if logged in) -->
+            <div th:if="${isLoggedIn}">
+              <a type="button" class="btn btn-primary" th:href="@{/catalogue/{id}/update(id=${catalogue.id})}">Edit</a>
+          </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
 
     <!-- Home Page Section End -->
 

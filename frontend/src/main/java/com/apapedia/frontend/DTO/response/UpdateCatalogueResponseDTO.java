@@ -1,5 +1,4 @@
 package com.apapedia.frontend.DTO.response;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +6,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ReadCatalogueResponseDTO {
+public class UpdateCatalogueResponseDTO {
     private UUID id;
     private Integer price;
     private String productName;  
