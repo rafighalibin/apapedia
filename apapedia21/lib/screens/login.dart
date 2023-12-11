@@ -183,7 +183,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const ProfileScreen()));
+                                                      const CatalogScreen()));
                                         } else {
                                           // Show error message if login failed
                                           ScaffoldMessenger.of(context)
