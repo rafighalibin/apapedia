@@ -133,6 +133,10 @@
        <div th:if="${isLoggedIn}">
         <a th:href="@{/catalogue/create}" class="btn btn-success">Add Product</a>
     </div>
+    <form th:action="@{/catalogue/search}" method="GET">
+      <input type="text" name="query" placeholder="Search Product Name Here..." th:value="${query}" />
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
       <div class="row">
         <!-- Iterate through the list of catalogs -->
         <div th:each="catalogue : ${listCatalogue}" class="col-md-4 mb-4">
