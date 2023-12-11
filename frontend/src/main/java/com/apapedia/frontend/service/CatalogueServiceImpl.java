@@ -127,10 +127,16 @@ public class CatalogueServiceImpl implements CatalogueService {
     @Override
     public List<ReadCatalogueResponseDTO> listCatalogueFiltered(String productName, HttpServletRequest request){
         String url = "/api/catalogue/search?query="+productName;
+        var token = getJwtFromCookies(request);
         try {
             var listCatalogue = this.webClient.get().uri(url).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+            
             for (var catalogue : listCatalogue){
-                catalogue.setImageString(Base64.getEncoder().encodeToString(catalogue.getImage()));
+                if (token != null && catalogue.getIdSeller().equals(UUID.fromString(getIdFromJwtToken(token))) || token == null){
+                    catalogue.setImageString(Base64.getEncoder().encodeToString(catalogue.getImage()));
+                } else {
+                    listCatalogue.remove(catalogue);
+                }
             } 
             return listCatalogue;
         } catch (Exception e){
