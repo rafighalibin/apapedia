@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.apapedia.frontend.DTO.request.CreateCatalogueRequestDTO;
 import com.apapedia.frontend.DTO.response.ReadCatalogueResponseDTO;
@@ -78,6 +79,14 @@ public class CatalogController {
         updateCatalogueResponseDTO.setImage(updateCatalogueResponseDTO.getImageFile().getBytes());
         catalogueService.updateCatalogue(updateCatalogueResponseDTO, request);
         return "redirect:/home";
+    }
+
+
+    @GetMapping("/catalogue/search")
+    public String filteredByName(@RequestParam(value = "query") String productName, Model model,HttpServletRequest request){
+        List<ReadCatalogueResponseDTO> listCatalogue= catalogueService.listCatalogueFiltered(productName,request);
+        model.addAttribute("listCatalogue", listCatalogue);
+        return "home";
     }
 
 }
