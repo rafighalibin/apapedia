@@ -70,7 +70,6 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 
-    <<<<<<<HEAD=======
 
     @Override
     public List<Order> getOrderHistory(HttpServletRequest request, UUID userId) {
@@ -106,5 +105,5 @@ public class OrderServiceImpl implements OrderService {
                 .block();
 
         return response;
-    }>>>>>>>f9f48cb579dd57efc9ed8c92e7eb5f683b72bd71
+    }
 }
