@@ -155,6 +155,7 @@
             <div th:if="${isLoggedIn}">
               <a type="button" class="btn btn-primary" th:href="@{/catalogue/{id}/update(id=${catalogue.id})}">Edit</a>
           </div>
+          <a th:href="@{/catalogue/{id}(id=${catalogue.id})}" class="btn btn-primary">Detail</a>
             </div>
           </div>
         </div>
