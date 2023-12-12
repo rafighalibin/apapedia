@@ -88,5 +88,11 @@ public class CatalogController {
         return "redirect:/";
     }
 
-
+    @GetMapping("/catalogue/{id}")
+    public String detailCatalogue(@PathVariable("id") UUID id, Model model, HttpServletRequest request) throws Exception{
+        ReadCatalogueResponseDTO catalogueDTO = catalogueService.getCatalogueById(id, request);
+        catalogueDTO.setImageString(Base64.getEncoder().encodeToString(catalogueDTO.getImage()));
+        model.addAttribute("catalogueDTO", catalogueDTO);
+        return "catalogue-view";
+    }
 }
