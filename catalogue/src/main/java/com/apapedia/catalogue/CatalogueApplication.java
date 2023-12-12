@@ -39,20 +39,20 @@ public class CatalogueApplication {
                 categoryService.createCategory(category);
             }
 
-            for (int i = 0; i < 10; i++) {
-                Catalogue catalogue = new Catalogue();
-                String productName = faker.commerce().productName();
-                catalogue.setIdSeller(UUID.fromString("f63fd3c5-1665-489f-bed4-1f73c4379060"));
-                catalogue.setProductName(productName);
-                catalogue.setProductNameLower(productName.toLowerCase());
-                catalogue.setPrice(faker.number().numberBetween(10000, 1000000));
-                catalogue.setStock(faker.number().numberBetween(1, 100));
-                catalogue.setProductDescription(faker.lorem().sentence());
-                List<Category> categories = categoryService.getAllCategories();
-                catalogue.setCategory(categories.get(faker.number().numberBetween(0, categories.size())));
-                catalogue.setImage(generateFakeImageBytes());
-                catalogueService.saveCatalogue(catalogue);
-            }
+            // for (int i = 0; i < 10; i++) {
+            //     Catalogue catalogue = new Catalogue();
+            //     String productName = faker.commerce().productName();
+            //     catalogue.setIdSeller(UUID.fromString("f63fd3c5-1665-489f-bed4-1f73c4379060"));
+            //     catalogue.setProductName(productName);
+            //     catalogue.setProductNameLower(productName.toLowerCase());
+            //     catalogue.setPrice(faker.number().numberBetween(10000, 1000000));
+            //     catalogue.setStock(faker.number().numberBetween(1, 100));
+            //     catalogue.setProductDescription(faker.lorem().sentence());
+            //     List<Category> categories = categoryService.getAllCategories();
+            //     catalogue.setCategory(categories.get(faker.number().numberBetween(0, categories.size())));
+            //     catalogue.setImage(generateFakeImageBytes());
+            //     catalogueService.saveCatalogue(catalogue);
+            // }
         };
     }
 

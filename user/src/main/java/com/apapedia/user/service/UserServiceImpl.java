@@ -44,6 +44,8 @@ public class UserServiceImpl implements UserService {
         String hashedPass = encrypt(user.getPassword());
         user.setPassword(hashedPass);
 
+        if (user.equals(findUserByUsername(user.getUsername()))) return null;
+
         return userDb.save(user);
     }
 

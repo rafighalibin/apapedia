@@ -45,6 +45,7 @@ public class UserRestController {
     private ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
         UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
         userModel = userService.addUser(userModel, createUserRequestDTO);
+        if (userModel == null) return null;
 
         CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
         createUserResponseDTO.setRole(userModel.getRole().getRole());
