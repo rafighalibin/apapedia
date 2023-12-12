@@ -132,7 +132,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ))
         ],
       ),
-      drawer: MyDrawer(),
+      drawer: const MyDrawer(),
       body: FutureBuilder<List<Product>?>(
         future: getJwtToken().then((token) => fetchProduct(
             token)), // a previously-obtained Future<String> or null
