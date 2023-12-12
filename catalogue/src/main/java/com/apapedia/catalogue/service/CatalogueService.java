@@ -38,6 +38,25 @@ public class CatalogueService {
         return catalogueDb.findById(catalogId).orElse(null);
     }
 
+    public List<Catalogue> getCatalogListSortedSeller(String sortBy, String order, UUID idSeller) {
+        if (sortBy.equals("price") && order.equals("asc")) {
+            return catalogueDb.findAllByIdSellerOrderByPriceAsc(idSeller);
+        }
+
+        if (sortBy.equals("price") && order.equals("desc")) {
+            return catalogueDb.findAllByIdSellerOrderByPriceDesc(idSeller);
+        }
+
+        if (sortBy.equals("name") && order.equals("asc")) {
+            return catalogueDb.findAllByIdSellerOrderByProductNameLowerAsc(idSeller);
+        }
+
+        if (sortBy.equals("name") && order.equals("desc")) {
+            return catalogueDb.findAllByIdSellerOrderByProductNameLowerDesc(idSeller);
+        }
+        return null;
+    }
+
     public List<Catalogue> getCatalogListSorted(String sortBy, String order) {
         if (sortBy.equals("price") && order.equals("asc")) {
             return catalogueDb.findAllByOrderByPriceAsc();

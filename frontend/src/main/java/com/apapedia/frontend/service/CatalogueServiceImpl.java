@@ -142,7 +142,12 @@ public class CatalogueServiceImpl implements CatalogueService {
         } catch (Exception e){
             return null;
         }
-
     }
-    
+
+
+    @Override
+    public List<ReadCatalogueResponseDTO> getCatalogueListSorted(String sortBy, String order, HttpServletRequest request){
+        String url = "/api/catalogue/filter?sortBy="+sortBy+"&order="+order;
+        return this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+    }
 }
