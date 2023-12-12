@@ -28,6 +28,7 @@ public class WebSecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/logout")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/catalogue/{id}")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/catalogue/filter/**")).permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
                         .loginPage("/login-sso")

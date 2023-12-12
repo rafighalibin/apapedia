@@ -1,6 +1,7 @@
 package com.apapedia.frontend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,5 +95,16 @@ public class CatalogController {
         catalogueDTO.setImageString(Base64.getEncoder().encodeToString(catalogueDTO.getImage()));
         model.addAttribute("catalogueDTO", catalogueDTO);
         return "catalogue-view";
+    }
+
+    @GetMapping("/catalogue/filter")
+    public String catalogueListSorted(@RequestParam(name = "sortBy", required = false) String sortBy, @RequestParam(name = "order", required = false) String order,
+                                    Model model, HttpServletRequest request){
+        List<ReadCatalogueResponseDTO> listCatalogue = catalogueService.getCatalogueListSorted(sortBy, order, request);
+        for (ReadCatalogueResponseDTO c : listCatalogue) {
+            c.setImageString(Base64.getEncoder().encodeToString(c.getImage()));
+          }
+        model.addAttribute("listCatalogue", listCatalogue);                                
+        return "home";                          
     }
 }

@@ -31,7 +31,8 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers( "/api/catalogue/viewall").permitAll()
                 .requestMatchers("/api/catalogue/search/**").permitAll()
-                .requestMatchers("api/catalogue/{catalogueId}").permitAll()
+                .requestMatchers("/api/catalogue/filter/**").permitAll()
+                .requestMatchers("/api/catalogue/{catalogueId}").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

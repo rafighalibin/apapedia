@@ -20,6 +20,10 @@ public interface CatalogueDb extends JpaRepository<Catalogue, UUID> {
 
     List<Catalogue> findAllByIdSellerOrderByProductNameLowerAsc(UUID sellerId);
 
+    List<Catalogue> findAllByIdSellerOrderByPriceAsc(UUID idSeller);
+
+    List<Catalogue> findAllByIdSellerOrderByPriceDesc(UUID idSeller);
+
     List<Catalogue> findAllByOrderByPriceAsc();
 
     List<Catalogue> findAll();
@@ -29,4 +33,6 @@ public interface CatalogueDb extends JpaRepository<Catalogue, UUID> {
     List<Catalogue> findAllByOrderByProductNameLowerDesc();
     
     List<Catalogue> findAllByProductNameLowerContaining(String name);
+
+    List<Catalogue> findAllByIdSellerOrderByProductNameLowerDesc(UUID idSeller);
 }
