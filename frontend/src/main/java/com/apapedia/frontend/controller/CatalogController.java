@@ -81,4 +81,12 @@ public class CatalogController {
         return "form-edit-product";
     }
 
+    @PostMapping("/catalogue/{id}/update")
+    public String UbahCatalogue(@ModelAttribute UpdateCatalogueResponseDTO updateCatalogueResponseDTO, HttpServletRequest request) throws Exception {
+        updateCatalogueResponseDTO.setImage(updateCatalogueResponseDTO.getImageFile().getBytes());
+        catalogueService.updateCatalogue(updateCatalogueResponseDTO, request);
+        return "redirect:/";
+    }
+
+
 }
