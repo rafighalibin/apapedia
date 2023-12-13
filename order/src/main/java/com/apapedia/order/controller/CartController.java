@@ -49,10 +49,10 @@ public class CartController {
         return ResponseEntity.ok(cartService.addItem(cart, cartItem));
     }
 
-    @PutMapping("/cart/update-item/{idCart}")
+    @PutMapping("/cart/update-item/{idUser}")
     public ResponseEntity<CartItem> updateCartItem(@Valid @RequestBody UpdateCartItemRequestDTO cartItemDTO,
-            @PathVariable("idCart") UUID idCart) {
-        var cart = cartService.findCartById(idCart);
+            @PathVariable("idUser") UUID idUser) {
+        var cart = cartService.findCartByUserId(idUser);
         var cartItemFromDto = cartMapper.updateCartItemRequestDTOToCartItem(cartItemDTO);
         var updatedCart = cartService.updateCartItem(cart, cartItemFromDto);
         return ResponseEntity.ok(updatedCart);
@@ -69,5 +69,11 @@ public class CartController {
     public ResponseEntity<String> deleteCartItems(@PathVariable("id") UUID id) {
         cartService.deleteCartItems(id);
         return ResponseEntity.ok("Cart items has been deleted successfully");
+    }
+
+    @PostMapping("/cart/checkout/{idUser}")
+    public ResponseEntity<String> checkout(@PathVariable("idUser") UUID idUser) {
+        String message = cartService.checkout(idUser);
+        return ResponseEntity.ok(message);
     }
 }

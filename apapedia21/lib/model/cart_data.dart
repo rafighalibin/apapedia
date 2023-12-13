@@ -10,6 +10,8 @@ class CartItemModel {
   late final String productNameLower;
   int quantity;
 
+  String cartID;
+
   CartItemModel({
     required this.id,
     required this.idSeller,
@@ -21,6 +23,7 @@ class CartItemModel {
     required this.image,
     required this.productNameLower,
     this.quantity = 1, // Default quantity is set to 1 TODO
+    this.cartID = '',
   });
 
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
@@ -30,9 +33,9 @@ class CartItemModel {
       price: json['price'],
       productName: json['productName'],
       productDescription: json['productDescription'],
-      category: json['category'],
+      category: json['category'] ?? {},
       stock: json['stock'],
-      image: json['image'],
+      image: json['image'] ?? 'IMAGE_PLACEHOLDER',
       productNameLower: json['productNameLower'],
     );
   }
