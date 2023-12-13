@@ -29,8 +29,6 @@ public interface UserService {
 
     String getJwtFromHeader(HttpServletRequest request);
 
-    String getUsernameFromJwtCookie(HttpServletRequest request);
-
     UserModel updateUser(HttpServletRequest request, UpdateUserRequestDTO newUser);
 
     boolean isLoggedIn(HttpServletRequest request);
@@ -39,7 +37,7 @@ public interface UserService {
 
     UpdateUserBalanceResponse updateBalanceAfterTransaction(UpdateBalanceAfterOrder newBalance);
 
-    String checkUsernameEmailPassword(HttpServletRequest request, UpdateUserRequestDTO newUser);
+    String checkUsernameEmail(HttpServletRequest request, UpdateUserRequestDTO newUser);
 
     String extractJwtFromRequest(HttpServletRequest request);
 

@@ -66,10 +66,6 @@ public class JwtUtils {
         Cookie jwtCookie = new Cookie("jwt", jwt);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
-        // Uncomment the line below if you're using HTTPS
-        // jwtCookie.setSecure(true);
-
-        // Add the cookie to the response
         response.addCookie(jwtCookie);
 
     }

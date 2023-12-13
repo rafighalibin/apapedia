@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:apapedia21/model/catalogue.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
 class ProductDetailPage extends StatelessWidget {
   final ProductModel product;
@@ -21,6 +23,11 @@ class ProductDetailPage extends StatelessWidget {
               shrinkWrap: true,
               padding: const EdgeInsets.all(16.0),
               children: [
+                Image.memory(
+                            Uint8List.fromList(product.image),
+                            height: 150, // Adjust the height as needed
+                            width: 150, // Take the full width
+                          ),
                 buildDetailRow('Product Name:', product.productName),
                 buildDetailRow('Product Category:', product.categoryName),
                 buildDetailRow('Product Description:', product.productDescription),
