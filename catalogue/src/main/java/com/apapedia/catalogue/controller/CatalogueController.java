@@ -146,15 +146,14 @@ public class CatalogueController {
         if (!(sortBy.equals("price") || sortBy.equals("name")) || !(order.equals("asc") || order.equals("desc"))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        var idSeller = jwtUtils.getIdFromJwtToken(jwtUtils.parseJwt(request));
-        if (idSeller != null){
+        try {
+            var idSeller = jwtUtils.getIdFromJwtToken(jwtUtils.parseJwt(request));
             List<Catalogue> catalogues = catalogueService.getCatalogListSortedSeller(sortBy, order, UUID.fromString(idSeller));
             return ResponseEntity.ok(catalogues);
-        }else{
+        } catch (Exception e) {
             List<Catalogue> catalogues = catalogueService.getCatalogListSorted(sortBy, order);
             return ResponseEntity.ok(catalogues);
         }
-
     }
 
 }
