@@ -126,7 +126,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
     }
     try {
       final response = await http.put(
-        Uri.parse('http://localhost:10140/api/user/update-balance'),
+        Uri.parse('https://apap-140.cs.ui.ac.id/api/user/update-balance'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -156,7 +156,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
   Future<int> getBalance(String? token) async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:10140/api/user/get'),
+        Uri.parse('https://apap-140.cs.ui.ac.id/api/user/get'),
         headers: {
           'Authorization': 'Bearer $token',
         },

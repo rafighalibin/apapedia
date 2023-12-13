@@ -28,7 +28,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:10142/api/catalogue/viewall'),
+        Uri.parse('https://apap-141.cs.ui.ac.id/api/catalogue/viewall'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -137,8 +137,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
       body: FutureBuilder<List<ProductModel>?>(
         future: getJwtToken().then((token) => fetchProduct(
             token)), // a previously-obtained Future<String> or null
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProductModel>?> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ProductModel>?> snapshot) {
           if (snapshot.data == null) {
             if (snapshot.connectionState == ConnectionState.done) {
               return const Padding(
@@ -184,56 +184,58 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductDetailPage(product: product),
-                                ),
-                              );
-                        },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: const [
-                              BoxShadow(color: Colors.black, blurRadius: 2.0)
-                            ]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.memory(
-                            Uint8List.fromList(product.image),
-                            height: 100, // Adjust the height as needed
-                            width: double.infinity, // Take the full width
-                            fit: BoxFit.cover, // Adjust the image fit
-                          ),
-                            Text('Nama Produk: ${product.productName}',
-                                style: const TextStyle(fontSize: 16)),
-                            Text('Harga: ${product.price.toString()}',
-                                style: const TextStyle(fontSize: 16)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: (){
-                                    // TODO: Implement add to cart functionality
-                                  },
-                                  child: Text('Add to Cart'),
-                                ),
-                                ElevatedButton(
-                                  onPressed: (){
-                                    // TODO: implement order Now Functionality
-                                  },
-                                  child: Text('Order Now'),
-                                ),
-                              ],
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductDetailPage(product: product),
                             ),
-                          ],
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.0),
+                              boxShadow: const [
+                                BoxShadow(color: Colors.black, blurRadius: 2.0)
+                              ]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.memory(
+                                Uint8List.fromList(product.image),
+                                height: 100, // Adjust the height as needed
+                                width: double.infinity, // Take the full width
+                                fit: BoxFit.cover, // Adjust the image fit
+                              ),
+                              Text('Nama Produk: ${product.productName}',
+                                  style: const TextStyle(fontSize: 16)),
+                              Text('Harga: ${product.price.toString()}',
+                                  style: const TextStyle(fontSize: 16)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // TODO: Implement add to cart functionality
+                                    },
+                                    child: Text('Add to Cart'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // TODO: implement order Now Functionality
+                                    },
+                                    child: Text('Order Now'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                       );
                     }));
           }

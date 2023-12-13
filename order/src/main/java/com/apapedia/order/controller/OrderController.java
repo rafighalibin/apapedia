@@ -62,9 +62,9 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrderStatus(@PathVariable UUID id,
-            @RequestBody UpdateOrderStatusRequestDTO request) {
+            @RequestBody UpdateOrderStatusRequestDTO request, HttpServletRequest servletRequest) {
         try {
-            Order order = orderService.updateOrderStatus(id, request.getStatus());
+            Order order = orderService.updateOrderStatus(id, request.getStatus(), servletRequest);
             return ResponseEntity.ok(order);
         } catch (Exception e) {
             e.printStackTrace();
