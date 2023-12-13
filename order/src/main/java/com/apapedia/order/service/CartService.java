@@ -23,4 +23,6 @@ public interface CartService {
     void deleteCartItems(UUID id);
 
     List<Map<String, Object>> convertToJsonObject(List<CartItem> listCartItems);
+
+    String checkout(UUID idUser);
 }
