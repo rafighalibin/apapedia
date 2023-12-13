@@ -87,7 +87,7 @@ public class UserController {
         oldUser.setCategory(user.getCategory());
         model.addAttribute("user", oldUser);
 
-        if (updateUserResponseDTO.getPassword() != updateUserResponseDTO.getConfirmPassword()) {
+        if (!updateUserResponseDTO.getPassword().equals(updateUserResponseDTO.getConfirmPassword())) {
             model.addAttribute("message", "Password dan Confirm Password tidak sama");
             return "form-update-profile";
         }
