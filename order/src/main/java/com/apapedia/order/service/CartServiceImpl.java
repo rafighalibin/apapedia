@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
     private final WebClient webClient;
 
     public CartServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:10142")
+        this.webClient = webClientBuilder.baseUrl("https://apap-142.cs.ui.ac.id")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
