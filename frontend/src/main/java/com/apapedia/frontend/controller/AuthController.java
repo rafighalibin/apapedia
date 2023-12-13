@@ -10,10 +10,12 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.apapedia.frontend.security.xml.Attributes;
 import com.apapedia.frontend.security.xml.ServiceResponse;
@@ -39,7 +41,7 @@ public class AuthController {
     @GetMapping("validate-ticket")
     public ModelAndView LoginSSO(
         @RequestParam(value = "ticket", required = false) String ticket,
-        HttpServletRequest request, HttpServletResponse response
+        HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes
     ) {
         ServiceResponse serviceResponse = this.webClient.get().uri(
             String.format(
@@ -58,6 +60,10 @@ public class AuthController {
 
         String name = attributes.getNama();
         var token = userService.getToken(username, name);
+        if (token == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Anda harus register sebelum login!");
+            return new ModelAndView("redirect:/register");
+        }
 
         HttpSession httpSession = request.getSession(true);
         httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
@@ -73,7 +79,7 @@ public class AuthController {
         response.addCookie(jwtCookie);
 
     
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/");
     }
 
     @GetMapping("/login-sso")
@@ -83,7 +89,8 @@ public class AuthController {
 
     @GetMapping("/logout-sso")
     public ModelAndView logoutSSO(Principal principal){
-        return new ModelAndView("redirect" + Setting.SERVER_LOGOUT + Setting.CLIENT_LOGOUT);
+        return new ModelAndView("redirect:" + Setting.SERVER_LOGOUT + Setting.CLIENT_LOGOUT);
     }
+
                     
 }

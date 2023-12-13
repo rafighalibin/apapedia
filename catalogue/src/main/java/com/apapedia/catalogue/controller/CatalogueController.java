@@ -137,22 +137,23 @@ public class CatalogueController {
     }
     
 
-    @GetMapping(value = "/catalogue", params = { "sortBy", "order" })
+    @GetMapping(value = "/catalogue/filter", params = { "sortBy", "order" })
     public ResponseEntity<List<Catalogue>> getCatalogListSorted(
             @RequestParam("sortBy") String sortBy,
-            @RequestParam("order") String order) {
+            @RequestParam("order") String order, HttpServletRequest request) {
+
 
         if (!(sortBy.equals("price") || sortBy.equals("name")) || !(order.equals("asc") || order.equals("desc"))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        List<Catalogue> catalogues = catalogueService.getCatalogListSorted(sortBy, order);
-
-        if (catalogues.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            var idSeller = jwtUtils.getIdFromJwtToken(jwtUtils.parseJwt(request));
+            List<Catalogue> catalogues = catalogueService.getCatalogListSortedSeller(sortBy, order, UUID.fromString(idSeller));
+            return ResponseEntity.ok(catalogues);
+        } catch (Exception e) {
+            List<Catalogue> catalogues = catalogueService.getCatalogListSorted(sortBy, order);
+            return ResponseEntity.ok(catalogues);
         }
-
-        return ResponseEntity.ok(catalogues);
     }
 
 }

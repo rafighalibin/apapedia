@@ -30,7 +30,9 @@ public class WebSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers( "/api/catalogue/viewall").permitAll()
-                .requestMatchers( "/api/catalogue/search/search?query={query}").permitAll()
+                .requestMatchers("/api/catalogue/search/**").permitAll()
+                .requestMatchers("/api/catalogue/filter/**").permitAll()
+                .requestMatchers("/api/catalogue/{catalogueId}").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

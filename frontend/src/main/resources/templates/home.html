@@ -133,11 +133,34 @@
        <div th:if="${isLoggedIn}">
         <a th:href="@{/catalogue/create}" class="btn btn-success">Add Product</a>
     </div>
-    <form th:action="@{/catalogue/search}" method="GET">
+    <form th:action="@{/}" method="GET">
       <input type="text" name="query" placeholder="Search Product Name Here..." th:value="${query}" />
       <button class="btn btn-primary" type="submit">Search</button>
     </form>
-      <div class="row">
+    <div class="container mt-3">
+      <form th:action="@{/}" method="GET">
+        <div class="form-row align-items-end">
+          <div class="form-group col-md-3">
+            <label for="sortBy">Sort By:</label>
+            <select class="form-control" id="sortBy" name="sortBy">
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="order">Order:</label>
+            <select class="form-control" id="order" name="order">
+              <option value="asc">asc</option>
+              <option value="desc">des</option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-primary">Filter</button>
+          </div>
+        </div>
+      </form>
+    </div>
+      <div class="row" th:if="${listCatalogue != null}">
         <!-- Iterate through the list of catalogs -->
         <div th:each="catalogue : ${listCatalogue}" class="col-md-4 mb-4">
           <div class="card">
@@ -155,6 +178,7 @@
             <div th:if="${isLoggedIn}">
               <a type="button" class="btn btn-primary" th:href="@{/catalogue/{id}/update(id=${catalogue.id})}">Edit</a>
           </div>
+          <a th:href="@{/catalogue/{id}(id=${catalogue.id})}" class="btn btn-primary">Detail</a>
             </div>
           </div>
         </div>

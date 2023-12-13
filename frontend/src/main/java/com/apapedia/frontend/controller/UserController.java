@@ -33,15 +33,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO, Model model)
-            throws IOException, InterruptedException {
-        model.addAttribute("navbarActive", "Register");
-        createUserDTO.setPassword("ariefthegoat");
-        createUserDTO.setRole("Seller");
-        createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");
-        userService.registerUser(createUserDTO);
-
-        return "redirect:/home";
+    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO, 
+                               RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
+        var user = userService.registerUser(createUserDTO);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Username sudah pernah didaftarkan!");
+            return "redirect:/register";
+        }
+        return "redirect:/"; 
     }
 
     @GetMapping("/profile")

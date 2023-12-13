@@ -20,4 +20,5 @@ public interface CatalogueService {
     ReadCatalogueResponseDTO updateCatalogue(UpdateCatalogueResponseDTO catalogue, HttpServletRequest request);
     public String getJwtFromCookies(HttpServletRequest request);
     List<ReadCatalogueResponseDTO> listCatalogueFiltered(String productName, HttpServletRequest request);
+    List<ReadCatalogueResponseDTO> getCatalogueListSorted(String sortBy, String order, HttpServletRequest request);
 }

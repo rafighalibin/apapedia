@@ -34,6 +34,8 @@ public class UserServiceImpl implements UserService {
     public String getToken(String username, String name) {
         var body = new LoginRequestDTO(username, name);
 
+        try {
+
         var response = this.webClient
                 .post()
                 .uri("/api/login/seller")
@@ -46,12 +48,19 @@ public class UserServiceImpl implements UserService {
         var token = response.getToken();
 
         return token;
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public ReadUserResponseDTO registerUser(CreateUserRequestDTO createUserDTO)
             throws IOException, InterruptedException {
         try {
+            createUserDTO.setPassword("ariefthegoat");
+            createUserDTO.setRole("Seller");
+            createUserDTO.setEmail(createUserDTO.getUsername() + "@ui.ac.id");
             var response = this.webClient
                     .post()
                     .uri("/api/user/add")
@@ -62,8 +71,7 @@ public class UserServiceImpl implements UserService {
             var userSubmitted = response.block();
             return userSubmitted;
         } catch (Exception e) {
-            ReadUserResponseDTO userResponseDTO = new ReadUserResponseDTO();
-            return userResponseDTO;
+            return null;
         }
 
     }
@@ -78,7 +86,6 @@ public class UserServiceImpl implements UserService {
                 .bodyToMono(ReadUserResponseDTO.class);
 
         ReadUserResponseDTO userResponseDTO = user.block();
-        userResponseDTO.setCategory("Official Store");
 
         return userResponseDTO;
     }
