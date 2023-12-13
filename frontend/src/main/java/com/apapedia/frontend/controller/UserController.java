@@ -33,12 +33,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO, Model model)
-            throws IOException, InterruptedException {
-        model.addAttribute("navbarActive", "Register");
-        userService.registerUser(createUserDTO);
-
-        return "redirect:/";
+    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO, 
+                               RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
+        var user = userService.registerUser(createUserDTO);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Username sudah pernah didaftarkan!");
+            return "redirect:/register";
+        }
+        return "redirect:/"; 
     }
 
     @GetMapping("/profile")
@@ -85,7 +87,7 @@ public class UserController {
         oldUser.setCategory(user.getCategory());
         model.addAttribute("user", oldUser);
 
-        if (updateUserResponseDTO.getPassword() != updateUserResponseDTO.getConfirmPassword()) {
+        if (!updateUserResponseDTO.getPassword().equals(updateUserResponseDTO.getConfirmPassword())) {
             model.addAttribute("message", "Password dan Confirm Password tidak sama");
             return "form-update-profile";
         }
@@ -137,6 +139,14 @@ public class UserController {
         redirectAttributes.addFlashAttribute("message", "Berhasil withdraw saldo");
 
         return "redirect:/profile";
+    }
+
+    @GetMapping("/delete-user")
+    public String deleteUser(Model model, HttpServletRequest request) throws IOException, InterruptedException {
+
+        userService.deleteUser(request);
+
+        return "redirect:/logout-sso";
     }
 
 

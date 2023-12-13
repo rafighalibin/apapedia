@@ -23,6 +23,8 @@ public interface UserService {
 
     void deleteUser(String id);
 
+    void updateUserDeleted(UserModel user, CreateUserRequestDTO createUserRequestDTO);
+
     String encrypt(String password);
 
     UserModel findUserByUsername(String username);

@@ -14,6 +14,7 @@ import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.var;
 
 import com.apapedia.frontend.DTO.response.CategoryResponseDTO;
 import com.apapedia.frontend.DTO.response.GraphResponseDTO;
@@ -148,6 +149,11 @@ public class CatalogueServiceImpl implements CatalogueService {
     @Override
     public List<ReadCatalogueResponseDTO> getCatalogueListSorted(String sortBy, String order, HttpServletRequest request){
         String url = "/api/catalogue/filter?sortBy="+sortBy+"&order="+order;
-        return this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+        var listCatalogue = this.webClient.get().uri(url).header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request)).retrieve().bodyToFlux(ReadCatalogueResponseDTO.class).collectList().block();
+        for (var catalogue : listCatalogue){
+            catalogue.setImageString(Base64.getEncoder().encodeToString(catalogue.getImage()));
+        }
+        return listCatalogue;
+
     }
 }

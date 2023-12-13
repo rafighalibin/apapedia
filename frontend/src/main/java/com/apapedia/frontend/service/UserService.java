@@ -20,4 +20,7 @@ public interface UserService {
                         throws IOException, InterruptedException;
 
         ReadUserResponseDTO withdrawBalance(HttpServletRequest request, Long amount);
+
+        String deleteUser(HttpServletRequest request)
+            throws IOException, InterruptedException;
 }
