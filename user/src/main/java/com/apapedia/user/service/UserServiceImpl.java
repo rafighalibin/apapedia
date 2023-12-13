@@ -176,23 +176,6 @@ public class UserServiceImpl implements UserService {
         return userOptional.orElse(null);
     }
 
-    // @Override
-    // public User authenticate(String username, String password) {
-    // // Attempt to retrieve user by username
-    // User userOptional = userDb.findByUsername(username);
-    // BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    // if (userOptional != null) {
-    // User user = userOptional;
-    // // Check if the provided password matches the stored password
-    // if (passwordEncoder.matches(password, user.getPassword())) {
-    // // Return user if passwords match
-    // return user;
-    // }
-    // }
-    // // Return null if authentication fails
-    // return null;
-    // }
-
     @Override
     public String getJwtFromHeader(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
