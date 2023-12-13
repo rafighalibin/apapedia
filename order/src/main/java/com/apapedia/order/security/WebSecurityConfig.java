@@ -29,8 +29,8 @@ public class WebSecurityConfig {
                 http.securityMatcher("/api/**")
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                                                .requestMatchers("/api/order/get/seller/{id}").permitAll()
-                                                .requestMatchers("/api/order/{id}").permitAll()
+                                                // .requestMatchers("/api/order/get/seller/{id}").permitAll()
+                                                // .requestMatchers("/api/order/{id}").permitAll()
                                                 .anyRequest().permitAll())
                                 .sessionManagement(
                                                 sessionManagement -> sessionManagement
