@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +18,10 @@ import com.apapedia.frontend.DTO.response.UpdateCatalogueResponseDTO;
 import com.apapedia.frontend.service.CatalogueService;
 import com.apapedia.frontend.service.OrderService;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @Controller
 public class CatalogController {
@@ -57,7 +62,22 @@ public class CatalogController {
     }
 
     @PostMapping("/catalogue/create")
-    public String addProduct(@ModelAttribute CreateCatalogueRequestDTO catalogueDTO, HttpServletRequest request) throws Exception{
+    public String addProduct(@Valid @ModelAttribute CreateCatalogueRequestDTO catalogueDTO, BindingResult bindingResult, HttpServletRequest request, Model model) throws Exception{
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(error -> {
+                        if (error instanceof FieldError) {
+                            FieldError fieldError = (FieldError) error;
+                            return fieldError.getField() + ": " + error.getDefaultMessage();
+                        }
+                        return error.getDefaultMessage();
+                    })
+                    .collect(Collectors.toList());
+
+            model.addAttribute("errors", errors);
+            return "error-view";
+        }
         catalogueDTO.setImage(catalogueDTO.getImageFile().getBytes());
         catalogueService.createCatalogue(catalogueDTO,request);
         return "redirect:/";
@@ -83,7 +103,22 @@ public class CatalogController {
     }
 
     @PostMapping("/catalogue/{id}/update")
-    public String UbahCatalogue(@ModelAttribute UpdateCatalogueResponseDTO updateCatalogueResponseDTO, HttpServletRequest request) throws Exception {
+    public String UbahCatalogue(@Valid @ModelAttribute UpdateCatalogueResponseDTO updateCatalogueResponseDTO, BindingResult bindingResult, Model model, HttpServletRequest request) throws Exception {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(error -> {
+                        if (error instanceof FieldError) {
+                            FieldError fieldError = (FieldError) error;
+                            return fieldError.getField() + ": " + error.getDefaultMessage();
+                        }
+                        return error.getDefaultMessage();
+                    })
+                    .collect(Collectors.toList());
+
+            model.addAttribute("errors", errors);
+            return "error-view";
+        }
         updateCatalogueResponseDTO.setImage(updateCatalogueResponseDTO.getImageFile().getBytes());
         catalogueService.updateCatalogue(updateCatalogueResponseDTO, request);
         return "redirect:/";
