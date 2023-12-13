@@ -4,10 +4,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import com.apapedia.user.model.UserModel;
 import com.apapedia.user.service.RoleService;
 import com.apapedia.user.service.UserService;
-import com.github.javafaker.Faker;
 
 import jakarta.transaction.Transactional;
 
@@ -22,11 +20,8 @@ public class UserApplication {
 	@Transactional
 	CommandLineRunner run(UserService userService, RoleService roleService) {
 		return args -> {
-
 			roleService.addRole("Seller");
 			roleService.addRole("Customer");
 		};
-
 	};
-
 }

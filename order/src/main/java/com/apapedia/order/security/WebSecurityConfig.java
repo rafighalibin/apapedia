@@ -29,12 +29,8 @@ public class WebSecurityConfig {
                 http.securityMatcher("/api/**")
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                                                .requestMatchers("/api/order/get/seller/{id}").permitAll()
-                                                // TODO: ini gw gangerti cara authorize dari flutter cart
-                                                .requestMatchers("/api/**").permitAll()
-                                                .requestMatchers("api/cart/update-item/**").permitAll()
-
-                                                .requestMatchers("/api/order/{id}").permitAll()
+                                                // .requestMatchers("/api/order/get/seller/{id}").permitAll()
+                                                // .requestMatchers("/api/order/{id}").permitAll()
                                                 .anyRequest().permitAll())
                                 .sessionManagement(
                                                 sessionManagement -> sessionManagement

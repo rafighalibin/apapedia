@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private final WebClient webClient;
 
     public UserServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:10141")
+        this.webClient = webClientBuilder.baseUrl("https://apap-141.cs.ui.ac.id")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
@@ -84,32 +84,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String checkUsernameEmailPassword(HttpServletRequest request,
+    public String checkUsernameEmail(HttpServletRequest request,
             UpdateUserRequestDTO newUser) {
         String jwt = getJwtFromHeader(request);
         String oldId = jwtUtils.getIdFromJwtToken(jwt);
         UserModel oldUser = findUserById(oldId);
 
-        String oldPassword = encrypt(oldUser.getPassword());
-        String newPassword = encrypt(newUser.getPassword());
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         for (UserModel user : userDb.findAll()) {
             String username = user.getUsername();
             String email = user.getEmail();
-            String password = encrypt(user.getPassword());
             if (username.equals(newUser.getUsername()) &&
                     !username.equals(oldUser.getUsername()))
                 return "duplicateUsername";
 
             if (email.equals(newUser.getEmail()) && !email.equals(oldUser.getEmail()))
                 return "duplicateEmail";
-
-            if (passwordEncoder.matches(password, newPassword) &&
-                    !passwordEncoder.matches(password, oldPassword))
-                return "duplicatePassword";
         }
-
         return "Y";
 
     }
@@ -176,23 +166,6 @@ public class UserServiceImpl implements UserService {
         return userOptional.orElse(null);
     }
 
-    // @Override
-    // public User authenticate(String username, String password) {
-    // // Attempt to retrieve user by username
-    // User userOptional = userDb.findByUsername(username);
-    // BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    // if (userOptional != null) {
-    // User user = userOptional;
-    // // Check if the provided password matches the stored password
-    // if (passwordEncoder.matches(password, user.getPassword())) {
-    // // Return user if passwords match
-    // return user;
-    // }
-    // }
-    // // Return null if authentication fails
-    // return null;
-    // }
-
     @Override
     public String getJwtFromHeader(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -217,14 +190,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Override
-    public String getUsernameFromJwtCookie(HttpServletRequest request) {
-        // String jwt = getJwtFromHeader(request);
-        // if (jwt != null && !jwt.isEmpty()) {
-        // return jwtUtil.extractUsername(jwt);
-        // }
-        return null;
-    }
+
 
     @Override
     public boolean isLoggedIn(HttpServletRequest request) {
