@@ -141,6 +141,14 @@ public class UserController {
         return "redirect:/profile";
     }
 
+    @GetMapping("/delete-user")
+    public String deleteUser(Model model, HttpServletRequest request) throws IOException, InterruptedException {
+
+        userService.deleteUser(request);
+
+        return "redirect:/logout-sso";
+    }
+
 
 
 }
