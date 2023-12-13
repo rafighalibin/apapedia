@@ -34,6 +34,8 @@ public class UserServiceImpl implements UserService {
     public String getToken(String username, String name) {
         var body = new LoginRequestDTO(username, name);
 
+        try {
+
         var response = this.webClient
                 .post()
                 .uri("/api/login/seller")
@@ -46,6 +48,10 @@ public class UserServiceImpl implements UserService {
         var token = response.getToken();
 
         return token;
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -65,8 +71,7 @@ public class UserServiceImpl implements UserService {
             var userSubmitted = response.block();
             return userSubmitted;
         } catch (Exception e) {
-            ReadUserResponseDTO userResponseDTO = new ReadUserResponseDTO();
-            return userResponseDTO;
+            return null;
         }
 
     }

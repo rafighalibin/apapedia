@@ -43,6 +43,7 @@ public class UserRestController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
+        if (userService.findUserByUsername(createUserRequestDTO.getUsername()) != null) return null;
         UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
         userModel = userService.addUser(userModel, createUserRequestDTO);
 

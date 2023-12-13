@@ -29,7 +29,7 @@ public class AuthRestController {
         
             String jwtToken = userService.loginSeller(loginJwtRequestDTO);
             if (jwtToken == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+                return null;
             }
             return new ResponseEntity<>(new LoginJwtResponseDTO(jwtToken), HttpStatus.OK);
          
