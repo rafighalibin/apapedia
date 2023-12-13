@@ -66,7 +66,7 @@ class _CartScreenState extends State<CartScreen> {
     String? token = await getJwtToken();
 
     final response = await http.get(
-      Uri.parse('http://localhost:10141/api/cart/get/${userId}'),
+      Uri.parse('https://apap-141.cs.ui.ac.id/api/cart/get/${userId}'),
       headers: {
         'Authorization': 'Bearer $token',
       },

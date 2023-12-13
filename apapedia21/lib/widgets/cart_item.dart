@@ -59,7 +59,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
 
     if (cartItemId == '') return false;
     final response = await http.put(
-      Uri.parse('http://localhost:10141/api/cart/update-item/${userId}'),
+      Uri.parse('https://apap-141.cs.ui.ac.id/api/cart/update-item/${userId}'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $jwt',

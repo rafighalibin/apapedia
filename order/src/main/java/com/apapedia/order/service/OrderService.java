@@ -2,7 +2,6 @@ package com.apapedia.order.service;
 
 import java.util.HashMap;
 
-
 import org.springframework.stereotype.Service;
 
 import com.apapedia.order.model.Order;
@@ -17,12 +16,14 @@ import java.util.UUID;
 public interface OrderService {
     void saveOrder(Order order);
 
-    Order updateOrderStatus(UUID id, int status);
+    Order updateOrderStatus(UUID id, int status, HttpServletRequest servletRequest);
 
     Order findById(UUID id);
 
     List<Order> findBySellerId(UUID sellerId);
+
     List<Order> findByCustomerId(UUID customerId);
+
     List<Order> findAll();
 
     void saveOrderItem(OrderItem orderItem);
