@@ -27,7 +27,11 @@ public class CatalogController {
     CatalogueService catalogueService;
 
     @GetMapping("/")
-    public String homePage(Model model, @RequestParam(value = "query", required = false) String productName, HttpServletRequest request) {
+    public String homePage(Model model, 
+            @RequestParam(value = "query", required = false) String productName, 
+            @RequestParam(name = "sortBy", required = false) String sortBy, 
+            @RequestParam(name = "order", required = false) String order, 
+            HttpServletRequest request) {
         var graph =  orderService.getGraph(request);
         if (graph != null) model.addAttribute("activeNavbar", "LoggedIn");
         else model.addAttribute("activeNavbar", "NotLoggedIn");
@@ -38,6 +42,8 @@ public class CatalogController {
         List<ReadCatalogueResponseDTO> listCatalogue;
         if (productName != null){
             listCatalogue = catalogueService.listCatalogueFiltered(productName,request);
+        } else if (sortBy != null && order != null) {
+            listCatalogue = catalogueService.getCatalogueListSorted(sortBy, order, request);
         } else {
             listCatalogue = catalogueService.getAllCatalogue(request);
         }
@@ -95,16 +101,5 @@ public class CatalogController {
         catalogueDTO.setImageString(Base64.getEncoder().encodeToString(catalogueDTO.getImage()));
         model.addAttribute("catalogueDTO", catalogueDTO);
         return "catalogue-view";
-    }
-
-    @GetMapping("/catalogue/filter")
-    public String catalogueListSorted(@RequestParam(name = "sortBy", required = false) String sortBy, @RequestParam(name = "order", required = false) String order,
-                                    Model model, HttpServletRequest request){
-        List<ReadCatalogueResponseDTO> listCatalogue = catalogueService.getCatalogueListSorted(sortBy, order, request);
-        for (ReadCatalogueResponseDTO c : listCatalogue) {
-            c.setImageString(Base64.getEncoder().encodeToString(c.getImage()));
-          }
-        model.addAttribute("listCatalogue", listCatalogue);                                
-        return "home";                          
     }
 }
