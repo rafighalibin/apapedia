@@ -5,21 +5,14 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import com.apapedia.frontend.DTO.request.CreateCatalogueRequestDTO;
-import com.apapedia.frontend.DTO.request.CreateUserRequestDTO;
 import com.apapedia.frontend.DTO.response.ReadCatalogueResponseDTO;
-import com.apapedia.frontend.DTO.response.ReadUserResponseDTO;
 import com.apapedia.frontend.DTO.response.UpdateCatalogueResponseDTO;
-import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.var;
 
 import com.apapedia.frontend.DTO.response.CategoryResponseDTO;
-import com.apapedia.frontend.DTO.response.GraphResponseDTO;
-
-import reactor.core.publisher.Mono;
 import java.util.*;
 @Service
 public class CatalogueServiceImpl implements CatalogueService {
