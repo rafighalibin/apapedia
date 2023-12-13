@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:apapedia21/product/product.dart';
+
 import 'package:apapedia21/model/catalogue.dart';
+import 'package:apapedia21/product/product.dart';
 import 'package:apapedia21/screens/product_detail_page.dart';
 import 'package:apapedia21/utils/drawer.dart';
 import 'package:apapedia21/utils/reusable_widget.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class CatalogScreen extends StatefulWidget {
   static const routeName = '/appointment/list';
+
   const CatalogScreen({Key? key}) : super(key: key);
 
   @override
@@ -19,6 +20,8 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
+  String _selectedSortOption = 'Nama Asc';
+
   Future<List<ProductModel>?> fetchProduct(String? token) async {
     print(token);
     if (token == null) {
@@ -34,7 +37,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
           'Authorization': 'Bearer $token',
         },
       );
-      // print("RESPONSE BODY : " + response.body);
 
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {
@@ -43,7 +45,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
           List<ProductModel> listproduct = [];
           for (var d in productJson) {
             if (d != null) {
-              // print(d);
               listproduct.add(ProductModel.fromJson(d));
             }
           }
@@ -62,13 +63,29 @@ class _CatalogScreenState extends State<CatalogScreen> {
     }
   }
 
+  void _sortProducts(List<ProductModel> products) {
+    switch (_selectedSortOption) {
+      case 'Nama Asc':
+        products.sort((a, b) => a.productName.compareTo(b.productName));
+        break;
+      case 'Nama Desc':
+        products.sort((a, b) => b.productName.compareTo(a.productName));
+        break;
+      case 'Harga Asc':
+        products.sort((a, b) => a.price.compareTo(b.price));
+        break;
+      case 'Harga Desc':
+        products.sort((a, b) => b.price.compareTo(a.price));
+        break;
+    }
+  }
+
   Future<String?> getJwtToken() async {
     const FlutterSecureStorage storage = const FlutterSecureStorage();
 
     try {
-      // Attempt to read the JWT token from storage
       String? jwt = await storage.read(key: 'jwt');
-      return jwt; // This will return null if the token doesn't exist
+      return jwt;
     } catch (e) {
       print('Error reading JWT from storage: ${e.toString()}');
       return null;
@@ -90,7 +107,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
     String decoded = utf8.decode(base64Url.decode(normalized));
 
     Map<String, dynamic> payloadMap = json.decode(decoded);
-    String? username = payloadMap['sub']; // 'sub' is used for the username
+    String? username = payloadMap['sub'];
 
     return username;
   }
@@ -108,11 +125,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Text("Loading...");
             } else if (snapshot.hasData) {
-              // Display the username if available
               return Text(snapshot.data ?? 'No Username',
                   style: TextStyle(color: Colors.white));
             } else {
-              // Handle the case where there is no username or an error
               return const Text('No Username',
                   style: TextStyle(color: Colors.white));
             }
@@ -120,25 +135,24 @@ class _CatalogScreenState extends State<CatalogScreen> {
         ),
         actions: [
           Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: IconButton(
-                onPressed: () {
-                  popUpExit(context, "Log out of your account?");
-                },
-                icon: const Icon(
-                  Icons.account_circle_outlined,
-                  size: 40,
-                  color: Colors.white,
-                ),
-              ))
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () {
+                popUpExit(context, "Log out of your account?");
+              },
+              icon: const Icon(
+                Icons.account_circle_outlined,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+          )
         ],
       ),
       drawer: const MyDrawer(),
       body: FutureBuilder<List<ProductModel>?>(
-        future: getJwtToken().then((token) => fetchProduct(
-            token)), // a previously-obtained Future<String> or null
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProductModel>?> snapshot) {
+        future: getJwtToken().then((token) => fetchProduct(token)),
+        builder: (BuildContext context, AsyncSnapshot<List<ProductModel>?> snapshot) {
           if (snapshot.data == null) {
             if (snapshot.connectionState == ConnectionState.done) {
               return const Padding(
@@ -173,69 +187,100 @@ class _CatalogScreenState extends State<CatalogScreen> {
             );
           } else {
             final data = snapshot.data as List<ProductModel>;
+            _sortProducts(data);
 
-            return Padding(
-                padding: const EdgeInsets.all(20),
-                child: ListView.builder(
+            return Column(
+              children: [
+                DropdownButton<String>(
+                  value: _selectedSortOption,
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() {
+                        _selectedSortOption = newValue;
+                        _sortProducts(data);
+                      });
+                    }
+                  },
+                  items: [
+                    'Nama Asc',
+                    'Nama Desc',
+                    'Harga Asc',
+                    'Harga Desc',
+                  ].map((String option) {
+                    return DropdownMenuItem<String>(
+                      value: option,
+                      child: Text(option),
+                    );
+                  }).toList(),
+                ),
+                Expanded(
+                  child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data!.length,
+                    itemCount: data.length,
                     itemBuilder: (_, index) {
                       ProductModel product = data[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductDetailPage(product: product),
-                                ),
-                              );
-                        },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: const [
-                              BoxShadow(color: Colors.black, blurRadius: 2.0)
-                            ]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.memory(
-                            Uint8List.fromList(product.image),
-                            height: 100, // Adjust the height as needed
-                            width: 100, // Take the full width
-                            fit: BoxFit.cover, // Adjust the image fit
-                          ),
-                            Text('Nama Produk: ${product.productName}',
-                                style: const TextStyle(fontSize: 16)),
-                            Text('Harga: ${product.price.toString()}',
-                                style: const TextStyle(fontSize: 16)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: (){
-                                    // TODO: Implement add to cart functionality
-                                  },
-                                  child: Text('Add to Cart'),
-                                ),
-                                ElevatedButton(
-                                  onPressed: (){
-                                    // TODO: implement order Now Functionality
-                                  },
-                                  child: Text('Order Now'),
-                                ),
-                              ],
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductDetailPage(product: product),
                             ),
-                          ],
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black, blurRadius: 2.0)
+                              ]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.memory(
+                                Uint8List.fromList(product.image),
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                              ),
+                              Text('Nama Produk: ${product.productName}',
+                                  style: const TextStyle(fontSize: 16)),
+                              Text('Harga: ${product.price.toString()}',
+                                  style: const TextStyle(fontSize: 16)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // TODO: Implement add to cart functionality
+                                    },
+                                    child: Text('Add to Cart'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // TODO: implement order Now Functionality
+                                    },
+                                    child: Text('Order Now'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                       );
-                    }));
+                    },
+                  ),
+                ),
+              ],
+            );
           }
         },
       ),
