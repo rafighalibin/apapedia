@@ -84,32 +84,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String checkUsernameEmailPassword(HttpServletRequest request,
+    public String checkUsernameEmail(HttpServletRequest request,
             UpdateUserRequestDTO newUser) {
         String jwt = getJwtFromHeader(request);
         String oldId = jwtUtils.getIdFromJwtToken(jwt);
         UserModel oldUser = findUserById(oldId);
 
-        String oldPassword = encrypt(oldUser.getPassword());
-        String newPassword = encrypt(newUser.getPassword());
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         for (UserModel user : userDb.findAll()) {
             String username = user.getUsername();
             String email = user.getEmail();
-            String password = encrypt(user.getPassword());
             if (username.equals(newUser.getUsername()) &&
                     !username.equals(oldUser.getUsername()))
                 return "duplicateUsername";
 
             if (email.equals(newUser.getEmail()) && !email.equals(oldUser.getEmail()))
                 return "duplicateEmail";
-
-            if (passwordEncoder.matches(password, newPassword) &&
-                    !passwordEncoder.matches(password, oldPassword))
-                return "duplicatePassword";
         }
-
         return "Y";
 
     }
@@ -200,14 +190,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Override
-    public String getUsernameFromJwtCookie(HttpServletRequest request) {
-        // String jwt = getJwtFromHeader(request);
-        // if (jwt != null && !jwt.isEmpty()) {
-        // return jwtUtil.extractUsername(jwt);
-        // }
-        return null;
-    }
+
 
     @Override
     public boolean isLoggedIn(HttpServletRequest request) {
