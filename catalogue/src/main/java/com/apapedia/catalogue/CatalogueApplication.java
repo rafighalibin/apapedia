@@ -39,20 +39,6 @@ public class CatalogueApplication {
                 categoryService.createCategory(category);
             }
 
-            for (int i = 0; i < 10; i++) {
-                Catalogue catalogue = new Catalogue();
-                String productName = faker.commerce().productName();
-                catalogue.setIdSeller(UUID.fromString("4524db40-7984-4cc9-a9c8-dd6a3e8c6893"));
-                catalogue.setProductName(productName);
-                catalogue.setProductNameLower(productName.toLowerCase());
-                catalogue.setPrice(faker.number().numberBetween(10000, 1000000));
-                catalogue.setStock(faker.number().numberBetween(1, 100));
-                catalogue.setProductDescription(faker.lorem().sentence());
-                List<Category> categories = categoryService.getAllCategories();
-                catalogue.setCategory(categories.get(faker.number().numberBetween(0, categories.size())));
-                catalogue.setImage(generateFakeImageBytes());
-                catalogueService.saveCatalogue(catalogue);
-            }
         };
     }
 

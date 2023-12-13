@@ -14,8 +14,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.apapedia.order.security.jwt.JwtTokenFilter;
 import org.springframework.security.config.Customizer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
