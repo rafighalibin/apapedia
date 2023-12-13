@@ -63,8 +63,14 @@ class _CartScreenState extends State<CartScreen> {
 
   Future<void> fetchData() async {
     String? userId = await getUserIdFromJwt();
-    final response = await http
-        .get(Uri.parse('http://localhost:10141/api/cart/get/${userId}'));
+    String? token = await getJwtToken();
+
+    final response = await http.get(
+      Uri.parse('http://localhost:10141/api/cart/get/${userId}'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);

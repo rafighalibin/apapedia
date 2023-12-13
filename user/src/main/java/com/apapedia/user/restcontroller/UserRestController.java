@@ -1,6 +1,5 @@
 package com.apapedia.user.restcontroller;
 
-import org.mapstruct.control.MappingControl.Use;
 import com.apapedia.user.dto.UserMapper;
 import com.apapedia.user.dto.request.*;
 import com.apapedia.user.dto.response.CreateUserResponseDTO;
@@ -42,7 +41,7 @@ public class UserRestController {
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    private ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
+    public ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
         var user = userService.findUserByUsername(createUserRequestDTO.getUsername());
         if (user != null) {
             if (user.isDeleted() == true) {
@@ -66,7 +65,6 @@ public class UserRestController {
     public ResponseEntity<?> updateUser(@Valid @RequestBody UpdateUserRequestDTO userDTO, HttpServletRequest request,
             HttpServletResponse response) {
 
-        // TODO: ini kayaknya gabisa kalo statusnya ngga 200
         if (!userService.isLoggedIn(request))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("You must be logged in to update a user.");

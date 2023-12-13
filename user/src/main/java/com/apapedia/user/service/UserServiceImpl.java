@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private final WebClient webClient;
 
     public UserServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:10141")
+        this.webClient = webClientBuilder.baseUrl("https://apap-141.cs.ui.ac.id")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
@@ -175,23 +175,6 @@ public class UserServiceImpl implements UserService {
         Optional<UserModel> userOptional = userDb.findById(id);
         return userOptional.orElse(null);
     }
-
-    // @Override
-    // public User authenticate(String username, String password) {
-    // // Attempt to retrieve user by username
-    // User userOptional = userDb.findByUsername(username);
-    // BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    // if (userOptional != null) {
-    // User user = userOptional;
-    // // Check if the provided password matches the stored password
-    // if (passwordEncoder.matches(password, user.getPassword())) {
-    // // Return user if passwords match
-    // return user;
-    // }
-    // }
-    // // Return null if authentication fails
-    // return null;
-    // }
 
     @Override
     public String getJwtFromHeader(HttpServletRequest request) {

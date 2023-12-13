@@ -6,8 +6,6 @@ import com.apapedia.user.model.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
-import java.util.UUID;
 
 public interface UserService {
 
