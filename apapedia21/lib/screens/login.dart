@@ -1,5 +1,6 @@
 import 'package:apapedia21/screens/catalog_page.dart';
 import 'package:apapedia21/screens/profile_page.dart';
+import 'package:apapedia21/screens/cart.dart';
 import 'package:apapedia21/screens/register.dart';
 import 'package:apapedia21/utils/color_pallette.dart';
 import 'package:flutter/material.dart';
@@ -183,7 +184,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const CatalogScreen()));
+                                                      const CartScreen()));
                                         } else {
                                           // Show error message if login failed
                                           ScaffoldMessenger.of(context)

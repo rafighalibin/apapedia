@@ -15,11 +15,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.apapedia.order.dto.response.ReadCatalogueResponseDTO;
 import com.apapedia.order.model.Cart;
 import com.apapedia.order.model.CartItem;
+import com.apapedia.order.model.Order;
+import com.apapedia.order.model.OrderItem;
 import com.apapedia.order.repository.CartDb;
 import com.apapedia.order.repository.CartItemDb;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,10 +36,13 @@ public class CartServiceImpl implements CartService {
     @Autowired
     CartItemDb cartItemDb;
 
+    @Autowired
+    OrderService orderService;
+
     private final WebClient webClient;
 
     public CartServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:10142")
+        this.webClient = webClientBuilder.baseUrl("https://apap-142.cs.ui.ac.id")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
@@ -43,30 +50,32 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart createCart(Cart cart) {
         Cart cartExisting = cartDb.findByUserId(cart.getUserId());
-        if (cartExisting != null && cartExisting.getListCartItem().size() > 0) {
-            return cartExisting;
+        if (cartExisting != null) {
+            if (cartExisting.getListCartItem().size() != 0) {
+                return cartExisting;
+            }
+            cartDb.delete(cartExisting);
         }
         cart.setListCartItem(new ArrayList<CartItem>());
 
         // TODO: DEBUG ONLY DELETE BEFORE COMMIT
-        // ParameterizedTypeReference<List<ReadCatalogueResponseDTO>> responseType = new
-        // ParameterizedTypeReference<List<ReadCatalogueResponseDTO>>() {
-        // };
+        ParameterizedTypeReference<List<ReadCatalogueResponseDTO>> responseType = new ParameterizedTypeReference<List<ReadCatalogueResponseDTO>>() {
+        };
 
-        // var response = this.webClient
-        // .get()
-        // .uri("/api/catalogue")
-        // .retrieve().toEntity(responseType)
-        // .block();
-        // cartDb.save(cart);
-        // for (ReadCatalogueResponseDTO e : response.getBody()) {
-        // CartItem cartItem = new CartItem();
-        // cartItem.setCart(cart);
-        // cartItem.setProductId(e.getId());
-        // cartItem.setQuantity(1);
-        // cart.getListCartItem().add(cartItem);
-        // cartItemDb.save(cartItem);
-        // }
+        var response = this.webClient
+                .get()
+                .uri("/api/catalogue/viewall")
+                .retrieve().toEntity(responseType)
+                .block();
+        cartDb.save(cart);
+        for (ReadCatalogueResponseDTO e : response.getBody()) {
+            CartItem cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setProductId(e.getId());
+            cartItem.setQuantity(1);
+            cart.getListCartItem().add(cartItem);
+            cartItemDb.save(cartItem);
+        }
         return cartDb.save(cart);
     }
 
@@ -102,7 +111,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findCartById(UUID idCart) {
-        return cartDb.findById(idCart).get();
+        return cartDb.findByCartId(idCart);
     }
 
     @Override
@@ -136,6 +145,57 @@ public class CartServiceImpl implements CartService {
             result.add(subResult);
         }
         return result;
+    }
+
+    @Override
+    public String checkout(UUID idUser) {
+        ParameterizedTypeReference<ReadCatalogueResponseDTO> responseType = new ParameterizedTypeReference<ReadCatalogueResponseDTO>() {
+        };
+        Cart cart = cartDb.findByUserId(idUser);
+
+        if (cart == null || cart.getListCartItem().size() == 0) {
+            return "Cart is empty";
+        }
+        Order order = new Order();
+        order.setCustomerId(idUser);
+        order.setListOrderItem(new ArrayList<OrderItem>());
+        order.setStatus(0);
+        order.setCreatedAt(LocalDateTime.now());
+        order.setUpdatedAt(LocalDateTime.now());
+
+        List<CartItem> listCartItem = cart.getListCartItem();
+        cart.setListCartItem(new ArrayList<CartItem>());
+
+        for (CartItem e : listCartItem) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProductId(e.getProductId());
+            orderItem.setQuantity(e.getQuantity());
+            ReadCatalogueResponseDTO product = this.webClient
+                    .get()
+                    .uri("/api/catalogue/" + e.getProductId().toString())
+                    .retrieve().toEntity(responseType)
+                    .block().getBody();
+            orderItem.setProductPrice(product.getPrice());
+            orderItem.setProductName(product.getProductName());
+
+            order.setTotalPrice(order.getTotalPrice() + (product.getPrice() * e.getQuantity()));
+            order.setSellerId(product.getIdSeller());
+
+            order.getListOrderItem().add(orderItem);
+            orderService.saveOrder(order);
+            orderService.saveOrderItem(orderItem);
+
+            cartItemDb.deleteById(e.getCartItemId());
+        }
+
+        cartDb.delete(cart);
+
+        Cart newCart = new Cart();
+        newCart.setUserId(idUser);
+        newCart.setListCartItem(new ArrayList<CartItem>());
+        cartDb.save(newCart);
+        return "Checkout successfully";
     }
 
 }
