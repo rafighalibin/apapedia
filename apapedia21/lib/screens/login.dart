@@ -42,7 +42,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
 
   Future<bool> login(String username, String password) async {
     final response = await http.post(
-      Uri.parse('http://localhost:10140/api/login/customer'),
+      Uri.parse('https://apap-140.cs.ui.ac.id/api/login/customer'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
