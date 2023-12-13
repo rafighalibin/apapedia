@@ -43,13 +43,23 @@ public class UserRestController {
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
-        if (userService.findUserByUsername(createUserRequestDTO.getUsername()) != null) return null;
-        UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
-        userModel = userService.addUser(userModel, createUserRequestDTO);
+        var user = userService.findUserByUsername(createUserRequestDTO.getUsername());
+        if (user != null) {
+            if (user.isDeleted() == true) {
+                userService.updateUserDeleted(user, createUserRequestDTO);
+                return ResponseEntity.ok(user);
+            } else {
+                return null;
+            }
+        } else {
+            UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
+            userModel = userService.addUser(userModel, createUserRequestDTO);
 
-        CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
-        createUserResponseDTO.setRole(userModel.getRole().getRole());
-        return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
+            CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
+            createUserResponseDTO.setRole(userModel.getRole().getRole());
+            return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
+        }
+
     }
 
     @PutMapping("/update")

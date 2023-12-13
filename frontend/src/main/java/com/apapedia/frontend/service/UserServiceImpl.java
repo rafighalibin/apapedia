@@ -5,6 +5,7 @@ import java.net.http.HttpResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import com.apapedia.frontend.DTO.request.CreateUserRequestDTO;
+import com.apapedia.frontend.DTO.request.DeleteUserRequestDTO;
 import com.apapedia.frontend.DTO.request.LoginRequestDTO;
 import com.apapedia.frontend.DTO.request.TokenDTO;
 import com.apapedia.frontend.DTO.request.UpdateBalanceRequestDTO;
@@ -13,6 +14,9 @@ import com.apapedia.frontend.DTO.response.UpdateUserResponseDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -23,6 +27,8 @@ import org.springframework.http.MediaType;
 public class UserServiceImpl implements UserService {
 
     private final WebClient webClient;
+
+    private String jwtSecret = "apapedia21";
 
     public UserServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("http://localhost:10140")
@@ -109,6 +115,23 @@ public class UserServiceImpl implements UserService {
         return jsonResponse;
     }
 
+        public String getIdFromJwtToken(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(jwtSecret)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("userId", String.class);
+        } catch (ExpiredJwtException ex) {
+            // Handle token expiration
+            System.out.println("Token has expired.");
+        } catch (JwtException ex) {
+            // Handle other JWT-related exceptions
+            System.out.println("Error parsing JWT: " + ex.getMessage());
+        }
+        return null;
+    }
+
     @Override
     public String updateUser(UpdateUserResponseDTO updateUserResponseDTO, HttpServletRequest request)
             throws IOException, InterruptedException {
@@ -153,6 +176,27 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public String deleteUser(HttpServletRequest request)
+            throws IOException, InterruptedException {
+        var idUser = getIdFromJwtToken(getJwtFromCookies(request));
+        var idUserDTO = new DeleteUserRequestDTO();
+        idUserDTO.setId(idUser);
+        
+        var response = this.webClient
+                .put()
+                .uri("/api/user/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtFromCookies(request))
+                .header("Cookie", "jwt=" + getJwtFromCookies(request))
+                .bodyValue(idUserDTO)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        return response;
     }
 
 }

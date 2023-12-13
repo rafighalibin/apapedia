@@ -43,8 +43,18 @@ public class UserServiceImpl implements UserService {
         user.setRole(roleService.getRoleByRoleName(createUserRequestDTO.getRole()));
         String hashedPass = encrypt(user.getPassword());
         user.setPassword(hashedPass);
+        user.setCreatedAt(LocalDateTime.now());
 
         return userDb.save(user);
+    }
+
+    @Override 
+    public void updateUserDeleted(UserModel user, CreateUserRequestDTO createUserRequestDTO){
+        user.setDeleted(false);
+        user.setName(createUserRequestDTO.getName());
+        user.setAddress(createUserRequestDTO.getAddress());
+        user.setCategory(createUserRequestDTO.getCategory());
+        saveUser(user);
     }
 
     @Override
@@ -265,11 +275,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String loginSeller(LoginJwtRequestDTO loginJwtRequestDTO) {
         String username = loginJwtRequestDTO.getUsername();
-        String name = loginJwtRequestDTO.getName();
 
         UserModel user = userDb.findByUsername(username);
 
-        if (user == null) {
+        if (user == null || user.isDeleted() == true) {
             return null;
         }
 
