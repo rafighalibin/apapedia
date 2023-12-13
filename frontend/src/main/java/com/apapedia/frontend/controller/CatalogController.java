@@ -134,6 +134,8 @@ public class CatalogController {
     public String detailCatalogue(@PathVariable("id") UUID id, Model model, HttpServletRequest request) throws Exception{
         ReadCatalogueResponseDTO catalogueDTO = catalogueService.getCatalogueById(id, request);
         catalogueDTO.setImageString(Base64.getEncoder().encodeToString(catalogueDTO.getImage()));
+        var token = catalogueService.getJwtFromCookies(request);
+        if (token != null) model.addAttribute("isLoggedIn", "True");
         model.addAttribute("catalogueDTO", catalogueDTO);
         return "catalogue-view";
     }
