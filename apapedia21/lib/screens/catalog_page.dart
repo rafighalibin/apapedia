@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:apapedia21/product/product.dart';
+import 'package:apapedia21/model/catalogue.dart';
+import 'package:apapedia21/screens/product_detail_page.dart';
 import 'package:apapedia21/utils/drawer.dart';
 import 'package:apapedia21/utils/reusable_widget.dart';
 
@@ -16,7 +19,7 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  Future<List<Product>?> fetchProduct(String? token) async {
+  Future<List<ProductModel>?> fetchProduct(String? token) async {
     print(token);
     if (token == null) {
       print('JWT token is null');
@@ -25,7 +28,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse(''),
+        Uri.parse('http://localhost:10142/api/catalogue/viewall'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -37,15 +40,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
         if (response.body.isNotEmpty) {
           List<dynamic> productJson = json.decode(response.body);
 
-          List<Product> listproduct = [];
+          List<ProductModel> listproduct = [];
           for (var d in productJson) {
             if (d != null) {
               // print(d);
-              listproduct.add(Product.fromJson(d));
+              listproduct.add(ProductModel.fromJson(d));
             }
           }
-          print('HAHAHAHAHAHA');
-          print(listproduct);
           return listproduct;
         } else {
           print('Empty response body');
@@ -133,11 +134,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
         ],
       ),
       drawer: const MyDrawer(),
-      body: FutureBuilder<List<Product>?>(
+      body: FutureBuilder<List<ProductModel>?>(
         future: getJwtToken().then((token) => fetchProduct(
             token)), // a previously-obtained Future<String> or null
         builder:
-            (BuildContext context, AsyncSnapshot<List<Product>?> snapshot) {
+            (BuildContext context, AsyncSnapshot<List<ProductModel>?> snapshot) {
           if (snapshot.data == null) {
             if (snapshot.connectionState == ConnectionState.done) {
               return const Padding(
@@ -171,7 +172,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
               ],
             );
           } else {
-            final data = snapshot.data as List<Product>;
+            final data = snapshot.data as List<ProductModel>;
 
             return Padding(
                 padding: const EdgeInsets.all(20),
@@ -179,8 +180,17 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     shrinkWrap: true,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (_, index) {
-                      Product product = data[index];
-                      return Container(
+                      ProductModel product = data[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductDetailPage(product: product),
+                                ),
+                              );
+                        },
+                      child: Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         padding: const EdgeInsets.all(20.0),
@@ -194,15 +204,36 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(product.photo,
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
-                            Text('Tahun Terbit: ${product.productName}',
+                            Image.memory(
+                            Uint8List.fromList(product.image),
+                            height: 100, // Adjust the height as needed
+                            width: double.infinity, // Take the full width
+                            fit: BoxFit.cover, // Adjust the image fit
+                          ),
+                            Text('Nama Produk: ${product.productName}',
                                 style: const TextStyle(fontSize: 16)),
                             Text('Harga: ${product.price.toString()}',
                                 style: const TextStyle(fontSize: 16)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    // TODO: Implement add to cart functionality
+                                  },
+                                  child: Text('Add to Cart'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: (){
+                                    // TODO: implement order Now Functionality
+                                  },
+                                  child: Text('Order Now'),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
+                      ),
                       );
                     }));
           }
