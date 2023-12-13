@@ -28,7 +28,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:10142/api/catalogue/viewall'),
+        Uri.parse('https://apap-142.cs.ui.ac.id/api/catalogue/viewall'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -207,7 +207,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             Image.memory(
                             Uint8List.fromList(product.image),
                             height: 100, // Adjust the height as needed
-                            width: double.infinity, // Take the full width
+                            width: 100, // Take the full width
                             fit: BoxFit.cover, // Adjust the image fit
                           ),
                             Text('Nama Produk: ${product.productName}',
