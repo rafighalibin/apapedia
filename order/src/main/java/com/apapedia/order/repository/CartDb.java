@@ -14,4 +14,6 @@ public interface CartDb extends JpaRepository<Cart, UUID> {
     Cart findByCartId(UUID id);
 
     Cart findByUserId(UUID userId);
+
+    void deleteByUserId(UUID userid);
 }

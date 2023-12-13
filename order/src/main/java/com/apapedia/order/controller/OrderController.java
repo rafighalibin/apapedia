@@ -5,6 +5,7 @@ import com.apapedia.order.dto.request.CreateOrderRequestDTO;
 import com.apapedia.order.dto.request.GraphRequestDTO;
 import com.apapedia.order.dto.request.UpdateOrderStatusRequestDTO;
 import com.apapedia.order.model.Order;
+import com.apapedia.order.service.CartService;
 import com.apapedia.order.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -27,6 +28,9 @@ public class OrderController {
     OrderService orderService;
 
     @Autowired
+    CartService cartService;
+
+    @Autowired
     OrderMapper orderMapper;
 
     @PostMapping(value = "/create")
@@ -37,7 +41,7 @@ public class OrderController {
     }
 
     @GetMapping("/graph")
-    public GraphRequestDTO graph(HttpServletRequest request){
+    public GraphRequestDTO graph(HttpServletRequest request) {
         HashMap<Integer, Integer> hashmap = orderService.getDailySales(request);
         GraphRequestDTO graphDTO = new GraphRequestDTO();
         graphDTO.setGraph(hashmap);
@@ -45,24 +49,24 @@ public class OrderController {
     }
 
     @GetMapping("/get/customer/{customerId}")
-    public ResponseEntity<?> getOrderByCustomerId(@PathVariable UUID customerId){
+    public ResponseEntity<?> getOrderByCustomerId(@PathVariable UUID customerId) {
         var listOrder = orderService.findByCustomerId(customerId);
         return ResponseEntity.ok(listOrder);
     }
 
-    
     @GetMapping("/get/seller/{sellerId}")
-    public ResponseEntity<?> getOrderBySellerId(@PathVariable UUID sellerId){
+    public ResponseEntity<?> getOrderBySellerId(@PathVariable UUID sellerId) {
         var listOrder = orderService.findBySellerId(sellerId);
         return ResponseEntity.ok(listOrder);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrderStatus(@PathVariable UUID id, @RequestBody UpdateOrderStatusRequestDTO request) {
-        try{
+    public ResponseEntity<?> updateOrderStatus(@PathVariable UUID id,
+            @RequestBody UpdateOrderStatusRequestDTO request) {
+        try {
             Order order = orderService.updateOrderStatus(id, request.getStatus());
             return ResponseEntity.ok(order);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tidak ada order dengan UUID : " + id);
         }

@@ -1,3 +1,4 @@
+import 'package:apapedia21/screens/checkout_page.dart';
 import 'package:apapedia21/utils/color_pallette.dart';
 import 'package:apapedia21/utils/drawer.dart';
 import 'package:apapedia21/utils/reusable_widget.dart';
@@ -61,7 +62,6 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Future<void> fetchData() async {
-    String? jwt = await getJwtToken();
     String? userId = await getUserIdFromJwt();
     final response = await http
         .get(Uri.parse('http://localhost:10141/api/cart/get/${userId}'));
@@ -69,9 +69,12 @@ class _CartScreenState extends State<CartScreen> {
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
       setState(() {
-        cartItems = jsonResponse
-            .map((data) => CartItemModel.fromJson(data['product']))
-            .toList();
+        for (var item in jsonResponse) {
+          CartItemModel cartItem = CartItemModel.fromJson(item['product']);
+          cartItem.quantity = item['quantity'];
+          cartItem.cartID = item['cartItemId'];
+          cartItems.add(cartItem);
+        }
       });
     } else {
       throw Exception('Failed to load data');
@@ -125,6 +128,12 @@ class _CartScreenState extends State<CartScreen> {
                     itemBuilder: (context, index) {
                       return CartItemWidget(
                         item: cartItems[index],
+                        onQuantityChanged: (newQuantity) {
+                          // Update the quantity in the cartItems list
+                          setState(() {
+                            cartItems[index].quantity = newQuantity;
+                          });
+                        },
                       );
                     },
                   ),
@@ -138,7 +147,12 @@ class _CartScreenState extends State<CartScreen> {
                 child: FractionallySizedBox(
                   widthFactor: 1,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CheckoutScreen()));
+                    },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       textStyle: TextStyle(
