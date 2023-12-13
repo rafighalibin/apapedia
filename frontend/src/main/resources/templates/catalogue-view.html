@@ -24,7 +24,12 @@
 </head>
 
 <body>
-    <nav th:replace="~{fragments/navbar :: navbar('Profile')}"></nav>
+    <div th:unless="${isLoggedIn}">
+        <nav th:replace="~{fragments/navbar :: navbar(NotLoggedIn)}"></nav>
+    </div>
+    <div th:if="${isLoggedIn}">
+        <nav th:replace="~{fragments/navbar :: navbar(${activeNavbar})}"></nav>
+    </div>
 
     <!-- Seller Profile Section Begin -->
     <section class="checkout spad">
