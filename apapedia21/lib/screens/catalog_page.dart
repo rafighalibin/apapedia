@@ -246,9 +246,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             children: [
                               Image.memory(
                                 Uint8List.fromList(product.image),
-                                height: 100,
-                                width: 100,
-                                fit: BoxFit.cover,
+                                height: 100, // Adjust the height as needed
+                                width: double.infinity, // Take the full width
+                                fit: BoxFit.cover, // Adjust the image fit
                               ),
                               Text('Nama Produk: ${product.productName}',
                                   style: const TextStyle(fontSize: 16)),

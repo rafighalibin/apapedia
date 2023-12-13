@@ -63,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:10140/api/user/get'),
+        Uri.parse('https://apap-140.cs.ui.ac.id/api/user/get'),
         headers: {
           'Authorization': 'Bearer $token',
         },
