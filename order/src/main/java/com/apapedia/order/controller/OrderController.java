@@ -41,6 +41,7 @@ public class OrderController {
     }
 
     @GetMapping("/graph")
+
     public GraphRequestDTO graph(HttpServletRequest request) {
         HashMap<Integer, Integer> hashmap = orderService.getDailySales(request);
         GraphRequestDTO graphDTO = new GraphRequestDTO();

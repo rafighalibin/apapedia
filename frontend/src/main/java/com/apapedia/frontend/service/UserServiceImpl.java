@@ -42,18 +42,18 @@ public class UserServiceImpl implements UserService {
 
         try {
 
-        var response = this.webClient
-                .post()
-                .uri("/api/login/seller")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(TokenDTO.class)
-                .block();
+            var response = this.webClient
+                    .post()
+                    .uri("/api/login/seller")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(TokenDTO.class)
+                    .block();
 
-        var token = response.getToken();
+            var token = response.getToken();
 
-        return token;
+            return token;
 
         } catch (Exception e) {
             return null;
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
         return jsonResponse;
     }
 
-        public String getIdFromJwtToken(String token) {
+    public String getIdFromJwtToken(String token) {
         try {
             return Jwts.parser()
                     .setSigningKey(jwtSecret)
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
         var idUser = getIdFromJwtToken(getJwtFromCookies(request));
         var idUserDTO = new DeleteUserRequestDTO();
         idUserDTO.setId(idUser);
-        
+
         var response = this.webClient
                 .put()
                 .uri("/api/user/delete")

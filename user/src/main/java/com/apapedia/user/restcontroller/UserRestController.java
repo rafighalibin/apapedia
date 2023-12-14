@@ -77,7 +77,6 @@ public class UserRestController {
         if (checkUsernameEmail.equals("duplicateEmail"))
             return ResponseEntity.ok("duplicate email");
 
-
         // Service method to update user details
         UserModel updatedUser = userService.updateUser(request, userDTO);
 

@@ -12,7 +12,7 @@ import jakarta.transaction.Transactional;
 
 @Repository
 @Transactional
-public interface OrderDb extends JpaRepository<Order, UUID>{
+public interface OrderDb extends JpaRepository<Order, UUID> {
     List<Order> findBySellerId(UUID sellerId);
 
     List<Order> findByCustomerId(UUID customerId);
