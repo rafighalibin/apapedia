@@ -69,16 +69,14 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("You must be logged in to update a user.");
 
-        String checkUsernameEmailPassword = userService.checkUsernameEmailPassword(request,
+        String checkUsernameEmail = userService.checkUsernameEmail(request,
                 userDTO);
-        if (checkUsernameEmailPassword.equals("duplicateUsername"))
+        if (checkUsernameEmail.equals("duplicateUsername"))
             return ResponseEntity.ok("duplicate username");
 
-        if (checkUsernameEmailPassword.equals("duplicateEmail"))
+        if (checkUsernameEmail.equals("duplicateEmail"))
             return ResponseEntity.ok("duplicate email");
 
-        if (checkUsernameEmailPassword.equals("duplicatePassword"))
-            return ResponseEntity.ok("duplicate password");
 
         // Service method to update user details
         UserModel updatedUser = userService.updateUser(request, userDTO);
