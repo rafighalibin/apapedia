@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:apapedia21/model/catalogue.dart';
 import 'package:apapedia21/product/product.dart';
+import 'package:apapedia21/screens/cart.dart';
 import 'package:apapedia21/screens/product_detail_page.dart';
 import 'package:apapedia21/utils/drawer.dart';
 import 'package:apapedia21/utils/reusable_widget.dart';
@@ -21,6 +22,15 @@ class CatalogScreen extends StatefulWidget {
 
 class _CatalogScreenState extends State<CatalogScreen> {
   String _selectedSortOption = 'Nama Asc';
+
+  void _goToCartPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartScreen(),
+      ),
+    ); // Replace '/cart' with your actual cart page route
+  }
 
   Future<List<ProductModel>?> fetchProduct(String? token) async {
     print(token);
@@ -146,13 +156,25 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 color: Colors.white,
               ),
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: _goToCartPage,
+              icon: const Icon(
+                Icons.shopping_cart,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ],
       ),
       drawer: const MyDrawer(),
       body: FutureBuilder<List<ProductModel>?>(
         future: getJwtToken().then((token) => fetchProduct(token)),
-        builder: (BuildContext context, AsyncSnapshot<List<ProductModel>?> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ProductModel>?> snapshot) {
           if (snapshot.data == null) {
             if (snapshot.connectionState == ConnectionState.done) {
               return const Padding(
@@ -237,8 +259,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(15.0),
                               boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black, blurRadius: 2.0)
+                                BoxShadow(color: Colors.black, blurRadius: 2.0)
                               ]),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -246,9 +267,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             children: [
                               Image.memory(
                                 Uint8List.fromList(product.image),
-                                height: 100, // Adjust the height as needed
-                                width: double.infinity, // Take the full width
-                                fit: BoxFit.cover, // Adjust the image fit
+                                height: 150, // Adjust the height as needed
+                                width: 150, // Take the full width
                               ),
                               Text('Nama Produk: ${product.productName}',
                                   style: const TextStyle(fontSize: 16)),
@@ -260,13 +280,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () {
-                                      // TODO: Implement add to cart functionality
+                                      _goToCartPage();
                                     },
                                     child: Text('Add to Cart'),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      // TODO: implement order Now Functionality
+                                      _goToCartPage();
                                     },
                                     child: Text('Order Now'),
                                   ),
