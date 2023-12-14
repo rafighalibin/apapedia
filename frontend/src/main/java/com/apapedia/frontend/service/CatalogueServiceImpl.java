@@ -22,7 +22,7 @@ public class CatalogueServiceImpl implements CatalogueService {
     private String jwtSecret = "apapedia21";
 
     public CatalogueServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://apap-142.cs.ui.ac.id").build();
+        this.webClient = webClientBuilder.baseUrl("http://localhost:10142").build();
     }
 
     @Override

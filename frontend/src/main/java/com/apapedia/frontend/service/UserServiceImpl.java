@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private String jwtSecret = "apapedia21";
 
     public UserServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://apap-140.cs.ui.ac.id/")
+        this.webClient = webClientBuilder.baseUrl("http://localhost:10140")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
