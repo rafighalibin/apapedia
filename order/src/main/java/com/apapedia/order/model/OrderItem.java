@@ -2,6 +2,9 @@ package com.apapedia.order.model;
 
 import java.util.Date;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,6 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties(value = { "order" }, allowSetters = true)
 @Table(name = "order_item")
 public class OrderItem {
 
@@ -22,9 +26,9 @@ public class OrderItem {
 
     @Column(name = "id_product", nullable = false)
     private UUID productId;
-    
+
     @ManyToOne
-    @JoinColumn(name = "id_order", referencedColumnName = "orderId")
+    @JoinColumn(name = "id_order", referencedColumnName = "order_id")
     private Order order;
 
     @NotNull
@@ -33,7 +37,7 @@ public class OrderItem {
 
     @NotNull
     @Column(name = "product_name", nullable = false)
-    private int productName;
+    private String productName;
 
     @NotNull
     @Column(name = "product_price", nullable = false)

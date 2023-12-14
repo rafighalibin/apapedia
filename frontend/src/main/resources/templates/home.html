@@ -1,17 +1,206 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>TK</title>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Ogani Template" />
+    <meta name="keywords" content="Ogani, unica, creative, html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>APAPEDIA 21</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+      
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+    integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Css Styles -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
     <object th:insert="~{fragments/fragment::css}" th:remove="tag"></object>
-    <object th:insert="~{fragments/fragment::js}" th:remove="tag"></object></head>
-<body>
+    <object th:insert="~{fragments/fragment::js}" th:remove="tag"></object>
+    <link
+      th:href="@{/css/font-awesome.min.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      th:href="@{/css/elegant-icons.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link th:href="@{/css/nice-select.css}" rel="stylesheet" type="text/css" />
+    <link
+      th:href="@{/css/jquery-ui.min.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      th:href="@{/css/owl.carousel.min.css}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link th:href="@{/css/slicknav.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" />
+    
+  </head>
 
-<div class="d-flex justify-content-center">
-    <div class="m-4">
-        <h2 class="pb-5">Example MicroService</h2>
+  <body>
+    <nav th:replace="~{fragments/navbar :: navbar(${activeNavbar})}"></nav>
+
+    <div th:if="${penjualanPerHari != null}">
+
+     <!-- Header and other HTML elements -->
+     <div class="container">
+      <div class="text-center pt-5">
+        <h2>Chart Penjualan Produk Bulan ini</h2>
+        <div class="row justify-content-center m-2">
+          <canvas id="chartSales"></canvas>
+        </div>
+      </div>
     </div>
-</div>
 
-</body>
+    <!-- ... other HTML elements ... -->
+
+    <script th:inline="javascript">
+      var penjualanPerHari = [[${penjualanPerHari}]]; 
+    
+      var labels = [];
+      var chartData = [];
+      for (var day in penjualanPerHari) {
+        if (penjualanPerHari.hasOwnProperty(day)) {
+          labels.push(`Day ${parseInt(day)}`);
+          chartData.push(penjualanPerHari[day]);
+        }
+      }
+    
+      var color = 'rgba(54, 162, 235, 0.2)';
+      var borderColor = 'rgba(54, 162, 235, 1)';
+    
+      const ctx = document.getElementById('chartSales');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: chartData,
+            backgroundColor: color,
+            borderColor: borderColor,
+            borderWidth: 1,
+            pointStyle: 'circle',
+            pointRadius: 5,
+            fill: false
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Number of Products Sold' //y-axis title
+              }
+            }
+          },
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false, // Thide the legend
+            },
+            title: {
+              display: false, //  hide the title at the top
+            }
+          }
+        }
+      });
+    </script>
+
+    </div>
+    <div class="container mt-5">
+      <h2 class="mb-4">All Catalogue</h2>
+       <!-- Add Product Button (visible only if logged in) -->
+       <div th:if="${isLoggedIn}">
+        <a th:href="@{/catalogue/create}" class="btn btn-success">Add Product</a>
+    </div>
+    <form th:action="@{/}" method="GET">
+      <input type="text" name="query" placeholder="Search Product Name Here..." th:value="${query}" />
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+    <div class="container mt-3">
+      <form th:action="@{/}" method="GET">
+        <div class="form-row align-items-center justify-content-start">
+          <!-- Sort By Field -->
+          <div class="form-group d-flex align-items-center mr-2">
+            <label for="sortBy" class="mr-1">Sort By:</label>
+            <select class="form-control" id="sortBy" name="sortBy">
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+            </select>
+          </div>
+          <!-- Order Field -->
+          <div class="form-group d-flex align-items-center mr-2">
+            <label for="order" class="mr-1">Order:</label>
+            <select class="form-control" id="order" name="order">
+              <option value="asc">asc</option>
+              <option value="desc">desc</option>
+            </select>
+          </div>
+          <!-- Submit Button -->
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Filter</button>
+          </div>
+        </div>
+      </form>
+    </div>       
+    
+      <div class="row" th:if="${listCatalogue != null}">
+        <!-- Iterate through the list of catalogs -->
+        <div th:each="catalogue : ${listCatalogue}" class="col-md-4 mb-4">
+          <div class="card" style="border: 1px solid #000;">
+            <div class="card-body">
+              <!-- Product Information -->
+              <h5 class="card-title" th:text="${catalogue.productName}"></h5>
+              <p class="card-text">
+                <img alt="" th:src="@{'data:image/jpeg;base64,'+ ${catalogue.imageString}}" style="width: 200px;height: 200px;"><br>
+                Category: <span th:text="${catalogue.category.name}"></span><br>
+                Price: <span th:text="${catalogue.price}"></span><br>
+                Description: <span th:text="${catalogue.productDescription}"></span><br>
+                Stock: <span th:text="${catalogue.stock}"></span>
+              </p>
+               <!-- Edit Button (visible only if logged in) -->
+            <div th:if="${isLoggedIn}">
+              <a type="button" class="btn btn-primary" th:href="@{/catalogue/{id}/update(id=${catalogue.id})}">Edit</a>
+          </div>
+          <a th:href="@{/catalogue/{id}(id=${catalogue.id})}" class="btn btn-primary">Detail</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home Page Section End -->
+
+    <footer th:replace="~{fragments/footer}"></footer>
+
+    <!-- Js Plugins -->
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/jquery.nice-select.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+    <script th:src="@{/js/jquery.slicknav.js}"></script>
+    <script th:src="@{/js/mixitup.min.js}"></script>
+    <script th:src="@{/js/owl.carousel.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+  </body>
 </html>

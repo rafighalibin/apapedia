@@ -1,35 +1,27 @@
 package com.apapedia.user.restcontroller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.apapedia.user.auth.JwtUtil;
 import com.apapedia.user.dto.UserMapper;
-import com.apapedia.user.dto.request.AuthenticationRequest;
-import com.apapedia.user.dto.request.CreateUserRequestDTO;
-import com.apapedia.user.dto.request.DeleteUserRequestDTO;
-import com.apapedia.user.dto.request.UpdateBalance;
-import com.apapedia.user.dto.request.UpdateUserRequestDTO;
-import com.apapedia.user.model.User;
-import com.apapedia.user.repository.UserDb;
+import com.apapedia.user.dto.request.*;
+import com.apapedia.user.dto.response.CreateUserResponseDTO;
+import com.apapedia.user.dto.response.UpdateUserBalanceResponse;
+import com.apapedia.user.model.UserModel;
+import com.apapedia.user.security.jwt.JwtUtils;
 import com.apapedia.user.service.UserService;
-
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserRestController {
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtils jwtUtils;
 
     @Autowired
     private UserMapper userMapper;
@@ -37,64 +29,36 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<?> createJWT(@RequestBody AuthenticationRequest authenticationRequest,
-            HttpServletResponse response) {
-        try {
-            User user = userService.authenticate(authenticationRequest.getUsername(),
-                    authenticationRequest.getPassword());
-            if (user != null) {
-
-                jwtUtil.createCookie(user, response);
-
-                return ResponseEntity.ok("logged in username : " + authenticationRequest.getUsername());
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An internal error occurred");
-        }
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response, HttpServletRequest request) {
-
-        if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You already logged out");
-
-        jwtUtil.invalidateToken(response);
-
-        return ResponseEntity.ok("User has been logged out successfully.");
-    }
-
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") String id, HttpServletRequest request) {
         if (!userService.isLoggedIn(request))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get user by id");
 
-        User user = userService.findUserById(id);
+        UserModel user = userService.findUserById(id);
 
         return ResponseEntity.ok(user);
 
     }
 
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequestDTO userDTO, BindingResult bindingResult,
-            HttpServletRequest request) {
-
-        if (userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged out to create a user.");
-
-        if (bindingResult.hasFieldErrors()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field");
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addUser(@RequestBody CreateUserRequestDTO createUserRequestDTO) {
+        var user = userService.findUserByUsername(createUserRequestDTO.getUsername());
+        if (user != null) {
+            if (user.isDeleted() == true) {
+                userService.updateUserDeleted(user, createUserRequestDTO);
+                return ResponseEntity.ok(user);
+            } else {
+                return null;
+            }
         } else {
-            var user = userMapper.createUserRequestDTOToUser(userDTO);
+            UserModel userModel = userMapper.createUserRequestDTOToUserModel(createUserRequestDTO);
+            userModel = userService.addUser(userModel, createUserRequestDTO);
 
-            userService.addUser(user);
-
-            return ResponseEntity.ok(user);
+            CreateUserResponseDTO createUserResponseDTO = userMapper.createUserResponseDTOToUserModel(userModel);
+            createUserResponseDTO.setRole(userModel.getRole().getRole());
+            return new ResponseEntity<>(createUserResponseDTO, HttpStatus.OK);
         }
+
     }
 
     @PutMapping("/update")
@@ -102,31 +66,24 @@ public class UserRestController {
             HttpServletResponse response) {
 
         if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a user.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("You must be logged in to update a user.");
 
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateUsername"))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate username");
+        String checkUsernameEmail = userService.checkUsernameEmail(request,
+                userDTO);
+        if (checkUsernameEmail.equals("duplicateUsername"))
+            return ResponseEntity.ok("duplicate username");
 
-        if (userService.checkUsernameEmailPassword(request, userDTO).equals("duplicateEmail"))
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate email");
-
-        // if (userService.checkUsernameEmailPassword(request,
-        // userDTO).equals("duplicatePassword")) return
-        // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("duplicate
-        // password");
+        if (checkUsernameEmail.equals("duplicateEmail"))
+            return ResponseEntity.ok("duplicate email");
 
         // Service method to update user details
-        userService.updateUser(request, userDTO);
+        UserModel updatedUser = userService.updateUser(request, userDTO);
 
-        // Convert DTO to User and save
-        User updatedUser = userMapper.updateUserRequestDTOToUser(userDTO);
+        jwtUtils.invalidateToken(response);
+        jwtUtils.createCookie(updatedUser, response);
 
-        userService.saveUser(updatedUser);
-
-        jwtUtil.invalidateToken(response);
-        jwtUtil.createCookie(updatedUser, response);
-
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok("Success");
     }
 
     @PutMapping("/delete")
@@ -145,9 +102,9 @@ public class UserRestController {
             HttpServletRequest request) {
 
         if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to update a balance");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must belogged in to update a balance");
 
-        User user = userService.updateBalance(request, updateBalance);
+        UserModel user = userService.updateBalance(request, updateBalance);
 
         return ResponseEntity.ok(user);
     }
@@ -156,11 +113,21 @@ public class UserRestController {
     public ResponseEntity<?> getUser(HttpServletRequest request) {
 
         if (!userService.isLoggedIn(request))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get user");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
 
-        User user = userService.findUserByUsername(jwtUtil.extractUsername(userService.getJwtFromCookies(request)));
+        UserModel user = userService
+                .findUserByUsername(jwtUtils.getUserNameFromJwtToken(userService.getJwtFromHeader(request)));
 
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/order/done/update-balance")
+    public ResponseEntity<?> updateBalanceAfterTransaction(@Valid @RequestBody UpdateBalanceAfterOrder updateBalance,
+            HttpServletRequest request) {
+        if (!userService.isLoggedIn(request))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to get User");
+        UpdateUserBalanceResponse user = userService.updateBalanceAfterTransaction(updateBalance);
+
+        return ResponseEntity.ok(user);
+    }
 }

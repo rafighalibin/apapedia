@@ -1,6 +1,3 @@
-<!-- Pass value navbarActive via
-   model.addAttribute("navbarActive", "Profile");
--->
 <!DOCTYPE html>
 <html
   lang="en"
@@ -19,88 +16,85 @@
   </head>
 
   <body>
-    <!-- Hamburger Menu Begin -->
-    <div class="humberger__menu__overlay"></div>
-    <div class="humberger__menu__wrapper">
-      <div class="humberger__menu__logo">
-        <a href="/">
-          <img th:src="@{/img/logo-cart-text-square.png}" width="100" />
-        </a>
-      </div>
-      <div class="humberger__menu__widget"></div>
-      <nav class="humberger__menu__nav mobile-menu">
-        <ul>
-          <li
-            class=""
-            th:classappend="${navbarActive == 'orderHistory'} ? 'active' : ''"
-          >
-            <a href="/TODO:orderHistory">Order History</a>
-          </li>
-          <li
-            class=""
-            th:classappend="${navbarActive == 'Profile'} ? 'active' : ''"
-          >
-            <a href="/profile">Profile</a>
-          </li>
-        </ul>
-      </nav>
-      <div id="mobile-menu-wrap"></div>
-    </div>
-    <!-- Hamburger Menu End -->
-
-    <!-- Navbar Begin -->
-    <header class="header" th:fragment="navbar(active)">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-3">
-            <div class="header__logo">
-              <a href="/"
-                ><img th:src="@{/img/logo-cart-text-rectangle.png}" width="200"
-              /></a>
-            </div>
+        <!-- Hamburger Menu Begin -->
+        <div class="humberger__menu__overlay"></div>
+        <div class="humberger__menu__wrapper">
+          <div class="humberger__menu__logo">
+            <a href="/">
+              <img th:src="@{/img/logo-cart-text-square.png}" width="100" />
+            </a>
           </div>
-          <div class="col-lg-6">
-            <div class="hero__search__form">
-              <form action="#">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  style="width: 150px; padding: 8px"
-                />
-                <button
-                  type="submit"
-                  class="site-btn"
-                  style="padding: 8px 12px; margin-left: 10px"
-                >
-                  SEARCH
-                </button>
-              </form>
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <nav class="header__menu">
-              <ul>
-                <li
-                  class=""
-                  th:classappend="${navbarActive == 'orderHistory'} ? 'active' : ''"
-                >
-                  <a href="/TODO:orderHistory">Order History</a>
-                </li>
-                <li
-                  class=""
-                  th:classappend="${navbarActive == 'Profile'} ? 'active' : ''"
-                >
-                  <a href="/profile">Profile</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          <div class="humberger__open">
-            <i class="fa fa-bars"></i>
-          </div>
+          <div class="humberger__menu__widget"></div>
+          <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+              <li
+                class=""
+                th:classappend="${navbarActive == 'orderHistory'} ? 'active' : ''"
+              >
+                <a href="/order/history">Order History</a>
+              </li>
+              <li
+                class=""
+                th:classappend="${navbarActive == 'Profile'} ? 'active' : ''"
+              >
+                <a href="/profile">Profile</a>
+              </li>
+            </ul>
+          </nav>
+          <div id="mobile-menu-wrap"></div>
         </div>
+        <!-- Hamburger Menu End -->
+    
+    <!-- Navbar Begin -->
+    <header class="header" th:fragment="navbar(navbarActive)">
+      <div class="container">
+          <div class="row align-items-center">
+              <!-- Logo -->
+              <div class="col-lg-3">
+                  <div class="header__logo">
+                      <a href="/">
+                          <img th:src="@{/img/logo-cart-text-rectangle.png}" width="200"/>
+                      </a>
+                  </div>
+              </div>
+  
+              <!-- Main Navigation (Profile, Order History) -->
+              <div class="col-lg-6">
+                  <nav class="header__menu">
+                      <ul th:if="${navbarActive != 'NotLoggedIn' and navbarActive != 'Register'}">
+                          <li th:classappend="${navbarActive == 'Profile'} ? 'active' : ''">
+                              <a href="/profile">Profile</a>
+                          </li>
+                          <li th:classappend="${navbarActive == 'Order History'} ? 'active' : ''">
+                              <a href="/order/history">Order History</a>
+                          </li>
+                      </ul>
+                  </nav>
+              </div>
+  
+              <!-- User Not Logged In -->
+              <div class="col-lg-3">
+                <nav class="header__menu">
+                    <ul th:if="${navbarActive == 'NotLoggedIn' or navbarActive == 'Register'}">
+                        <li class="text-right" th:classappend="${navbarActive == 'Login'} ? 'active' : ''">
+                            <a href="/login-sso">Login</a>
+                        </li>
+                        <li class="text-right" th:classappend="${navbarActive == 'Register'} ? 'active' : ''">
+                            <a href="/register">Register</a>
+                        </li>
+                    </ul>
+                    <ul th:if="${navbarActive != 'NotLoggedIn' and navbarActive != 'Register'}">
+                      <li class="text-right" th:classappend="${navbarActive == 'Logout'} ? 'active' : ''">
+                        <a href="/logout-sso">Logout</a>
+                      </li>
+                  </ul>
+                </nav>
+            </div>
+            
+          </div>
       </div>
-    </header>
+  </header>
+  
 
     <!-- Navbar End -->
   </body>

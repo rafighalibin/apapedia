@@ -35,16 +35,17 @@ public class Catalogue {
     @Column(name="product_description", nullable=false)
     private String productDescription;
 
-    @NotNull
-    @Column(name="id_category", nullable=false)
-    private UUID idCategory;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_category", referencedColumnName = "id_category")
+    private Category category;
 
     @NotNull
     @Column(name="stock", nullable=false)
     private Integer stock;
 
+    @Lob
     @Column(name="image", nullable=false)
-    private String image;
+    private byte[] image;
 
     @NotNull
     @Column(name = "product_name_lower")
