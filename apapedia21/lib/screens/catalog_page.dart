@@ -5,6 +5,7 @@ import 'package:apapedia21/model/catalogue.dart';
 import 'package:apapedia21/product/product.dart';
 import 'package:apapedia21/screens/cart.dart';
 import 'package:apapedia21/screens/product_detail_page.dart';
+import 'package:apapedia21/screens/profile_page.dart';
 import 'package:apapedia21/utils/drawer.dart';
 import 'package:apapedia21/utils/reusable_widget.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
     ); // Replace '/cart' with your actual cart page route
   }
 
+  void _goToProfilePage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfileScreen(),
+      ),
+    ); // Replace '/cart' with your actual cart page route
+  }
+
   Future<List<ProductModel>?> fetchProduct(String? token) async {
     print(token);
     if (token == null) {
@@ -41,7 +51,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('https://apap-142.cs.ui.ac.id/api/catalogue/viewall'),
+        Uri.parse('http://localhost:10142/api/catalogue/viewall'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -147,9 +157,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () {
-                popUpExit(context, "Log out of your account?");
-              },
+              onPressed:  
+                _goToProfilePage,
+              
               icon: const Icon(
                 Icons.account_circle_outlined,
                 size: 40,

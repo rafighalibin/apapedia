@@ -195,7 +195,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     try {
       final response = await http.put(
-        Uri.parse('https://apap-140.cs.ui.ac.id/api/user/update'),
+        Uri.parse('http://localhost:10140/api/user/update'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',

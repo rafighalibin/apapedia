@@ -62,7 +62,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     String? token = await getJwtToken();
     String? userId = await getUserIdFromJwt();
     final response = await http.get(
-      Uri.parse('https://apap-141.cs.ui.ac.id/api/cart/get/${userId}'),
+      Uri.parse('http://localhost:10141/api/cart/get/${userId}'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -87,7 +87,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     String? userId = await getUserIdFromJwt();
     String? jwt = await getJwtToken();
     final response = await http.post(
-      Uri.parse('https://apap-141.cs.ui.ac.id/api/cart/checkout/${userId}'),
+      Uri.parse('http://localhost:10141/api/cart/checkout/${userId}'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $jwt',

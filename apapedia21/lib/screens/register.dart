@@ -38,7 +38,7 @@ class _RegisterFormScreenState extends State<RegisterFormScreen> {
   Future<bool> register(String username, String name, String password,
       String address, String email) async {
     final response = await http.post(
-      Uri.parse('https://apap-140.cs.ui.ac.id/api/user/add'),
+      Uri.parse('http://localhost:10140/api/user/add'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
