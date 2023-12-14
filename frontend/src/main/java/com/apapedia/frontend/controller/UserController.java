@@ -33,14 +33,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO, 
-                               RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
+    public String registerUser(@ModelAttribute CreateUserRequestDTO createUserDTO,
+            RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
         var user = userService.registerUser(createUserDTO);
         if (user == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Username sudah pernah didaftarkan!");
             return "redirect:/register";
         }
-        return "redirect:/"; 
+        return "redirect:/";
     }
 
     @GetMapping("/profile")
@@ -148,7 +148,5 @@ public class UserController {
 
         return "redirect:/logout-sso";
     }
-
-
 
 }

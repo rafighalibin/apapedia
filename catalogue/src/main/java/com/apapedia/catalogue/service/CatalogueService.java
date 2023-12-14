@@ -3,15 +3,11 @@ package com.apapedia.catalogue.service;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.catalog.Catalog;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.apapedia.catalogue.model.Catalogue;
 import com.apapedia.catalogue.repository.CatalogueDb;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class CatalogueService {
@@ -39,41 +35,41 @@ public class CatalogueService {
     }
 
     public List<Catalogue> getCatalogListSortedSeller(String sortBy, String order, UUID idSeller) {
-        if (sortBy.equals("price") && order.equals("asc")) {
+        Boolean isAsc = order.equals("asc");
+        Boolean byPrice = sortBy.equals("price");
+        if (byPrice && isAsc) {
             return catalogueDb.findAllByIdSellerOrderByPriceAsc(idSeller);
         }
 
-        if (sortBy.equals("price") && order.equals("desc")) {
+        if (byPrice) {
             return catalogueDb.findAllByIdSellerOrderByPriceDesc(idSeller);
         }
 
-        if (sortBy.equals("name") && order.equals("asc")) {
+        if (isAsc) {
             return catalogueDb.findAllByIdSellerOrderByProductNameLowerAsc(idSeller);
         }
 
-        if (sortBy.equals("name") && order.equals("desc")) {
-            return catalogueDb.findAllByIdSellerOrderByProductNameLowerDesc(idSeller);
-        }
-        return null;
+        return catalogueDb.findAllByIdSellerOrderByProductNameLowerDesc(idSeller);
+
     }
 
     public List<Catalogue> getCatalogListSorted(String sortBy, String order) {
-        if (sortBy.equals("price") && order.equals("asc")) {
+        Boolean isAsc = order.equals("asc");
+        Boolean byPrice = sortBy.equals("price");
+        if (byPrice && isAsc) {
             return catalogueDb.findAllByOrderByPriceAsc();
         }
 
-        if (sortBy.equals("price") && order.equals("desc")) {
+        if (byPrice) {
             return catalogueDb.findAllByOrderByPriceDesc();
         }
 
-        if (sortBy.equals("name") && order.equals("asc")) {
+        if (isAsc) {
             return catalogueDb.findAllByOrderByProductNameLowerAsc();
         }
 
-        if (sortBy.equals("name") && order.equals("desc")) {
-            return catalogueDb.findAllByOrderByProductNameLowerDesc();
-        }
-        return null;
+        return catalogueDb.findAllByOrderByProductNameLowerDesc();
+
     }
 
     public List<Catalogue> getAllCatalogueByName(String name) {

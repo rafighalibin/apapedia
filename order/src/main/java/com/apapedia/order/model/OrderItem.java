@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@JsonIgnoreProperties(value = {"order"}, allowSetters = true)
+@JsonIgnoreProperties(value = { "order" }, allowSetters = true)
 @Table(name = "order_item")
 public class OrderItem {
 
@@ -26,7 +26,7 @@ public class OrderItem {
 
     @Column(name = "id_product", nullable = false)
     private UUID productId;
-    
+
     @ManyToOne
     @JoinColumn(name = "id_order", referencedColumnName = "order_id")
     private Order order;
