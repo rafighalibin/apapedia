@@ -1,6 +1,5 @@
 package com.apapedia.frontend.DTO.response;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,7 +15,7 @@ public class ReadUserResponseDTO {
     private String name;
     private String username;
     private String email;
-    private BigDecimal balance;
+    private Long balance;
     private String address;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;

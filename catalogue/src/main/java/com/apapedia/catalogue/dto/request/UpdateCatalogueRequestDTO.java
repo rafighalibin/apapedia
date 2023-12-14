@@ -1,6 +1,6 @@
 package com.apapedia.catalogue.dto.request;
 
-import java.util.UUID;
+import com.apapedia.catalogue.model.Category;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -16,6 +16,7 @@ public class UpdateCatalogueRequestDTO {
     private Integer price;
     private String productDescription;
     private Integer stock;
-    private String image;
-    private UUID idCategory;
+    private byte[] image;
+    private Category category;
+
 }

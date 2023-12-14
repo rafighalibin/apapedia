@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "UserApplication",
+      "request": "launch",
+      "mainClass": "com.apapedia.user.UserApplication",
+      "projectName": ""
+    },
+    {
+      "type": "java",
       "name": "FrontendApplication",
       "request": "launch",
       "mainClass": "com.apapedia.frontend.FrontendApplication",
@@ -21,6 +28,16 @@
       "cwd": "${workspaceFolder}",
       "mainClass": "com.apapedia.catalogue.CatalogueApplication",
       "projectName": "catalogue",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FrontendApplication<frontend>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.apapedia.frontend.FrontendApplication",
+      "projectName": "frontend",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     }

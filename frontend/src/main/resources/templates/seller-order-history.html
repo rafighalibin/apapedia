@@ -1,0 +1,123 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="description" content="Ogani Template"/>
+    <meta name="keywords" content="Ogani, unica, creative, html"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Profile</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"
+    ></script>
+    <!-- Google Font -->
+    <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap"
+            rel="stylesheet"
+    />
+    <!-- Css Styles -->
+    <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+    />
+
+    <object th:insert="~{fragments/fragment::css}" th:remove="tag"></object>
+    <object th:insert="~{fragments/fragment::js}" th:remove="tag"></object>
+    <link
+            th:href="@{/css/font-awesome.min.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link
+            th:href="@{/css/elegant-icons.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link th:href="@{/css/nice-select.css}" rel="stylesheet" type="text/css"/>
+    <link
+            th:href="@{/css/jquery-ui.min.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link
+            th:href="@{/css/owl.carousel.min.css}"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link th:href="@{/css/slicknav.min.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar('Order History')}"></nav>
+
+<div class="container">
+    <h2>Seller Order History</h2>
+    <h5 th:text="${message}" style="color: #ad3939"></h5>
+    <table class="table table-borderless mx-auto">
+        <thead>
+        <tr class="bg-light">
+            <th scope="col" class="text-center" width="5%">#</th>
+            <th scope="col" class="text-center" width="20%">Tanggal</th>
+            <th scope="col" class="text-center" width="10%">Status</th>
+            <th scope="col" class="text-center" width="20%">Pelanggan</th>
+            <th scope="col" class="text-center" width="20%">
+                <span>Harga Total</span>
+            </th>
+            <th scope="col" class="text-center" width="25%">Ubah Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.orderId}"></td>
+            <td th:text="${order.createdAt}"></td>
+            <td>
+                <span th:if="${order.status eq 1}">
+                    <span class="ms-1 text-center d-inline-block">Dikonfirmasi Penjual</span>
+                </span>
+                <span th:if="${order.status eq 2}">
+                    <span class="ms-1 text-center d-inline-block">Menunggu Kurir</span>
+                </span>
+                <span th:if="${order.status eq 3}">
+                    <span class="ms-1 text-center d-inline-block">Dalam Perjalanan</span>
+                </span>
+                <span th:if="${order.status eq 4}">
+                    <span class="ms-1 text-center d-inline-block">Barang Diterima</span>
+                </span>
+                <span th:if="${order.status eq 5}">
+                    <span class="ms-1 text-center d-inline-block">Selesai</span>
+                </span>
+            </td>
+            <td>
+                <img src="https://i.imgur.com/VKOeFyS.png" width="25"/>
+                <span th:text="${order.customerId}"></span>
+            </td>
+            <td class="text-center">
+                <span class="fw-bolder" th:text="${order.totalPrice}"></span>
+            </td>
+            <td class="text-center">
+                <div th:id="'form-' + ${order.orderId}">
+                    <form th:action="@{'/order/update/status/' + ${order.orderId}}" th:object="${updateStatusForm}"
+                          method="post">
+                        <input type="hidden" id="status" name="status" required th:value="${order.status}"/>
+
+                        <div th:if="${order.status < 5}" class="d-inline-block">
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </div>
+
+                        <div th:if="${order.status == 5}" class="ms-1">
+                            <span class="text-center d-inline-block">Selesai</span>
+                        </div>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
